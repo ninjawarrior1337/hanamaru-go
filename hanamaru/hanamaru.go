@@ -2,6 +2,7 @@ package hanamaru
 
 import (
 	"github.com/bwmarrin/discordgo"
+	"hanamaru/util"
 	"log"
 	"strings"
 )
@@ -32,7 +33,7 @@ func (h *Hanamaru) AddCommand(cmd *Command) {
 			return
 		}
 		argsString := strings.TrimPrefix(m.Content, h.prefix+cmd.Name)
-		args := ParseArgs(argsString)
+		args := util.ParseArgs(argsString)
 		ctx := &Context{
 			Session:       s,
 			MessageCreate: m,

@@ -3,6 +3,7 @@ package hanamaru
 import (
 	"fmt"
 	"image"
+	"io"
 	"net/http"
 	"net/url"
 
@@ -26,6 +27,10 @@ func (c *Context) Reply(m string) (*discordgo.Message, error) {
 	return c.ChannelMessageSend(c.ChannelID, m)
 }
 
+func (c *Context) ReplyFile(name string, r io.Reader) (*discordgo.Message, error) {
+	return c.ChannelFileSend(c.ChannelID, name, r)
+}
+
 func (c *Context) GetImage(idx uint) (*gg.Context, error) {
 	var imgUrl string
 
@@ -34,13 +39,13 @@ func (c *Context) GetImage(idx uint) (*gg.Context, error) {
 			return nil, fmt.Errorf("this doesn't contain an image")
 		} else {
 			if _, err := url.Parse(c.Args[0]); err != nil {
-				return nil, fmt.Errorf("this doesn't contain an image")
+				return nil, fmt.Errorf("this invalid image: %v", c.Args[0])
 			}
 			imgUrl = c.Args[0]
 		}
+	} else {
+		imgUrl = c.Message.Attachments[idx].URL
 	}
-
-	imgUrl = c.Message.Attachments[idx].URL
 
 	resp, err := http.Get(imgUrl)
 	if err != nil {

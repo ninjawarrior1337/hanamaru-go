@@ -20,7 +20,7 @@ func NewProcessor(width, height int) *caire.Processor {
 		Percentage:     false,
 		Square:         false,
 		Debug:          false,
-		Scale:          false,
+		Scale:          true,
 		FaceDetect:     false,
 		FaceAngle:      0,
 		Classifier:     "",
@@ -38,8 +38,8 @@ var CAA = &hanamaru.Command{
 		if len(ctx.Args) < 2 {
 			return fmt.Errorf("not enoguh args passed")
 		}
-		nW, _ := strconv.Atoi(ctx.Args[0])
-		nH, _ := strconv.Atoi(ctx.Args[1])
+		nW, _ := strconv.Atoi(ctx.Args[1])
+		nH, _ := strconv.Atoi(ctx.Args[2])
 		p := NewProcessor(nW, nH)
 
 		b := img.Image().Bounds()
@@ -53,7 +53,7 @@ var CAA = &hanamaru.Command{
 
 		outBuf := new(bytes.Buffer)
 		jpeg.Encode(outBuf, imgOut, nil)
-		ctx.ChannelFileSend(ctx.ChannelID, "bruh.jpg", outBuf)
+		ctx.ReplyFile("bruh.jpg", outBuf)
 		return nil
 	},
 }

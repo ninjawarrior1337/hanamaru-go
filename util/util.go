@@ -1,4 +1,4 @@
-package hanamaru
+package util
 
 import (
 	"encoding/csv"

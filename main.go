@@ -22,6 +22,7 @@ func main() {
 	bot.AddCommand(image.Rumble)
 	bot.AddCommand(image.CAA)
 	bot.AddCommand(info.Avatar)
+	bot.AddCommand(image.Jpg)
 
 	signal.Notify(syscallChan, syscall.SIGTERM, syscall.SIGINT)
 	<-syscallChan
