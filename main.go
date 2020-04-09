@@ -21,6 +21,7 @@ func main() {
 	bot.AddCommand(debug.ListArgs)
 	bot.AddCommand(image.Rumble)
 	bot.AddCommand(image.CAA)
+	bot.AddCommand(info.Avatar)
 
 	signal.Notify(syscallChan, syscall.SIGTERM, syscall.SIGINT)
 	<-syscallChan
