@@ -2,7 +2,7 @@ package hanamaru
 
 import (
 	"github.com/bwmarrin/discordgo"
-	"hanamaru/util"
+	"hanamaru/hanamaru/voice"
 	"log"
 	"strings"
 )
@@ -10,6 +10,7 @@ import (
 type Hanamaru struct {
 	prefix string
 	*discordgo.Session
+	VoiceContext *voice.Context
 }
 
 func New(t, prefix string) (bot *Hanamaru) {
@@ -24,7 +25,9 @@ func New(t, prefix string) (bot *Hanamaru) {
 		log.Fatalf("Failed to open webhook: %v", err)
 	}
 
-	return &Hanamaru{prefix, s}
+	voiceContext := voice.NewContext()
+
+	return &Hanamaru{prefix, s, voiceContext}
 }
 
 func (h *Hanamaru) AddCommand(cmd *Command) {
@@ -32,12 +35,16 @@ func (h *Hanamaru) AddCommand(cmd *Command) {
 		if !strings.HasPrefix(m.Content, h.prefix+cmd.Name) {
 			return
 		}
+		if m.Author.ID == s.State.User.ID || m.Author.Bot {
+			return
+		}
 		argsString := strings.TrimPrefix(m.Content, h.prefix+cmd.Name)
-		args := util.ParseArgs(argsString)
+		args := ParseArgs(argsString)
 		ctx := &Context{
 			Session:       s,
 			MessageCreate: m,
 			Args:          args,
+			VoiceContext:  h.VoiceContext,
 		}
 		err := cmd.Exec(ctx)
 		if err != nil {
@@ -48,6 +55,9 @@ func (h *Hanamaru) AddCommand(cmd *Command) {
 }
 
 func (h *Hanamaru) Close() {
+	for _, vc := range h.VoiceContext.VCs {
+		vc.Disconnect()
+	}
 	err := h.Session.Close()
 	if err != nil {
 		log.Fatalf("Failed to exit the bot correctly: %v", err)

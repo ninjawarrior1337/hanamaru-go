@@ -121,3 +121,4 @@ fabric.properties
 # End of https://www.gitignore.io/api/go,code,intellij
 
 secrets.go
+assets/test.mp3

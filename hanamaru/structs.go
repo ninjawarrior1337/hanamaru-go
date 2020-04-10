@@ -2,6 +2,7 @@ package hanamaru
 
 import (
 	"fmt"
+	"hanamaru/hanamaru/voice"
 	"image"
 	"io"
 	"net/http"
@@ -20,7 +21,8 @@ type Command struct {
 type Context struct {
 	*discordgo.Session
 	*discordgo.MessageCreate
-	Args []string
+	Args         []string
+	VoiceContext *voice.Context
 }
 
 func (c *Context) Reply(m string) (*discordgo.Message, error) {
@@ -81,4 +83,20 @@ func (c *Context) GetMember(idx int) (*discordgo.Member, error) {
 		return nil, fmt.Errorf("this doesn't contain any mentions")
 	}
 	return c.Session.GuildMember(c.GuildID, c.Mentions[idx].ID)
+}
+
+func (c *Context) GetVoiceChannnel() (*discordgo.Channel, error) {
+	guild, err := c.Guild(c.GuildID)
+	if err != nil {
+		return nil, fmt.Errorf("you can only use this command in a guild")
+	}
+	for _, state := range guild.VoiceStates {
+		if state.UserID == c.Author.ID {
+			channel, _ := c.State.Channel(state.ChannelID)
+
+			return channel, nil
+		}
+	}
+
+	return nil, fmt.Errorf("please join a vc before using this command")
 }

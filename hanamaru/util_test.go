@@ -1,4 +1,4 @@
-package util
+package hanamaru
 
 import (
 	"github.com/stretchr/testify/assert"
