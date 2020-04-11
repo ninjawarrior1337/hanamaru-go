@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"hanamaru/hanamaru"
 	"hanamaru/hanamaru/voice"
-	"io"
 	"path/filepath"
 )
 
@@ -28,14 +27,12 @@ var Play = &hanamaru.Command{
 		if queue.Length() == 1 {
 			song := queue.Pop()
 			//ctx.Reply(fmt.Sprintf("%v", song))
-			doneChan, err := song.Play(vc)
+			_, err := song.Play(vc)
 			if err != nil {
 				return fmt.Errorf("failed to play song: %v", err)
 			}
-			err = <-doneChan
-			if err != nil && err != io.EOF {
-				return fmt.Errorf("error while playing song: %v", err)
-			}
+			//err = <-doneChan
+
 		}
 		return nil
 	},

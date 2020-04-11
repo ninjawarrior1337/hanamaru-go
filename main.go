@@ -5,6 +5,7 @@ import (
 	"hanamaru/commands/image"
 	"hanamaru/commands/info"
 	"hanamaru/commands/music"
+	"hanamaru/events"
 	"hanamaru/hanamaru"
 	"os"
 	"os/signal"
@@ -28,6 +29,8 @@ func main() {
 	bot.AddCommand(music.Leave)
 	bot.AddCommand(music.Join)
 	bot.AddCommand(music.Play)
+
+	bot.AddHandler(events.Nhentai)
 
 	signal.Notify(syscallChan, syscall.SIGTERM, syscall.SIGINT)
 	<-syscallChan

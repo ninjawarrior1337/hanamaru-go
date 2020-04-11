@@ -3,9 +3,16 @@ module hanamaru
 go 1.13
 
 require (
+	github.com/PuerkitoBio/goquery v1.5.1 // indirect
+	github.com/antchfx/htmlquery v1.2.2 // indirect
+	github.com/antchfx/xmlquery v1.2.3 // indirect
+	github.com/antchfx/xpath v1.1.5 // indirect
 	github.com/bwmarrin/discordgo v0.20.2
 	github.com/esimov/caire v1.2.5
 	github.com/fogleman/gg v1.3.0
+	github.com/gocolly/colly/v2 v2.0.1
+	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
+	github.com/golang/protobuf v1.3.5 // indirect
 	github.com/jonas747/dca v0.0.0-20200403191804-067b814772f1
 	github.com/jonas747/ogg v0.0.0-20161220051205-b4f6f4cf3757 // indirect
 	github.com/markbates/pkger v0.15.1
@@ -13,4 +20,6 @@ require (
 	github.com/stretchr/testify v1.5.1
 	github.com/xfrr/goffmpeg v0.0.0-20200403115021-c3a1545b29f4 // indirect
 	golang.org/x/image v0.0.0-20200119044424-58c23975cae1 // indirect
+	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e // indirect
+	google.golang.org/appengine v1.6.5 // indirect
 )

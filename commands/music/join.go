@@ -24,6 +24,13 @@ var Join = &hanamaru.Command{
 			ctx.VoiceContext.Queues[ctx.GuildID] = &voice.Queue{}
 		}
 
+		for {
+			if vc.Ready {
+				ctx.Reply("Joined!")
+				break
+			}
+		}
+
 		return nil
 	},
 }

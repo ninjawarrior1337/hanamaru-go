@@ -20,7 +20,7 @@ type StaticFile struct {
 	ec       *dca.EncodeSession
 }
 
-func (s *StaticFile) Play(vc *discordgo.VoiceConnection) (chan error, error) {
+func (s *StaticFile) Play(vc *discordgo.VoiceConnection) (*dca.StreamingSession, error) {
 	var err error
 	s.ec, err = dca.EncodeFile(s.FilePath, defaultOptions)
 	if err != nil {
@@ -28,6 +28,9 @@ func (s *StaticFile) Play(vc *discordgo.VoiceConnection) (chan error, error) {
 	}
 	fmt.Println(s.ec.Stats())
 	done := make(chan error)
-	dca.NewStream(s.ec, vc, done)
-	return done, nil
+	stream := dca.NewStream(s.ec, vc, done)
+	err = <-done
+	fmt.Println(err)
+	fmt.Println(s.ec.FFMPEGMessages())
+	return stream, nil
 }

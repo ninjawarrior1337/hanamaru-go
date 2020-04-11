@@ -26,4 +26,5 @@ func TransformBraile(ctx *gg.Context) string {
 			//fString+=
 		}
 	}
+	return ""
 }

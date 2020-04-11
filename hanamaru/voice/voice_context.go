@@ -2,6 +2,7 @@ package voice
 
 import (
 	"github.com/bwmarrin/discordgo"
+	"github.com/jonas747/dca"
 )
 
 func NewContext() *Context {
@@ -17,5 +18,5 @@ type Context struct {
 }
 
 type Playable interface {
-	Play(vc *discordgo.VoiceConnection) (chan error, error)
+	Play(vc *discordgo.VoiceConnection) (*dca.StreamingSession, error)
 }
