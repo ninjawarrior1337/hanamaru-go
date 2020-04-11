@@ -2,6 +2,7 @@ package main
 
 import (
 	"hanamaru/commands/debug"
+	"hanamaru/commands/fun"
 	"hanamaru/commands/image"
 	"hanamaru/commands/info"
 	"hanamaru/commands/music"
@@ -29,6 +30,8 @@ func main() {
 	bot.AddCommand(music.Leave)
 	bot.AddCommand(music.Join)
 	bot.AddCommand(music.Play)
+
+	bot.AddCommand(fun.Dance)
 
 	bot.AddHandler(events.Nhentai)
 

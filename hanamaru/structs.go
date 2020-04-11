@@ -100,3 +100,10 @@ func (c *Context) GetVoiceChannnel() (*discordgo.Channel, error) {
 
 	return nil, fmt.Errorf("please join a vc before using this command")
 }
+
+func (c *Context) GetArgIndex(idx int) (string, error) {
+	if idx > len(c.Args)-1 {
+		return "", fmt.Errorf("failed to get arg with index %v", idx)
+	}
+	return c.Args[idx], nil
+}

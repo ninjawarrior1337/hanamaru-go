@@ -1,6 +1,7 @@
 package events
 
 import (
+	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"hanamaru/util"
 	"regexp"
@@ -14,19 +15,38 @@ var Nhentai = func(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.Bot {
 		return
 	}
-	matches := nhr.FindStringSubmatch(m.Content)
-	if len(matches) == 0 {
-		return
-	}
-	matchInt, _ := strconv.Atoi(matches[0])
 
-	n, err := util.ParseNhentai(matchInt)
+	matches, err := ParseStringWithSixDigits(m.Content)
 	if err != nil {
-		s.ChannelMessageSend(m.ChannelID, strconv.Itoa(matchInt)+": Not Found")
 		return
 	}
 
-	s.ChannelMessageSendEmbed(m.ChannelID, ConstructEmbed(n))
+	for _, match := range matches {
+		n, err := util.ParseNhentai(match)
+		if err != nil {
+			s.ChannelMessageSend(m.ChannelID, strconv.Itoa(match)+": Not Found")
+		}
+		s.ChannelMessageSendEmbed(m.ChannelID, ConstructEmbed(n))
+	}
+}
+
+func ParseStringWithSixDigits(msg string) ([]int, error) {
+	matches := nhr.FindAllStringSubmatch(msg, -1)
+	if len(matches) == 0 {
+		return nil, fmt.Errorf("no matches")
+	}
+	var intMatches []int
+	for _, match := range matches {
+		if len(intMatches) >= 3 {
+			return intMatches, nil
+		}
+		matchInt, err := strconv.Atoi(match[1])
+		if err != nil {
+			continue
+		}
+		intMatches = append(intMatches, matchInt)
+	}
+	return intMatches, nil
 }
 
 func ConstructEmbed(n util.NHentai) *discordgo.MessageEmbed {

@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-var prg = regexp.MustCompile(`(\d+)`)
+var prg = regexp.MustCompile(`(\d+) pages?`)
 var trg = regexp.MustCompile(`([a-zA-Z ]+)`)
 
 type NHentai struct {
@@ -57,9 +57,16 @@ func ParseNhentai(digits int) (NHentai, error) {
 	})
 
 	c.OnHTML("#info > div:nth-child(3)", func(element *colly.HTMLElement) {
-		matches := prg.FindStringSubmatch(element.Text)
+		matches := prg.FindAllStringSubmatch(element.Text, -1)
 		if len(matches) != 0 {
-			n.PageCount, _ = strconv.Atoi(matches[0])
+			n.PageCount, _ = strconv.Atoi(matches[0][1])
+		}
+	})
+
+	c.OnHTML("#info > div:nth-child(4)", func(element *colly.HTMLElement) {
+		matches := prg.FindAllStringSubmatch(element.Text, -1)
+		if len(matches) != 0 {
+			n.PageCount, _ = strconv.Atoi(matches[0][1])
 		}
 	})
 
