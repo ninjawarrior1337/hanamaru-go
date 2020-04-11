@@ -1,10 +1,13 @@
-name: Run Tests
+name: Run Tests and Build
 
 on: [push]
 jobs:
   build:
     name: Build and Test
-    runs-on: [ubuntu-latest, windows-latest]
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - name: Setup Go
@@ -14,4 +17,7 @@ jobs:
       - run: go version
       - run: go generate ./...
       - run: go test ./...
+      - run: go build -o artifacts/hanamaru.exe
+        if: runner.os==Windows
       - run: go build -o artifacts/hanamaru
+        if: runner.os==Linux
