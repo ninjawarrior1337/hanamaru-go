@@ -4,7 +4,7 @@ on: [push]
 jobs:
   build:
     name: Build and Test
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v2
       - name: Setup Go
@@ -14,4 +14,4 @@ jobs:
       - run: go version
       - run: go generate ./...
       - run: go test ./...
-      - run: go build
+      - run: go build -o artifacts/hanamaru
