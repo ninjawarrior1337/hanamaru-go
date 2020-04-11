@@ -19,6 +19,6 @@ func TestParseStringWithSixDigits(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	assert.Equal(t, []int{456693, 456692, 456691}, numbers)
+	assert.Equal(t, []int{407230, 22743, 621644}, numbers)
 
 }
