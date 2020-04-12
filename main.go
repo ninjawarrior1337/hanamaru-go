@@ -14,15 +14,14 @@ import (
 )
 
 var TOKEN string
-var bot *hanamaru.Hanamaru
 
 var optionals []*hanamaru.Command
 
 func main() {
 	var syscallChan = make(chan os.Signal)
-	defer bot.Close()
 
-	bot = hanamaru.New("Bot "+TOKEN, "!")
+	bot := hanamaru.New("Bot "+TOKEN, "!")
+	defer bot.Close()
 
 	bot.AddCommand(info.About)
 	bot.AddCommand(debug.ListArgs)

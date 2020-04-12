@@ -7,8 +7,8 @@ import (
 
 func NewContext() *Context {
 	return &Context{
-		Queues: map[string]*Queue{},
-		VCs:    map[string]*discordgo.VoiceConnection{},
+		Queues: make(map[string]*Queue),
+		VCs:    make(map[string]*discordgo.VoiceConnection),
 	}
 }
 
