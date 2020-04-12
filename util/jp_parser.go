@@ -1,3 +1,5 @@
+// +build jp
+
 package util
 
 import (

@@ -6,8 +6,8 @@ jobs:
     name: Build and Test
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+        tags: ["jp", ""]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/cache@v1
@@ -23,7 +23,5 @@ jobs:
       - run: go version
       - run: go generate ./...
       - run: go test ./...
-      - run: go build -o artifacts/hanamaru.exe
-        if: runner.os=='Windows'
-      - run: go build -o artifacts/hanamaru
-        if: runner.os=='Linux'
+      - run: GOOS=windows GOARCH=amd64 go build -tags ${{matrix.tags}} -o artifacts/hanamaru-${{matrix.tags}}.exe
+      - run: GOOS=linux GOARCH=amd64 go build -tags ${{matrix.tags}} -o artifacts/hanamaru-${{matrix.tags}}
