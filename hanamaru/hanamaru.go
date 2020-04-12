@@ -27,7 +27,7 @@ func New(t, prefix string) (bot *Hanamaru) {
 
 	voiceContext := voice.NewContext()
 
-	log.Printf("Ready and logged in as %v zura!", s.State.User.Username)
+	log.Printf("Ready and logged in as %v zura!", s.State.User.Username+"#"+s.State.User.Discriminator)
 
 	return &Hanamaru{prefix, s, voiceContext}
 }
