@@ -9,10 +9,10 @@ import (
 	"strings"
 )
 
-var nhr = regexp.MustCompile(`(\d{6})`)
+var nhr = regexp.MustCompile(`^(\d{6})$`)
 
 var Nhentai = func(s *discordgo.Session, m *discordgo.MessageCreate) {
-	if m.Author.Bot {
+	if m.Author.Bot || len(m.Mentions) > 0 {
 		return
 	}
 
@@ -31,21 +31,28 @@ var Nhentai = func(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 func ParseStringWithSixDigits(msg string) ([]int, error) {
-	matches := nhr.FindAllStringSubmatch(msg, -1)
-	if len(matches) == 0 {
-		return nil, fmt.Errorf("no matches")
-	}
+	msgs := strings.Split(msg, " ")
 	var intMatches []int
-	for _, match := range matches {
-		if len(intMatches) >= 3 {
-			return intMatches, nil
-		}
-		matchInt, err := strconv.Atoi(match[1])
-		if err != nil {
+	for _, msg := range msgs {
+		matches := nhr.FindAllStringSubmatch(msg, -1)
+		if len(matches) == 0 {
 			continue
 		}
-		intMatches = append(intMatches, matchInt)
+		for _, match := range matches {
+			if len(intMatches) >= 3 {
+				return intMatches, nil
+			}
+			matchInt, err := strconv.Atoi(match[1])
+			if err != nil {
+				continue
+			}
+			intMatches = append(intMatches, matchInt)
+		}
 	}
+	if len(intMatches) == 0 {
+		return nil, fmt.Errorf("no matches")
+	}
+
 	return intMatches, nil
 }
 
