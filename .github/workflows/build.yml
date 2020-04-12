@@ -23,5 +23,12 @@ jobs:
       - run: go version
       - run: go generate ./...
       - run: go test ./...
-      - run: GOOS=windows GOARCH=amd64 go build -tags ${{matrix.tags}} -o artifacts/hanamaru-${{matrix.tags}}.exe
-      - run: GOOS=linux GOARCH=amd64 go build -tags ${{matrix.tags}} -o artifacts/hanamaru-${{matrix.tags}}
+      - run: GOOS=windows GOARCH=amd64 go build -tags ${{matrix.tags}} -ldflags="-s -w" -o artifacts/hanamaru-${{matrix.tags}}.exe
+        if: matrix.tags != ''
+      - run: GOOS=linux GOARCH=amd64 go build -tags ${{matrix.tags}} -ldflags="-s -w" -o artifacts/hanamaru-${{matrix.tags}}
+        if: matrix.tags != ''
+
+      - run: GOOS=windows GOARCH=amd64 go build -tags ${{matrix.tags}} -ldflags="-s -w" -o artifacts/hanamaru.exe
+        if: matrix.tags == ''
+      - run: GOOS=linux GOARCH=amd64 go build -tags ${{matrix.tags}} -ldflags="-s -w" -o artifacts/hanamaru
+        if: matrix.tags == ''
