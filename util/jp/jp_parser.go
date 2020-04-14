@@ -1,11 +1,12 @@
 // +build jp
 
-package util
+package jp
 
 import (
+	"strings"
+
 	"github.com/gojp/kana"
 	"github.com/ikawaha/kagome/tokenizer"
-	"strings"
 )
 
 var t = tokenizer.New()

@@ -1,10 +1,11 @@
 // +build jp
 
-package util
+package jp
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestParseJapanese(t *testing.T) {

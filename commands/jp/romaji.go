@@ -5,7 +5,7 @@ package jp
 import (
 	"fmt"
 	"hanamaru/hanamaru"
-	"hanamaru/util"
+	"hanamaru/util/jp"
 )
 
 var Romaji = &hanamaru.Command{
@@ -16,7 +16,7 @@ var Romaji = &hanamaru.Command{
 		if err != nil {
 			return fmt.Errorf("please input a string to turn into romaji")
 		}
-		output := util.ParseJapanese(input)
+		output := jp.ParseJapanese(input)
 		ctx.Reply(output)
 		return nil
 	},
