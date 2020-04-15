@@ -9,10 +9,8 @@ import (
 	"github.com/ikawaha/kagome/tokenizer"
 )
 
-var t = tokenizer.New()
-
 func ParseJapanese(jp string) string {
-	tokens := t.Tokenize(jp)
+	tokens := Tokenizer.Tokenize(jp)
 	var finalOutput []string
 
 	for _, token := range tokens {

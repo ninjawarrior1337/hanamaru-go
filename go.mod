@@ -12,6 +12,7 @@ require (
 	github.com/fogleman/gg v1.3.0
 	github.com/gocolly/colly/v2 v2.0.1
 	github.com/gojp/kana v0.1.0
+	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.3.5 // indirect
 	github.com/ikawaha/kagome v1.11.2
@@ -20,8 +21,7 @@ require (
 	github.com/markbates/pkger v0.15.1
 	github.com/rylio/ytdl v0.6.2
 	github.com/stretchr/testify v1.5.1
-	github.com/xfrr/goffmpeg v0.0.0-20200403115021-c3a1545b29f4 // indirect
-	golang.org/x/image v0.0.0-20200119044424-58c23975cae1 // indirect
+	golang.org/x/image v0.0.0-20200119044424-58c23975cae1
 	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e // indirect
 	google.golang.org/appengine v1.6.5 // indirect
 )
