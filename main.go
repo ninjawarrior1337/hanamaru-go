@@ -26,7 +26,7 @@ func main() {
 	bot.AddCommand(info.About)
 	bot.AddCommand(debug.ListArgs)
 	bot.AddCommand(image.Rumble)
-	bot.AddCommand(image.CAA)
+	bot.AddCommand(image.CAS)
 	bot.AddCommand(info.Avatar)
 	bot.AddCommand(image.Jpg)
 

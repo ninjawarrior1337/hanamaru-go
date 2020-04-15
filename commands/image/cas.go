@@ -20,14 +20,14 @@ func NewProcessor(width, height int) *caire.Processor {
 		Percentage:     false,
 		Square:         false,
 		Debug:          false,
-		Scale:          true,
+		Scale:          false,
 		FaceDetect:     false,
 		FaceAngle:      0,
 		Classifier:     "",
 	}
 }
 
-var CAA = &hanamaru.Command{
+var CAS = &hanamaru.Command{
 	Name:               "cas",
 	PermissionRequired: 0,
 	Exec: func(ctx *hanamaru.Context) error {
