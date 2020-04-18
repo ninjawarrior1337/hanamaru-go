@@ -13,6 +13,8 @@ import (
 	"syscall"
 )
 
+//go:generate pkger
+
 var TOKEN string
 
 var optionals []*hanamaru.Command
@@ -35,6 +37,7 @@ func main() {
 	bot.AddCommand(music.Play)
 
 	bot.AddCommand(fun.Dance)
+	bot.AddCommand(fun.Suntsu)
 
 	for _, command := range optionals {
 		bot.AddCommand(command)
