@@ -120,7 +120,7 @@ fabric.properties
 
 # End of https://www.gitignore.io/api/go,code,intellij
 
-secrets.go
+config.yml
 assets/test.mp3
 
 util/jp/*.png

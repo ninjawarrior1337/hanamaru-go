@@ -8,7 +8,8 @@ import (
 )
 
 type Hanamaru struct {
-	prefix string
+	prefix  string
+	ownerid string
 	*discordgo.Session
 	VoiceContext *voice.Context
 }
@@ -29,7 +30,16 @@ func New(t, prefix string) (bot *Hanamaru) {
 
 	log.Printf("Ready and logged in as %v zura!", s.State.User.Username+"#"+s.State.User.Discriminator)
 
-	return &Hanamaru{prefix, s, voiceContext}
+	return &Hanamaru{
+		prefix:       prefix,
+		Session:      s,
+		VoiceContext: voiceContext,
+		ownerid:      "",
+	}
+}
+
+func (h *Hanamaru) SetOwner(id string) {
+	h.ownerid = id
 }
 
 func (h *Hanamaru) AddCommand(cmd *Command) {
