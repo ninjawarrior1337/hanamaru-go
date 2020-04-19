@@ -13,7 +13,7 @@ import (
 var LatexTemplate = template.Must(template.New("latex").Parse(`
 \documentclass{article}
 \begin{document}
-{{.}}
+${{.}}$
 \pagenumbering{gobble}
 \end{document}
 `))

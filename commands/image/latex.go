@@ -6,7 +6,7 @@ import (
 )
 
 var Latex = &hanamaru.Command{
-	Name:               "",
+	Name:               "latex",
 	PermissionRequired: 0,
 	OwnerOnly:          false,
 	Exec: func(ctx *hanamaru.Context) error {
