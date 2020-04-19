@@ -15,6 +15,7 @@ import (
 type Command struct {
 	Name               string
 	PermissionRequired int
+	OwnerOnly          bool
 	Exec               func(ctx *Context) error
 }
 
@@ -43,7 +44,7 @@ func (c *Context) GetImage(idx uint) (*gg.Context, error) {
 			if _, err := url.Parse(c.Args[0]); err != nil {
 				return nil, fmt.Errorf("this invalid image: %v", c.Args[0])
 			}
-			imgUrl = c.Args[0]
+			imgUrl, c.Args = c.Args[0], c.Args[1:]
 		}
 	} else {
 		imgUrl = c.Message.Attachments[idx].URL

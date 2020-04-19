@@ -10,4 +10,5 @@ var About = &hanamaru.Command{
 		_, _ = ctx.ChannelMessageSend(ctx.ChannelID, "bruh")
 		return nil
 	},
+	OwnerOnly: true,
 }
