@@ -57,6 +57,7 @@ func main() {
 	bot.AddCommand(image.CAS)
 	bot.AddCommand(info.Avatar)
 	bot.AddCommand(image.Jpg)
+	bot.AddCommand(image.Latex)
 
 	bot.AddCommand(music.Leave)
 	bot.AddCommand(music.Join)
