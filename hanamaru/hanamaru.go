@@ -43,6 +43,9 @@ func (h *Hanamaru) SetOwner(id string) {
 }
 
 func (h *Hanamaru) AddCommand(cmd *Command) {
+	if cmd.Name == "" {
+		panic("A command must not have an empty name!")
+	}
 	var handleFunc = func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if !strings.HasPrefix(m.Content, h.prefix+cmd.Name) {
 			return
