@@ -50,6 +50,10 @@ func (h *Hanamaru) AddCommand(cmd *Command) {
 		if m.Author.ID == s.State.User.ID || m.Author.Bot {
 			return
 		}
+		if cmd.OwnerOnly && h.ownerid != m.Author.ID {
+			s.ChannelMessageSend(m.ChannelID, "ERROR: You must be the owner of this instance to run this command")
+			return
+		}
 		argsString := strings.TrimPrefix(m.Content, h.prefix+cmd.Name)
 		args := ParseArgs(argsString)
 		ctx := &Context{

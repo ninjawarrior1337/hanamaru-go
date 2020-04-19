@@ -38,8 +38,8 @@ var CAS = &hanamaru.Command{
 		if len(ctx.Args) < 2 {
 			return fmt.Errorf("not enoguh args passed")
 		}
-		nW, _ := strconv.Atoi(ctx.Args[1])
-		nH, _ := strconv.Atoi(ctx.Args[2])
+		nW, _ := strconv.Atoi(ctx.Args[0])
+		nH, _ := strconv.Atoi(ctx.Args[1])
 		p := NewProcessor(nW, nH)
 
 		b := img.Image().Bounds()
