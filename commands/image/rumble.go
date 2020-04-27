@@ -10,7 +10,7 @@ import (
 	"log"
 )
 
-var rumbleCtx *gg.Context
+var rumbleImg image.Image
 
 func init() {
 	file, err := pkger.Open("/assets/rumble.png")
@@ -18,12 +18,10 @@ func init() {
 		log.Fatalf("Failed to open rumble.png: %v", err)
 	}
 
-	rumblePng, _, err := image.Decode(file)
+	rumbleImg, _, err = image.Decode(file)
 	if err != nil {
 		log.Fatalf("Failed to process rumble.png: %v", err)
 	}
-
-	rumbleCtx = gg.NewContextForImage(rumblePng)
 }
 
 var Rumble = &hanamaru.Command{
@@ -34,7 +32,7 @@ var Rumble = &hanamaru.Command{
 		if err != nil {
 			return err
 		}
-		mutRCtx := gg.NewContextForImage(rumbleCtx.Image())
+		mutRCtx := gg.NewContextForImage(rumbleImg)
 		mutRCtx.Scale(float64(input.Width()), float64(input.Height()/2))
 		input.DrawImage(mutRCtx.Image(), 0, 0)
 
