@@ -26,7 +26,7 @@ func init() {
 		panic("failed to decode bishop base image")
 	}
 
-	fontF, err := pkger.Open("/assets/impact.ttf")
+	fontF, err := pkger.Open("/assets/Impact.ttf")
 	if err != nil {
 		panic("failed to load impact prarsedFont")
 	}
