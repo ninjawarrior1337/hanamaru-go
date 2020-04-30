@@ -2,6 +2,7 @@ package image
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/fogleman/gg"
 	"github.com/golang/freetype/truetype"
 	"github.com/markbates/pkger"
@@ -42,6 +43,9 @@ var Bishop = &hanamaru.Command{
 			return err
 		}
 		madText := prevMsg.Content
+		if madText == "" {
+			return fmt.Errorf("please use ths command after a message that contains text")
+		}
 		//Code borrowed from meme.go
 		textCtx := gg.NewContext(244, 376)
 		textCtx.SetRGBA(1, 1, 1, 0)
