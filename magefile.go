@@ -18,7 +18,7 @@ var OSes = []string{"windows", "linux"}
 
 // A build step that requires additional params, or platform specific steps for example
 func Build() error {
-	mg.Deps(InstallDeps, Test, Generate)
+	mg.SerialDeps(InstallDeps, Test, Generate)
 	fmt.Println("Building...")
 
 	for _, cOS := range OSes {
@@ -68,4 +68,5 @@ func InstallDeps() error {
 func Clean() {
 	fmt.Println("Cleaning...")
 	os.RemoveAll("artifacts")
+	os.Remove("pkged.go")
 }
