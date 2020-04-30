@@ -16,10 +16,12 @@ type Command struct {
 	Name               string
 	PermissionRequired int
 	OwnerOnly          bool
+	Help               string
 	Exec               func(ctx *Context) error
 }
 
 type Context struct {
+	Hanamaru *Hanamaru
 	*discordgo.Session
 	*discordgo.MessageCreate
 	Args         []string
@@ -107,4 +109,12 @@ func (c *Context) GetArgIndex(idx int) (string, error) {
 		return "", fmt.Errorf("failed to get arg with index %v", idx)
 	}
 	return c.Args[idx], nil
+}
+
+func (c *Context) GetPreviousMessage() (*discordgo.Message, error) {
+	msgs, err := c.Session.ChannelMessages(c.ChannelID, 1, c.Message.ID, "", "")
+	if err != nil {
+		return nil, fmt.Errorf("no messages found before previously executed command")
+	}
+	return msgs[0], nil
 }

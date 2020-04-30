@@ -8,6 +8,7 @@ require (
 	github.com/antchfx/xmlquery v1.2.3 // indirect
 	github.com/antchfx/xpath v1.1.5 // indirect
 	github.com/bwmarrin/discordgo v0.20.2
+	github.com/disintegration/imaging v1.6.2
 	github.com/esimov/caire v1.2.5
 	github.com/fogleman/gg v1.3.0
 	github.com/gocolly/colly/v2 v2.0.1
@@ -18,6 +19,7 @@ require (
 	github.com/ikawaha/kagome v1.11.2
 	github.com/jonas747/dca v0.0.0-20200403191804-067b814772f1
 	github.com/jonas747/ogg v0.0.0-20161220051205-b4f6f4cf3757 // indirect
+	github.com/magefile/mage v1.9.0
 	github.com/markbates/pkger v0.15.1
 	github.com/rylio/ytdl v0.6.2
 	github.com/spf13/viper v1.6.3
