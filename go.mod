@@ -8,6 +8,7 @@ require (
 	github.com/antchfx/xmlquery v1.2.3 // indirect
 	github.com/antchfx/xpath v1.1.5 // indirect
 	github.com/bwmarrin/discordgo v0.20.2
+	github.com/disintegration/imaging v1.6.2
 	github.com/esimov/caire v1.2.5
 	github.com/fogleman/gg v1.3.0
 	github.com/gocolly/colly/v2 v2.0.1
