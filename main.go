@@ -77,6 +77,7 @@ func main() {
 
 	bot.AddHandler(events.Nhentai)
 	bot.AddHandler(events.Boomer)
+	bot.AddHandler(events.RepeatMessage)
 
 	signal.Notify(syscallChan, syscall.SIGTERM, syscall.SIGINT)
 	<-syscallChan
