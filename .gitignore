@@ -125,3 +125,5 @@ assets/test.mp3
 
 util/jp/*.png
 *.gen.go
+
+artifacts

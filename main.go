@@ -50,13 +50,19 @@ func main() {
 	defer bot.Close()
 
 	bot.SetOwner(config.GetString("owner"))
+	bot.EnableHelpCommand()
+
+	bot.AddCommand(debug.ListArgs)
 
 	bot.AddCommand(info.About)
-	bot.AddCommand(debug.ListArgs)
+	bot.AddCommand(info.Avatar)
+
 	bot.AddCommand(image.Rumble)
 	bot.AddCommand(image.CAS)
-	bot.AddCommand(info.Avatar)
 	bot.AddCommand(image.Jpg)
+	bot.AddCommand(image.Latex)
+	bot.AddCommand(image.Stretch)
+	bot.AddCommand(image.Bishop)
 
 	bot.AddCommand(music.Leave)
 	bot.AddCommand(music.Join)
@@ -70,6 +76,8 @@ func main() {
 	}
 
 	bot.AddHandler(events.Nhentai)
+	bot.AddHandler(events.Boomer)
+	bot.AddHandler(events.RepeatMessage)
 
 	signal.Notify(syscallChan, syscall.SIGTERM, syscall.SIGINT)
 	<-syscallChan

@@ -12,6 +12,7 @@ type Hanamaru struct {
 	ownerid string
 	*discordgo.Session
 	VoiceContext *voice.Context
+	commands     []*Command
 }
 
 func New(t, prefix string) (bot *Hanamaru) {
@@ -35,6 +36,7 @@ func New(t, prefix string) (bot *Hanamaru) {
 		Session:      s,
 		VoiceContext: voiceContext,
 		ownerid:      "",
+		commands:     []*Command{},
 	}
 }
 
@@ -43,6 +45,9 @@ func (h *Hanamaru) SetOwner(id string) {
 }
 
 func (h *Hanamaru) AddCommand(cmd *Command) {
+	if cmd.Name == "" {
+		panic("A command must not have an empty name!")
+	}
 	var handleFunc = func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if !strings.HasPrefix(m.Content, h.prefix+cmd.Name) {
 			return
@@ -61,6 +66,7 @@ func (h *Hanamaru) AddCommand(cmd *Command) {
 			MessageCreate: m,
 			Args:          args,
 			VoiceContext:  h.VoiceContext,
+			Hanamaru:      h,
 		}
 		err := cmd.Exec(ctx)
 		if err != nil {
@@ -68,6 +74,11 @@ func (h *Hanamaru) AddCommand(cmd *Command) {
 		}
 	}
 	h.AddHandler(handleFunc)
+	h.commands = append(h.commands, cmd)
+}
+
+func (h *Hanamaru) EnableHelpCommand() {
+	h.AddCommand(help)
 }
 
 func (h *Hanamaru) Close() {
