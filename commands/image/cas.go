@@ -35,11 +35,16 @@ var CAS = &hanamaru.Command{
 		if err != nil {
 			return err
 		}
-		if len(ctx.Args) < 2 {
-			return fmt.Errorf("not enoguh args passed")
+		widthArg, err := ctx.GetArgIndex(0)
+		if err != nil {
+			return err
 		}
-		nW, _ := strconv.Atoi(ctx.Args[0])
-		nH, _ := strconv.Atoi(ctx.Args[1])
+		heightArg, err := ctx.GetArgIndex(1)
+		if err != nil {
+			return err
+		}
+		nW, _ := strconv.Atoi(widthArg)
+		nH, _ := strconv.Atoi(heightArg)
 		p := NewProcessor(nW, nH)
 
 		b := img.Image().Bounds()
@@ -53,7 +58,7 @@ var CAS = &hanamaru.Command{
 
 		outBuf := new(bytes.Buffer)
 		jpeg.Encode(outBuf, imgOut, nil)
-		ctx.ReplyFile("bruh.jpg", outBuf)
+		ctx.ReplyFile("cas.jpg", outBuf)
 		return nil
 	},
 }
