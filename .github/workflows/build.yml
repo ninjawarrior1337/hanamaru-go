@@ -23,7 +23,7 @@ jobs:
       - run: go version
       - name: Setup Mage
         run: |
-          go get -u -d github.com/magefile/mage
-          cd $GOPATH/src/github.com/magefile/mage
+          git clone https://github.com/magefile/mage
+          cd mage
           go run bootstrap.go
       - run: mage build
