@@ -50,6 +50,7 @@ func main() {
 	defer bot.Close()
 
 	bot.SetOwner(config.GetString("owner"))
+	bot.EnableHelpCommand()
 
 	bot.AddCommand(debug.ListArgs)
 
