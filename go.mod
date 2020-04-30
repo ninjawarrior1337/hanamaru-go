@@ -19,6 +19,7 @@ require (
 	github.com/ikawaha/kagome v1.11.2
 	github.com/jonas747/dca v0.0.0-20200403191804-067b814772f1
 	github.com/jonas747/ogg v0.0.0-20161220051205-b4f6f4cf3757 // indirect
+	github.com/magefile/mage v1.9.0
 	github.com/markbates/pkger v0.15.1
 	github.com/rylio/ytdl v0.6.2
 	github.com/spf13/viper v1.6.3
