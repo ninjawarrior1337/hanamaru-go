@@ -2,7 +2,7 @@ package image
 
 import (
 	"bytes"
-	"github.com/fogleman/gg"
+	"github.com/disintegration/imaging"
 	"github.com/markbates/pkger"
 	"hanamaru/hanamaru"
 	"image"
@@ -32,9 +32,8 @@ var Rumble = &hanamaru.Command{
 		if err != nil {
 			return err
 		}
-		mutRCtx := gg.NewContextForImage(rumbleImg)
-		mutRCtx.Scale(float64(input.Width()), float64(input.Height()/2))
-		input.DrawImage(mutRCtx.Image(), 0, 0)
+		mutRCtx := imaging.Resize(rumbleImg, input.Width(), input.Height()/2, imaging.Lanczos)
+		input.DrawImage(mutRCtx, 0, 0)
 
 		buf := new(bytes.Buffer)
 		jpeg.Encode(buf, input.Image(), nil)

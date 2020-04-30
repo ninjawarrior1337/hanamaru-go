@@ -108,3 +108,11 @@ func (c *Context) GetArgIndex(idx int) (string, error) {
 	}
 	return c.Args[idx], nil
 }
+
+func (c *Context) GetPreviousMessage() (*discordgo.Message, error) {
+	msgs, err := c.Session.ChannelMessages(c.ChannelID, 1, c.Message.ID, "", "")
+	if err != nil {
+		return nil, fmt.Errorf("no messages found before previously executed command")
+	}
+	return msgs[0], nil
+}
