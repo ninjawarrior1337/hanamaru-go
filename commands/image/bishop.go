@@ -61,11 +61,11 @@ var Bishop = &hanamaru.Command{
 				}
 				x := float64(textCtx.Width()/2) + float64(dx)
 				y := float64(textCtx.Height()/2) + float64(dy)
-				textCtx.DrawStringAnchored(madText, x, y, 0.5, 0.5)
+				textCtx.DrawStringWrapped(madText, x, y, 0.5, 0.5, float64(textCtx.Width()), 1, gg.AlignCenter)
 			}
 		}
 		textCtx.SetRGB(1, 1, 1)
-		textCtx.DrawStringAnchored(madText, float64(textCtx.Width()/2), float64(textCtx.Height()/2), 0.5, 0.5)
+		textCtx.DrawStringWrapped(madText, float64(textCtx.Width()/2), float64(textCtx.Height()/2), 0.5, 0.5, float64(textCtx.Width()), 1, gg.AlignCenter)
 
 		finalImg := gg.NewContextForImage(baseImg)
 		finalImg.DrawImage(textCtx.Image(), 505, 124)

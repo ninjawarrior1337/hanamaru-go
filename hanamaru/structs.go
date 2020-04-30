@@ -16,10 +16,12 @@ type Command struct {
 	Name               string
 	PermissionRequired int
 	OwnerOnly          bool
+	Help               string
 	Exec               func(ctx *Context) error
 }
 
 type Context struct {
+	Hanamaru *Hanamaru
 	*discordgo.Session
 	*discordgo.MessageCreate
 	Args         []string
