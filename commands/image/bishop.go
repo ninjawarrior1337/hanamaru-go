@@ -1,3 +1,5 @@
+// +build ij
+
 package image
 
 import (
