@@ -70,14 +70,14 @@ func main() {
 
 	bot.AddCommand(fun.Dance)
 	bot.AddCommand(fun.Suntsu)
+	bot.AddCommand(fun.Talk)
 
 	for _, command := range optionals {
 		bot.AddCommand(command)
 	}
 
 	bot.AddHandler(events.Nhentai)
-	bot.AddHandler(events.Boomer)
-	bot.AddHandler(events.Shiraz)
+	bot.AddHandler(events.ReactionExpansion)
 	bot.AddHandler(events.RepeatMessage)
 
 	signal.Notify(syscallChan, syscall.SIGTERM, syscall.SIGINT)
