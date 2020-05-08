@@ -23,6 +23,7 @@ var Play = &hanamaru.Command{
 
 		//queue.Push(&voice.YoutubeSrc{YtUrl:"https://www.youtube.com/watch?v=XQsMmtC91b4"})
 		fp, _ := filepath.Abs("assets/test.mp3")
+		fmt.Println(fp)
 		queue.Push(&voice.StaticFile{FilePath: fp})
 		if queue.Length() == 1 {
 			song := queue.Pop()
@@ -32,7 +33,6 @@ var Play = &hanamaru.Command{
 				return fmt.Errorf("failed to play song: %v", err)
 			}
 			//err = <-doneChan
-
 		}
 		return nil
 	},
