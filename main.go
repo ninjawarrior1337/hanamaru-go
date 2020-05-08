@@ -56,6 +56,7 @@ func main() {
 
 	bot.AddCommand(info.About)
 	bot.AddCommand(info.Avatar)
+	bot.AddCommand(info.Invite)
 
 	bot.AddCommand(image.Rumble)
 	bot.AddCommand(image.CAS)
