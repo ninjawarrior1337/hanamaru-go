@@ -6,7 +6,6 @@ require (
 	github.com/PuerkitoBio/goquery v1.5.1 // indirect
 	github.com/antchfx/htmlquery v1.2.3 // indirect
 	github.com/antchfx/xmlquery v1.2.4 // indirect
-	github.com/bwmarrin/dca v0.0.0-20180611192139-99fdf68b87a1 // indirect
 	github.com/bwmarrin/discordgo v0.20.3
 	github.com/disintegration/imaging v1.6.2
 	github.com/esimov/caire v1.2.5
@@ -35,6 +34,7 @@ require (
 	github.com/smartystreets/assertions v1.1.0 // indirect
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
+	github.com/spf13/cobra v1.0.0
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.6.3
@@ -46,5 +46,4 @@ require (
 	google.golang.org/appengine v1.6.6 // indirect
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 	gopkg.in/ini.v1 v1.55.0 // indirect
-	layeh.com/gopus v0.0.0-20161224163843-0ebf989153aa // indirect
 )

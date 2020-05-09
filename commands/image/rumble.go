@@ -24,7 +24,7 @@ func init() {
 	}
 }
 
-var Rumble = &hanamaru.Command{
+var Rumble *hanamaru.Command = &hanamaru.Command{
 	Name:               "rumble",
 	PermissionRequired: 0,
 	Exec: func(ctx *hanamaru.Context) error {
