@@ -7,6 +7,7 @@ import (
 	"github.com/magefile/mage/mg" // mg contains helpful utility functions, like Deps
 	"github.com/magefile/mage/sh"
 	"os"
+	"path/filepath"
 )
 
 // Default target to run when none is specified
@@ -48,14 +49,26 @@ func Build() error {
 	return nil
 }
 
+func BuildDocker() error {
+	mg.SerialDeps(InstallDeps, Generate)
+	fmt.Println("Building for Docker")
+	return sh.Run("go", "build", "-tags", "ij,jp", "-o", "hanamaru")
+}
+
 func Test() error {
 	fmt.Println("Running tests...")
 	return sh.Run("go", "test", "./...")
 }
 
 func Generate() error {
-	fmt.Println("Running Go generate...")
+	mg.SerialDeps(LinkCommands)
+	fmt.Println("Generating Necessary Code...")
 	return sh.Run("go", "generate")
+}
+
+func LinkCommands() error {
+	fmt.Println("Linking Commands...")
+	return sh.Run("go", "run", filepath.FromSlash("./tools/cmd/gen_command_imports.go"))
 }
 
 // Manage your deps, or running package managers.

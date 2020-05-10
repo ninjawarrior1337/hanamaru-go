@@ -6,6 +6,7 @@ import (
 	"go/parser"
 	"go/token"
 	"html/template"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -15,29 +16,33 @@ var registerCommandTemplate = template.Must(template.New("register_commands").Pa
 package main
 
 import(
-	{{range .}}"hanamaru/commands/{{.Pkg}}"
-	{{end}}
+	{{- range $index, $e := .}}
+	"hanamaru/commands/{{$index}}"
+	{{- end}}
 )
 
 func init() {
-	{{range .}}hanamaru.AddCommand({{.Pkg}}.{{.Name}})
+	{{- range $i, $e := .}}
+	{{- range $e}}
+	commands = append(commands, {{$i}}.{{.}})
+	{{- end}}
 	{{end}}
 }
 `))
 
-type CommandDef struct {
-	Pkg  string
-	Name string
-}
-
 func main() {
-	var commands []CommandDef
-	filepath.Walk("./commands", func(path string, info os.FileInfo, err error) error {
+	var commandDefs = map[string][]string{}
+
+	err := filepath.Walk("commands", func(path string, info os.FileInfo, err error) error {
 		var fset token.FileSet
 		file, _ := parser.ParseFile(&fset, path, nil, parser.ParseComments)
 		if file != nil {
+			if len(file.Comments) > 0 {
+				if strings.Contains(file.Comments[0].List[0].Text, "+build") {
+					return nil
+				}
+			}
 			ast.Inspect(file, func(node ast.Node) bool {
-				//fmt.Println(node)
 				d, ok := node.(*ast.ValueSpec)
 				if ok {
 					if len(d.Values) > 0 {
@@ -46,7 +51,8 @@ func main() {
 							x, ok := ur.X.(*ast.CompositeLit)
 							if ok {
 								if strings.Contains(fmt.Sprintf("%v", x.Type), "Command") {
-									commands = append(commands, CommandDef{file.Name.String(), d.Names[0].String()})
+									fmt.Println("Adding: " + d.Names[0].String())
+									commandDefs[file.Name.String()] = append(commandDefs[file.Name.String()], d.Names[0].String())
 								}
 							}
 						}
@@ -57,8 +63,16 @@ func main() {
 		}
 		return nil
 	})
-	f, _ := os.OpenFile("./commands.go", os.O_CREATE, 775)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	f, err := os.OpenFile("./commands.gen.go", os.O_CREATE|os.O_RDWR, 775)
+	if err != nil {
+		log.Fatalln(err)
+	}
 	defer f.Close()
 	f.Truncate(0)
-	registerCommandTemplate.Execute(f, commands)
+
+	registerCommandTemplate.Execute(f, commandDefs)
 }

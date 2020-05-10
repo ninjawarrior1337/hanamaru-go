@@ -2,11 +2,6 @@ package main
 
 import (
 	"github.com/spf13/viper"
-	"hanamaru/commands/debug"
-	"hanamaru/commands/fun"
-	"hanamaru/commands/image"
-	"hanamaru/commands/info"
-	"hanamaru/commands/music"
 	"hanamaru/events"
 	"hanamaru/hanamaru"
 	"log"
@@ -19,7 +14,8 @@ import (
 
 var config *viper.Viper
 
-var optionals []*hanamaru.Command
+var commands []*hanamaru.Command
+var optionalEvents []interface{}
 
 func init() {
 	config = viper.New()
@@ -52,34 +48,16 @@ func main() {
 	bot.SetOwner(config.GetString("owner"))
 	bot.EnableHelpCommand()
 
-	bot.AddCommand(debug.ListArgs)
-
-	bot.AddCommand(info.About)
-	bot.AddCommand(info.Avatar)
-	bot.AddCommand(info.Invite)
-
-	bot.AddCommand(image.Rumble)
-	bot.AddCommand(image.CAS)
-	bot.AddCommand(image.Jpg)
-	bot.AddCommand(image.Latex)
-	bot.AddCommand(image.Stretch)
-	bot.AddCommand(image.Bishop)
-
-	bot.AddCommand(music.Leave)
-	bot.AddCommand(music.Join)
-	bot.AddCommand(music.Play)
-
-	bot.AddCommand(fun.Dance)
-	bot.AddCommand(fun.Suntsu)
-	bot.AddCommand(fun.Talk)
-
-	for _, command := range optionals {
+	for _, command := range commands {
 		bot.AddCommand(command)
+	}
+
+	for _, event := range optionalEvents {
+		bot.AddHandler(event)
 	}
 
 	bot.AddHandler(events.Nhentai)
 	bot.AddHandler(events.ReactionExpansion)
-	bot.AddHandler(events.RepeatMessage)
 
 	signal.Notify(syscallChan, syscall.SIGTERM, syscall.SIGINT)
 	<-syscallChan
