@@ -5,5 +5,5 @@ package main
 import "hanamaru/commands/jp"
 
 func init() {
-	optionals = append(optionals, jp.Romaji, jp.Pitch)
+	commands = append(commands, jp.Romaji, jp.Pitch)
 }
