@@ -18,7 +18,7 @@ var Pitch = &hanamaru.Command{
 			return err
 		}
 		phrase, pitchData := jp.ScrapePitchAccent(arg)
-		img, err := jp.RenderPitchAccent(phrase, pitchData)
+		img, err := jp.RenderPitchAccentConcurrent(phrase, pitchData)
 		if err != nil {
 			return err
 		}
