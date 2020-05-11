@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-var LatexTemplate = template.Must(template.New("latex").Parse(`
+var Template = template.Must(template.New("latex").Parse(`
 \documentclass{article}
 \begin{document}
 ${{.}}$
@@ -21,8 +21,8 @@ ${{.}}$
 func GenerateLatexImage(latex string) (image.Image, error) {
 	// Get filename
 	buf := new(bytes.Buffer)
-	LatexTemplate.Execute(buf, latex)
-	postData := LatexRequest{
+	Template.Execute(buf, latex)
+	postData := Request{
 		Code:   buf.String(),
 		Format: "png",
 	}
@@ -36,7 +36,7 @@ func GenerateLatexImage(latex string) (image.Image, error) {
 	}
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
-	var lResp LatexResponse
+	var lResp Response
 	err = json.Unmarshal(body, &lResp)
 	if err != nil {
 		return nil, fmt.Errorf("failed to unmarshal response: %v", err)
