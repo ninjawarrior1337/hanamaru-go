@@ -3,6 +3,7 @@ package info
 import (
 	"github.com/bwmarrin/discordgo"
 	"hanamaru/hanamaru"
+	"os"
 )
 
 var About = &hanamaru.Command{
@@ -17,7 +18,18 @@ var About = &hanamaru.Command{
 			Image:       nil,
 			Thumbnail:   &discordgo.MessageEmbedThumbnail{URL: "https://cdn.discordapp.com/avatars/405165920563232778/fd1727a732d6605c49f0b729c4bb6e89.png"},
 			Video:       nil,
-			Fields:      []*discordgo.MessageEmbedField{},
+			Fields: []*discordgo.MessageEmbedField{
+				{
+					Name: "Build Date",
+					Value: func() string {
+						if bd := os.Getenv("BUILD_DATE"); bd == "" {
+							return "develop"
+						} else {
+							return bd
+						}
+					}(),
+				},
+			},
 			Author: &discordgo.MessageEmbedAuthor{
 				URL:          "https://github.com/ninjawarrior1337/hanamaru-go",
 				Name:         "Hanamaru",
