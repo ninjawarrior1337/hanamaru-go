@@ -14,11 +14,11 @@ var Latex = &hanamaru.Command{
 		if err != nil {
 			return err
 		}
-		image, err := latex.GeneratePNGFromLatex(input)
+		image, err := latex.GenerateLatexImage(input)
 		if err != nil {
 			return err
 		}
-		ctx.ReplyFile("latex.png", image)
+		ctx.ReplyPNGImg(image, "latex")
 		return nil
 	},
 }

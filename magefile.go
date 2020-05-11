@@ -52,7 +52,7 @@ func Build() error {
 func BuildDocker() error {
 	mg.SerialDeps(InstallDeps, Generate)
 	fmt.Println("Building for Docker")
-	return sh.Run("go", "build", "-tags", "ij,jp", "-o", "hanamaru")
+	return sh.Run("go", "build", "-tags", "ij,jp", `-ldflags=-s -w`, "-o", "hanamaru")
 }
 
 func Test() error {

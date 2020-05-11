@@ -1,9 +1,12 @@
 package hanamaru
 
 import (
+	"bytes"
 	"fmt"
 	"hanamaru/hanamaru/voice"
 	"image"
+	"image/jpeg"
+	"image/png"
 	"io"
 	"net/http"
 	"net/url"
@@ -34,6 +37,26 @@ func (c *Context) Reply(m string) (*discordgo.Message, error) {
 
 func (c *Context) ReplyFile(name string, r io.Reader) (*discordgo.Message, error) {
 	return c.ChannelFileSend(c.ChannelID, name, r)
+}
+
+//This is name without extension btw, the following function will add it by itself
+func (c *Context) ReplyPNGImg(img image.Image, name string) (*discordgo.Message, error) {
+	var pngBuf = new(bytes.Buffer)
+	err := png.Encode(pngBuf, img)
+	if err != nil {
+		return nil, fmt.Errorf("failed to encode png image, please report to Treelar#1974: %v", err)
+	}
+	return c.ReplyFile(name+".png", pngBuf)
+}
+
+//This is name without extension btw, the following function will add it by itself
+func (c *Context) ReplyJPGImg(img image.Image, name string) (*discordgo.Message, error) {
+	jpgBuf := new(bytes.Buffer)
+	err := jpeg.Encode(jpgBuf, img, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to encode jpg image, please report to Treelar#1974: %v", err)
+	}
+	return c.ReplyFile(name+".jpg", jpgBuf)
 }
 
 func (c *Context) GetImage(idx uint) (*gg.Context, error) {
@@ -109,6 +132,13 @@ func (c *Context) GetArgIndex(idx int) (string, error) {
 		return "", fmt.Errorf("failed to get arg with index %v", idx)
 	}
 	return c.Args[idx], nil
+}
+
+func (c *Context) GetArgIndexDefault(idx int, def string) string {
+	if idx > len(c.Args)-1 {
+		return def
+	}
+	return c.Args[idx]
 }
 
 func (c *Context) GetPreviousMessage() (*discordgo.Message, error) {

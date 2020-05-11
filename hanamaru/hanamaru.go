@@ -2,6 +2,7 @@ package hanamaru
 
 import (
 	"github.com/bwmarrin/discordgo"
+	bolt "go.etcd.io/bbolt"
 	"hanamaru/hanamaru/voice"
 	"log"
 	"strings"
@@ -13,6 +14,7 @@ type Hanamaru struct {
 	*discordgo.Session
 	VoiceContext *voice.Context
 	commands     []*Command
+	db           *bolt.DB
 }
 
 func New(t, prefix string) (bot *Hanamaru) {
@@ -88,5 +90,8 @@ func (h *Hanamaru) Close() {
 	err := h.Session.Close()
 	if err != nil {
 		log.Fatalf("Failed to exit the bot correctly: %v", err)
+	}
+	if h.db != nil {
+		h.db.Close()
 	}
 }

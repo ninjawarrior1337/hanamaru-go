@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/spf13/viper"
 	"hanamaru/events"
 	"hanamaru/hanamaru"
@@ -47,6 +48,11 @@ func main() {
 
 	bot.SetOwner(config.GetString("owner"))
 	bot.EnableHelpCommand()
+
+	err := bot.SetupDB()
+	if err != nil {
+		fmt.Println("Failed to setup db: " + err.Error())
+	}
 
 	for _, command := range commands {
 		bot.AddCommand(command)

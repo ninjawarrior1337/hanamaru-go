@@ -2,14 +2,11 @@ package util
 
 import (
 	"fmt"
-	"os"
 	"testing"
 )
 
 func TestParseNhentai(t *testing.T) {
-	if _, isCI := os.LookupEnv("CI"); isCI {
-		return
-	}
+	PerformOnlyCI(t)
 	n, _ := ParseNhentai(308389)
 
 	fmt.Println(n)
