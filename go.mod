@@ -24,6 +24,7 @@ require (
 	github.com/jonas747/ogg v0.0.0-20161220051205-b4f6f4cf3757 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/magefile/mage v1.9.0
+	github.com/magiconair/properties v1.8.1
 	github.com/markbates/pkger v0.15.1
 	github.com/mitchellh/mapstructure v1.3.0 // indirect
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
@@ -38,6 +39,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.6.3
 	github.com/stretchr/testify v1.5.1
+	go.etcd.io/bbolt v1.3.2
 	golang.org/x/crypto v0.0.0-20200429183012-4b2356b1ed79 // indirect
 	golang.org/x/image v0.0.0-20200430140353-33d19683fad8
 	golang.org/x/net v0.0.0-20200501053045-e0ff5e5a1de5 // indirect

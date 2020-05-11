@@ -3,7 +3,6 @@
 package image
 
 import (
-	"bytes"
 	"fmt"
 	"github.com/fogleman/gg"
 	"github.com/golang/freetype/truetype"
@@ -11,7 +10,6 @@ import (
 	"golang.org/x/image/font"
 	"hanamaru/hanamaru"
 	"image"
-	"image/jpeg"
 	"io/ioutil"
 )
 
@@ -46,7 +44,7 @@ var Bishop = &hanamaru.Command{
 		}
 		madText := prevMsg.Content
 		if madText == "" {
-			return fmt.Errorf("please use ths command after a message that contains text")
+			return fmt.Errorf("please use this command after a message that contains text")
 		}
 		//Code borrowed from meme.go
 		textCtx := gg.NewContext(244, 376)
@@ -71,9 +69,9 @@ var Bishop = &hanamaru.Command{
 
 		finalImg := gg.NewContextForImage(baseImg)
 		finalImg.DrawImage(textCtx.Image(), 505, 124)
-		jpgOut := new(bytes.Buffer)
-		jpeg.Encode(jpgOut, finalImg.Image(), nil)
-		ctx.ReplyFile("bishop.jpg", jpgOut)
+
+		ctx.ReplyJPGImg(finalImg.Image(), "bishop")
+
 		return nil
 	},
 }

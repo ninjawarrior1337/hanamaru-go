@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
-	"io"
+	"image"
 	"io/ioutil"
 	"net/http"
 )
@@ -18,7 +18,7 @@ ${{.}}$
 \end{document}
 `))
 
-func GeneratePNGFromLatex(latex string) (io.Reader, error) {
+func GenerateLatexImage(latex string) (image.Image, error) {
 	// Get filename
 	buf := new(bytes.Buffer)
 	LatexTemplate.Execute(buf, latex)
@@ -51,6 +51,8 @@ func GeneratePNGFromLatex(latex string) (io.Reader, error) {
 		return nil, fmt.Errorf("failed to get finished image: %v", err)
 	}
 	defer resp.Body.Close()
-	body, _ = ioutil.ReadAll(resp.Body)
-	return bytes.NewReader(body), nil
+
+	img, _, _ := image.Decode(resp.Body)
+
+	return img, nil
 }

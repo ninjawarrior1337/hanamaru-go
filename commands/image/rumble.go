@@ -1,12 +1,10 @@
 package image
 
 import (
-	"bytes"
 	"github.com/disintegration/imaging"
 	"github.com/markbates/pkger"
 	"hanamaru/hanamaru"
 	"image"
-	"image/jpeg"
 	"log"
 )
 
@@ -35,9 +33,7 @@ var Rumble *hanamaru.Command = &hanamaru.Command{
 		mutRCtx := imaging.Resize(rumbleImg, input.Width(), input.Height()/2, imaging.Lanczos)
 		input.DrawImage(mutRCtx, 0, 0)
 
-		buf := new(bytes.Buffer)
-		jpeg.Encode(buf, input.Image(), nil)
-		ctx.ChannelFileSend(ctx.ChannelID, "bruh.jpg", buf)
+		ctx.ReplyJPGImg(input.Image(), "rumble")
 		return nil
 	},
 }

@@ -1,12 +1,10 @@
 package image
 
 import (
-	"bytes"
 	"fmt"
 	"hanamaru/hanamaru"
 	"image"
 	"image/draw"
-	"image/jpeg"
 	"strconv"
 )
 import "github.com/esimov/caire"
@@ -56,9 +54,7 @@ var CAS = &hanamaru.Command{
 			return fmt.Errorf("failed to CAS image: %v", err)
 		}
 
-		outBuf := new(bytes.Buffer)
-		jpeg.Encode(outBuf, imgOut, nil)
-		ctx.ReplyFile("cas.jpg", outBuf)
+		ctx.ReplyJPGImg(imgOut, "cas")
 		return nil
 	},
 }
