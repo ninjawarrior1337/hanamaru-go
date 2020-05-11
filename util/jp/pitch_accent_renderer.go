@@ -73,22 +73,26 @@ func RenderPitchAccentConcurrent(phrase string, pitchInfo []int) (image.Image, e
 		return nil, fmt.Errorf("please make sure the phrase is sent with the correct pitch info")
 	}
 
+	type Rune struct {
+		Pos int
+		Img image.Image
+	}
+
 	var wg sync.WaitGroup
 	ctx := gg.NewContext(KanaWidth*utf8.RuneCountInString(phrase), KanaHeight)
 
-	chars := strings.Split(phrase, "")
-	for i, mora := range chars {
+	for i, mora := range strings.Split(phrase, "") {
+		wg.Add(1)
 		prevPitch := GetPitchAccentIndex(i-1, pitchInfo)
 		nextPitch := GetPitchAccentIndex(i+1, pitchInfo)
 		go func(mora string, pos int) {
-			wg.Add(1)
 			defer wg.Done()
 			runeImg := RenderRune(mora, pitchInfo[pos], prevPitch, nextPitch)
 			ctx.DrawImage(runeImg, pos*KanaWidth, 0)
 		}(mora, i)
 	}
-
 	wg.Wait()
+
 	return ctx.Image(), nil
 }
 
