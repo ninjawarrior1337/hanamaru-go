@@ -22,8 +22,8 @@ func TestRenderRune(t *testing.T) {
 	io.Copy(file, buff)
 }
 
-func TestRenderPitchAccent(t *testing.T) {
-	img, err := RenderPitchAccent("にほんじん", []int{0, 1, 1, 1, 0})
+func TestRenderPitchAccentConcurrent(t *testing.T) {
+	img, err := RenderPitchAccentConcurrent("にほんじん", []int{0, 1, 1, 1, 0})
 	if err != nil {
 		t.Error(err)
 	}
@@ -35,4 +35,29 @@ func TestRenderPitchAccent(t *testing.T) {
 	defer file.Close()
 
 	io.Copy(file, buff)
+}
+
+func benchmarkRenderPitchAccent(b *testing.B, phrase string, pitchData []int) {
+	for n := 0; n < b.N; n++ {
+		RenderPitchAccent(phrase, pitchData)
+	}
+}
+
+func benchmarkRenderPitchAccentConcurrent(b *testing.B, phrase string, pitchData []int) {
+	for n := 0; n < b.N; n++ {
+		RenderPitchAccentConcurrent(phrase, pitchData)
+	}
+}
+
+func BenchmarkRenderPitchAccentNihongo(b *testing.B) {
+	benchmarkRenderPitchAccent(b, "にほんご", []int{0, 1, 1, 1})
+}
+func BenchmarkRenderPitchAccentNihongoConcurrent(b *testing.B) {
+	benchmarkRenderPitchAccentConcurrent(b, "にほんご", []int{0, 1, 1, 1})
+}
+func BenchmarkRenderPitchAccentILikeJapanese(b *testing.B) {
+	benchmarkRenderPitchAccent(b, "にほんごがすきです", []int{0, 1, 1, 1, 1, 0, 1, 0, 0})
+}
+func BenchmarkRenderPitchAccentILikeJapaneseConcurrent(b *testing.B) {
+	benchmarkRenderPitchAccentConcurrent(b, "にほんごがすきです", []int{0, 1, 1, 1, 1, 0, 1, 0, 0})
 }
