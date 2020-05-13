@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"hanamaru/hanamaru/voice"
 	"image"
+	"image/gif"
 	"image/jpeg"
 	"image/png"
 	"io"
@@ -57,6 +58,15 @@ func (c *Context) ReplyJPGImg(img image.Image, name string) (*discordgo.Message,
 		return nil, fmt.Errorf("failed to encode jpg image, please report to Treelar#1974: %v", err)
 	}
 	return c.ReplyFile(name+".jpg", jpgBuf)
+}
+
+func (c *Context) ReplyGIFImg(img *gif.GIF, name string) (*discordgo.Message, error) {
+	gifBuf := new(bytes.Buffer)
+	err := gif.EncodeAll(gifBuf, img)
+	if err != nil {
+		return nil, fmt.Errorf("failed to encode gif image, please report to Treelar#1974: %v", err)
+	}
+	return c.ReplyFile(name+".gif", gifBuf)
 }
 
 func (c *Context) GetImage(idx uint) (*gg.Context, error) {

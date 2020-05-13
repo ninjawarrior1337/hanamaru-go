@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"hanamaru/hanamaru"
 	"hanamaru/hanamaru/voice"
-	"path/filepath"
 )
 
 var Play = &hanamaru.Command{
@@ -21,10 +20,10 @@ var Play = &hanamaru.Command{
 			return fmt.Errorf("this isnt supposed to happen what")
 		}
 
-		//queue.Push(&voice.YoutubeSrc{YtUrl:"https://www.youtube.com/watch?v=XQsMmtC91b4"})
-		fp, _ := filepath.Abs("assets/test.mp3")
-		fmt.Println(fp)
-		queue.Push(&voice.StaticFile{FilePath: fp})
+		queue.Push(&voice.YoutubeSrc{YtUrl: "https://www.youtube.com/watch?v=XQsMmtC91b4"})
+		//fp, _ := filepath.Abs("assets/test.mp3")
+		//fmt.Println(fp)
+		//queue.Push(&voice.StaticFile{FilePath: fp})
 		if queue.Length() == 1 {
 			song := queue.Pop()
 			//ctx.Reply(fmt.Sprintf("%v", song))
