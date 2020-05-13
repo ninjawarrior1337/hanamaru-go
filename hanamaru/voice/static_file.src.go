@@ -26,6 +26,8 @@ func (s *StaticFile) Play(vc *discordgo.VoiceConnection) (*dca.StreamingSession,
 	if err != nil {
 		return nil, fmt.Errorf("failed to play file: %v: %v", s.FilePath, err)
 	}
+	//file, _ := os.Open(s.FilePath)
+	//decoder := dca.NewDecoder(file)
 	fmt.Println(s.ec.Stats())
 	done := make(chan error)
 	stream := dca.NewStream(s.ec, vc, done)

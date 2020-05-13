@@ -12,7 +12,7 @@ type YoutubeSrc struct {
 	ec    *dca.EncodeSession
 }
 
-func (s *YoutubeSrc) Play(vc *discordgo.VoiceConnection) (chan error, error) {
+func (s *YoutubeSrc) Play(vc *discordgo.VoiceConnection) (*dca.StreamingSession, error) {
 	videoInfo, err := ytdl.GetVideoInfo(s.YtUrl)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get video info: %v", err)
@@ -30,6 +30,9 @@ func (s *YoutubeSrc) Play(vc *discordgo.VoiceConnection) (chan error, error) {
 	}
 
 	done := make(chan error)
-	dca.NewStream(s.ec, vc, done)
-	return done, err
+	stream := dca.NewStream(s.ec, vc, done)
+	err = <-done
+	fmt.Println(err)
+	fmt.Println(s.ec.FFMPEGMessages())
+	return stream, err
 }
