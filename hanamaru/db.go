@@ -1,9 +1,57 @@
 package hanamaru
 
 import (
+	"fmt"
 	bolt "go.etcd.io/bbolt"
 	"os"
 )
+
+var configCommand = &Command{
+	Name:               "config",
+	PermissionRequired: 0,
+	OwnerOnly:          false,
+	Help:               "",
+	Exec: func(ctx *Context) error {
+		err := ctx.Hanamaru.db.Update(func(tx *bolt.Tx) error {
+			b, err := tx.CreateBucketIfNotExists([]byte(ctx.GuildID))
+			if err != nil {
+				return err
+			}
+			subCommand := ctx.GetArgIndexDefault(0, "get")
+			switch subCommand {
+			case "get":
+				key := ctx.GetArgIndexDefault(1, "")
+				if key == "" {
+					output := ""
+					b.ForEach(func(k, v []byte) error {
+						output += fmt.Sprintf("**%s**: %s\n", k, v)
+						return nil
+					})
+					ctx.Reply(output)
+				} else {
+					v := b.Get([]byte(key))
+					ctx.Reply(fmt.Sprintf("%s -> %s", key, v))
+				}
+			case "set":
+				key, err := ctx.GetArgIndex(1)
+				if err != nil {
+					return err
+				}
+				val, err := ctx.GetArgIndex(2)
+				if err != nil {
+					return err
+				}
+				ctx.Set(key, val)
+				ctx.Reply(fmt.Sprintf("Attempted to set: %s -> %s", key, val))
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+		return nil
+	},
+}
 
 func (h *Hanamaru) SetupDB() (err error) {
 	if os.Getenv("IN_DOCKER") == "true" {
@@ -13,6 +61,7 @@ func (h *Hanamaru) SetupDB() (err error) {
 		}
 	}
 	h.db, err = bolt.Open("db.bbolt", 0666, nil)
+	h.AddCommand(configCommand)
 	if err != nil {
 		return
 	}
