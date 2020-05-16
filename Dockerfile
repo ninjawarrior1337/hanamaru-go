@@ -8,5 +8,6 @@ RUN mage buildDocker
 
 FROM alpine
 WORKDIR /app
+ENV IN_DOCKER true
 COPY --from=builder /app/hanamaru .
 CMD ["./hanamaru"]
