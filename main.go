@@ -64,6 +64,7 @@ func main() {
 
 	bot.AddHandler(events.Nhentai)
 	bot.AddHandler(events.ReactionExpansion)
+	bot.AddHandler(events.Roboragi)
 
 	bot.Session.UpdateListeningStatus("Perry the Platypus (Extended Version)")
 
