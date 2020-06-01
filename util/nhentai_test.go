@@ -6,7 +6,7 @@ import (
 )
 
 func TestParseNhentai(t *testing.T) {
-	PerformOnlyCI(t)
+	PerformNotCI(t)
 	n, _ := ParseNhentai(308389)
 
 	fmt.Println(n)

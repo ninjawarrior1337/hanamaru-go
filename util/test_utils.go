@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func PerformOnlyCI(t *testing.T) {
+func PerformNotCI(t *testing.T) {
 	if _, isCI := os.LookupEnv("CI"); isCI {
 		t.SkipNow()
 	}

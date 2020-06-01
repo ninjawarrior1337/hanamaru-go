@@ -6,7 +6,7 @@ import (
 )
 
 func TestLookupMinecraft(t *testing.T) {
-	PerformOnlyCI(t)
+	PerformNotCI(t)
 	p, err := LookupMinecraft("ninjawarrior1337")
 	if err != nil {
 		t.Error(err)

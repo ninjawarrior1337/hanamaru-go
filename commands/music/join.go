@@ -18,6 +18,7 @@ var Join = &hanamaru.Command{
 		if err != nil {
 			return fmt.Errorf("failed to join VC: %v", err)
 		}
+
 		ctx.VoiceContext.VCs[ctx.GuildID] = vc
 
 		if _, ok := ctx.VoiceContext.Queues[ctx.GuildID]; !ok {
