@@ -19,14 +19,14 @@ var Roboragi = func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if err != nil {
 			return
 		}
-		_, err = s.ChannelMessageSendEmbed(m.ChannelID, RoboragiEmbed(media))
+		_, err = s.ChannelMessageSendEmbed(m.ChannelID, roboragiEmbed(media))
 		if err != nil {
 			s.ChannelMessageSend(m.ChannelID, err.Error())
 		}
 	}
 }
 
-func RoboragiEmbed(media util.ALMedia) *discordgo.MessageEmbed {
+func roboragiEmbed(media util.ALMedia) *discordgo.MessageEmbed {
 	return &discordgo.MessageEmbed{
 		URL:         media.SiteURL,
 		Type:        "rich",
@@ -34,23 +34,25 @@ func RoboragiEmbed(media util.ALMedia) *discordgo.MessageEmbed {
 		Description: strings.TrimSpace(strings.ReplaceAll(media.Description, "<br>", "")),
 		Timestamp:   "",
 		Color:       0,
-		Footer:      &discordgo.MessageEmbedFooter{Text: "Status: " + strings.Title(strings.ToLower(media.Status))},
+		Footer:      &discordgo.MessageEmbedFooter{Text: "Status: " + strings.Title(strings.ToLower(media.Status)) + " | " + "Type: " + string(media.Type)},
 		Thumbnail:   &discordgo.MessageEmbedThumbnail{URL: media.CoverImage.Large},
 		Provider:    nil,
-		Fields: []*discordgo.MessageEmbedField{
+		Fields:      generateFields(media),
+	}
+}
+
+func generateFields(media util.ALMedia) []*discordgo.MessageEmbedField {
+	var f []*discordgo.MessageEmbedField
+	if media.Type == util.Anime {
+		f = []*discordgo.MessageEmbedField{
 			{
-				Name:   "Episode Count",
+				Name:   "Episodes",
 				Value:  strconv.Itoa(media.Episodes),
 				Inline: true,
 			},
 			{
 				Name:   "Episode Duration",
-				Value:  strconv.Itoa(media.Duration),
-				Inline: true,
-			},
-			{
-				Name:   "Score",
-				Value:  strconv.Itoa(media.AverageScore),
+				Value:  strconv.Itoa(media.Duration) + " Minutes",
 				Inline: true,
 			},
 			{
@@ -58,11 +60,31 @@ func RoboragiEmbed(media util.ALMedia) *discordgo.MessageEmbed {
 				Value:  strconv.Itoa(media.SeasonYear),
 				Inline: true,
 			},
+		}
+	} else {
+		f = []*discordgo.MessageEmbedField{
 			{
-				Name:   "Genres",
-				Value:  strings.Join(media.Genres, ", "),
+				Name:   "Volumes",
+				Value:  strconv.Itoa(media.Volumes),
 				Inline: true,
 			},
-		},
+			{
+				Name:   "Chapters",
+				Value:  strconv.Itoa(media.Chapters),
+				Inline: true,
+			},
+		}
 	}
+	f = append(f,
+		&discordgo.MessageEmbedField{
+			Name:   "Score",
+			Value:  strconv.Itoa(media.AverageScore),
+			Inline: true,
+		},
+		&discordgo.MessageEmbedField{
+			Name:   "Genres",
+			Value:  strings.Join(media.Genres, ", "),
+			Inline: true,
+		})
+	return f
 }

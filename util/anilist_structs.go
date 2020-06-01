@@ -9,15 +9,25 @@ var SearchQuery = `query {
     coverImage {
       large
     }
+    type
     status
-    duration
     seasonYear
     episodes
+    duration
+    chapters
+    volumes
     description
     genres
     averageScore
   }
 }`
+
+type MediaType string
+
+const (
+	Manga MediaType = "MANGA"
+	Anime           = "ANIME"
+)
 
 type ALRequest struct {
 	Query string `json:"query"`
@@ -37,11 +47,14 @@ type ALMedia struct {
 	CoverImage struct {
 		Large string `json:"large"`
 	} `json:"coverImage"`
-	Status       string   `json:"status"`
-	Duration     int      `json:"duration"`
-	SeasonYear   int      `json:"seasonYear"`
-	Episodes     int      `json:"episodes"`
-	Description  string   `json:"description"`
-	Genres       []string `json:"genres"`
-	AverageScore int      `json:"averageScore"`
+	Type         MediaType `json:"type"`
+	Status       string    `json:"status"`
+	SeasonYear   int       `json:"seasonYear"`
+	Episodes     int       `json:"episodes"`
+	Duration     int       `json:"duration"`
+	Chapters     int       `json:"chapters"`
+	Volumes      int       `json:"volumes"`
+	Description  string    `json:"description"`
+	Genres       []string  `json:"genres"`
+	AverageScore int       `json:"averageScore"`
 }
