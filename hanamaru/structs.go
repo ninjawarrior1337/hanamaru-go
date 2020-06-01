@@ -13,7 +13,6 @@ import (
 	"net/url"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/fogleman/gg"
 )
 
 type Command struct {
@@ -69,7 +68,7 @@ func (c *Context) ReplyGIFImg(img *gif.GIF, name string) (*discordgo.Message, er
 	return c.ReplyFile(name+".gif", gifBuf)
 }
 
-func (c *Context) GetImage(idx uint) (*gg.Context, error) {
+func (c *Context) GetImage(idx uint) (image.Image, error) {
 	var imgUrl string
 
 	if len(c.Message.Attachments) <= 0 {
@@ -96,7 +95,7 @@ func (c *Context) GetImage(idx uint) (*gg.Context, error) {
 		return nil, fmt.Errorf("failed to decode image sent: %v", img)
 	}
 
-	return gg.NewContextForImage(img), nil
+	return img, nil
 }
 
 func (c *Context) GetUser(idx int) (*discordgo.User, error) {

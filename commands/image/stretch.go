@@ -14,7 +14,7 @@ var Stretch = &hanamaru.Command{
 		if err != nil {
 			return err
 		}
-		resizedImg := imaging.Resize(img.Image(), img.Width()*2, img.Height(), imaging.Lanczos)
+		resizedImg := imaging.Resize(img, img.Bounds().Max.X*2, img.Bounds().Max.Y, imaging.Lanczos)
 		ctx.ReplyPNGImg(resizedImg, "resize")
 		return nil
 	},
