@@ -45,9 +45,9 @@ var CAS = &hanamaru.Command{
 		nH, _ := strconv.Atoi(heightArg)
 		p := NewProcessor(nW, nH)
 
-		b := img.Image().Bounds()
+		b := img.Bounds()
 		m := image.NewNRGBA(b)
-		draw.Draw(m, b, img.Image(), b.Min, draw.Src)
+		draw.Draw(m, b, img, b.Min, draw.Src)
 
 		imgOut, err := p.Resize(m)
 		if err != nil {

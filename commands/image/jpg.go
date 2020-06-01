@@ -16,7 +16,7 @@ var Jpg = &hanamaru.Command{
 		}
 
 		outBuf := new(bytes.Buffer)
-		err = jpeg.Encode(outBuf, img.Image(), &jpeg.Options{Quality: 1})
+		err = jpeg.Encode(outBuf, img, &jpeg.Options{Quality: 1})
 		if err != nil {
 			return err
 		}
