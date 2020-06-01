@@ -1,6 +1,7 @@
 package music
 
 import (
+	"errors"
 	"fmt"
 	"hanamaru/hanamaru"
 	"hanamaru/hanamaru/voice"
@@ -20,7 +21,12 @@ var Play = &hanamaru.Command{
 			return fmt.Errorf("this isnt supposed to happen what")
 		}
 
-		queue.Push(&voice.YoutubeSrc{YtUrl: "https://www.youtube.com/watch?v=XQsMmtC91b4"})
+		videoUrl, err := ctx.GetArgIndex(0)
+		if err != nil {
+			return errors.New("please pass in a valid video URL")
+		}
+
+		queue.Push(voice.NewYTSrc(videoUrl, ctx.VoiceContext.Ytdl))
 		//fp, _ := filepath.Abs("assets/test.mp3")
 		//fmt.Println(fp)
 		//queue.Push(&voice.StaticFile{FilePath: fp})
