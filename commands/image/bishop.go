@@ -17,7 +17,7 @@ var baseImg image.Image
 var fontFace font.Face
 
 func init() {
-	f, err := pkger.Open("/assets/thefrick.png")
+	f, err := pkger.Open("/assets/imgs/thefrick.png")
 	if err != nil {
 		panic("failed to load bishop base image")
 	}

@@ -7,6 +7,7 @@ COPY ./ /app/
 RUN mage buildDocker
 
 FROM alpine
+RUN apk add --no-cache youtube-dl
 WORKDIR /app
 ENV IN_DOCKER true
 COPY --from=builder /app/hanamaru .

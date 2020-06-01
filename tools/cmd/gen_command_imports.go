@@ -46,13 +46,15 @@ func main() {
 				d, ok := node.(*ast.ValueSpec)
 				if ok {
 					if len(d.Values) > 0 {
-						ur, ok := d.Values[0].(*ast.UnaryExpr)
-						if ok {
-							x, ok := ur.X.(*ast.CompositeLit)
+						for _, vs := range d.Values {
+							ur, ok := vs.(*ast.UnaryExpr)
 							if ok {
-								if strings.Contains(fmt.Sprintf("%v", x.Type), "Command") {
-									fmt.Println("Adding: " + d.Names[0].String())
-									commandDefs[file.Name.String()] = append(commandDefs[file.Name.String()], d.Names[0].String())
+								x, ok := ur.X.(*ast.CompositeLit)
+								if ok {
+									if strings.Contains(fmt.Sprintf("%v", x.Type), "Command") {
+										fmt.Println("Adding: " + d.Names[0].String())
+										commandDefs[file.Name.String()] = append(commandDefs[file.Name.String()], d.Names[0].String())
+									}
 								}
 							}
 						}
