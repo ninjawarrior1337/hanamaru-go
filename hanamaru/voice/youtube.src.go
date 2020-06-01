@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/bwmarrin/discordgo"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/jonas747/dca"
 	"strings"
 )
@@ -25,7 +24,6 @@ func (s *YoutubeSrc) Play(vc *discordgo.VoiceConnection) (*dca.StreamingSession,
 		return nil, fmt.Errorf("failed to get video info: %v", err)
 	}
 	var format Formats
-	spew.Dump(videoInfo.Formats)
 	for _, f := range videoInfo.Formats {
 		if strings.ContainsAny(f.Format, "audio only") && f.Abr > 50 {
 			format = f
