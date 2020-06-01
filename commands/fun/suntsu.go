@@ -11,7 +11,7 @@ import (
 )
 
 var quotes []string
-var quoteTempl = template.Must(template.New("suntsu").Parse(`"{{.}}" - Cock and Balls, Art of Dick`))
+var quoteTempl = template.Must(template.New("suntsu").Parse(`"{{.}}" - Sun Tsu, Art of War`))
 
 func init() {
 	file, err := pkger.Open("/assets/suntsu.json")
