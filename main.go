@@ -66,7 +66,7 @@ func main() {
 	bot.AddHandler(events.ReactionExpansion)
 	bot.AddHandler(events.Roboragi)
 
-	bot.Session.UpdateListeningStatus("Perry the Platypus (Extended Version)")
+	bot.Session.UpdateListeningStatus("Perry the Platypus - Extended Version")
 
 	signal.Notify(syscallChan, syscall.SIGTERM, syscall.SIGINT)
 	<-syscallChan

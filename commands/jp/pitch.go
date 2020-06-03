@@ -11,6 +11,7 @@ import (
 
 var Pitch = &hanamaru.Command{
 	Name:               "pitch",
+	Help:               "Generates a Dogen-style pitch accent diagram. Uses OJAD Suzuki-kun for pitch info",
 	PermissionRequired: 0,
 	Exec: func(ctx *hanamaru.Context) error {
 		arg, err := ctx.GetArgIndex(0)
