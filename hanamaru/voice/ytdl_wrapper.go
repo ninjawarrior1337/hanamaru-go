@@ -11,12 +11,17 @@ type Ytdl struct {
 	Path string
 }
 
-func NewYTDL(path string) (*Ytdl, error) {
-	if path == "" {
+func NewYTDL(patharg ...string) (*Ytdl, error) {
+	var path string
+	if len(patharg) > 0 {
+		path = patharg[0]
+
+	} else {
 		if path = findYtdl(); path == "" {
 			return nil, errors.New("cannot find youtubedl automatically, please specify a path")
 		}
 	}
+
 	return &Ytdl{Path: path}, nil
 }
 
