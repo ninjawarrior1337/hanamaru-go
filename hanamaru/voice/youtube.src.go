@@ -42,3 +42,7 @@ func (s *YoutubeSrc) Play(vc *discordgo.VoiceConnection) (*dca.StreamingSession,
 	stream := dca.NewStream(s.ec, vc, done)
 	return stream, done, nil
 }
+
+func (s *YoutubeSrc) Cleanup() {
+	s.ec.Cleanup()
+}

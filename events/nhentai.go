@@ -15,7 +15,13 @@ var Nhentai = func(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.Bot || len(m.Mentions) > 0 {
 		return
 	}
-
+	//TODO: Have unified way to get the active prefix of the bot
+	if strings.HasPrefix(m.Content, "!") {
+		return
+	}
+	if channel, _ := s.Channel(m.ChannelID); channel != nil && !channel.NSFW {
+		return
+	}
 	matches, err := ParseStringWithSixDigits(m.Content)
 	if err != nil {
 		return

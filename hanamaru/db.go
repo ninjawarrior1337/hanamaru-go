@@ -9,8 +9,8 @@ import (
 var configCommand = &Command{
 	Name:               "config",
 	PermissionRequired: 0,
-	OwnerOnly:          false,
-	Help:               "",
+	OwnerOnly:          true,
+	Help:               "Manage the key-value store of the bot",
 	Exec: func(ctx *Context) error {
 		err := ctx.Hanamaru.db.Update(func(tx *bolt.Tx) error {
 			b, err := tx.CreateBucketIfNotExists([]byte(ctx.GuildID))
@@ -27,6 +27,10 @@ var configCommand = &Command{
 						output += fmt.Sprintf("**%s**: %s\n", k, v)
 						return nil
 					})
+					if output == "" {
+						ctx.Reply("No values saved on this server")
+						return nil
+					}
 					ctx.Reply(output)
 				} else {
 					v := b.Get([]byte(key))
@@ -41,7 +45,10 @@ var configCommand = &Command{
 				if err != nil {
 					return err
 				}
-				ctx.Set(key, val)
+				err = ctx.setFromTx(tx, key, val)
+				if err != nil {
+					return err
+				}
 				ctx.Reply(fmt.Sprintf("Attempted to set: %s -> %s", key, val))
 			}
 			return nil
@@ -68,14 +75,18 @@ func (h *Hanamaru) SetupDB() (err error) {
 	return nil
 }
 
-func (c *Context) Set(key, value string) {
-	c.Hanamaru.db.Update(func(tx *bolt.Tx) error {
-		b, err := tx.CreateBucketIfNotExists([]byte(c.GuildID))
-		if err != nil {
-			return err
-		}
-		return b.Put([]byte(key), []byte(value))
+func (c *Context) Set(key, value string) error {
+	return c.Hanamaru.db.Update(func(tx *bolt.Tx) error {
+		return c.setFromTx(tx, key, value)
 	})
+}
+
+func (c *Context) setFromTx(tx *bolt.Tx, key, value string) error {
+	b, err := tx.CreateBucketIfNotExists([]byte(c.GuildID))
+	if err != nil {
+		return err
+	}
+	return b.Put([]byte(key), []byte(value))
 }
 
 func (c *Context) Get(key string) string {

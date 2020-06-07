@@ -35,6 +35,10 @@ func (c *Context) Reply(m string) (*discordgo.Message, error) {
 	return c.ChannelMessageSend(c.ChannelID, m)
 }
 
+func (c *Context) ReplyEmbed(embed *discordgo.MessageEmbed) (*discordgo.Message, error) {
+	return c.ChannelMessageSendEmbed(c.ChannelID, embed)
+}
+
 func (c *Context) ReplyFile(name string, r io.Reader) (*discordgo.Message, error) {
 	return c.ChannelFileSend(c.ChannelID, name, r)
 }
@@ -120,7 +124,7 @@ func (c *Context) GetMember(idx int) (*discordgo.Member, error) {
 	return c.Session.GuildMember(c.GuildID, c.Mentions[idx].ID)
 }
 
-func (c *Context) GetVoiceChannnel() (*discordgo.Channel, error) {
+func (c *Context) GetSenderVoiceChannel() (*discordgo.Channel, error) {
 	guild, err := c.Guild(c.GuildID)
 	if err != nil {
 		return nil, fmt.Errorf("you can only use this command in a guild")
