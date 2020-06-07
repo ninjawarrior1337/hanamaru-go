@@ -14,6 +14,10 @@ var Roboragi = func(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.Bot {
 		return
 	}
+	//TODO: Have unified way to get the active prefix of the bot
+	if strings.HasPrefix(m.Content, "!") {
+		return
+	}
 	if matches := animeRegex.FindAllStringSubmatch(m.Content, -1); len(matches) > 0 {
 		media, err := util.GetAnimeInfo(matches[0][1])
 		if err != nil {

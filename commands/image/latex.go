@@ -1,6 +1,7 @@
 package image
 
 import (
+	"github.com/disintegration/imaging"
 	"hanamaru/hanamaru"
 	"hanamaru/util/latex"
 )
@@ -15,10 +16,11 @@ var Latex = &hanamaru.Command{
 			return err
 		}
 		image, err := latex.GenerateLatexImage(input)
+		neg := imaging.Invert(image)
 		if err != nil {
 			return err
 		}
-		ctx.ReplyPNGImg(image, "latex")
+		ctx.ReplyPNGImg(neg, "latex")
 		return nil
 	},
 }

@@ -46,6 +46,19 @@ func (h *Hanamaru) SetOwner(id string) {
 	h.ownerid = id
 }
 
+func HasPermission(s *discordgo.Session, member *discordgo.Member, permission int) (bool, error) {
+	for _, rid := range member.Roles {
+		role, err := s.State.Role(member.GuildID, rid)
+		if err != nil {
+			return false, err
+		}
+		if role.Permissions&permission != 0 {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
 func (h *Hanamaru) AddCommand(cmd *Command) {
 	if cmd.Name == "" {
 		panic("A command must not have an empty name!")
@@ -59,6 +72,10 @@ func (h *Hanamaru) AddCommand(cmd *Command) {
 		}
 		if cmd.OwnerOnly && h.ownerid != m.Author.ID {
 			s.ChannelMessageSend(m.ChannelID, "ERROR: You must be the owner of this instance to run this command")
+			return
+		}
+		if ok, _ := HasPermission(s, m.Member, cmd.PermissionRequired); cmd.PermissionRequired > 0 && !ok {
+			s.ChannelMessageSend(m.ChannelID, "ERROR: You don't have the required permissions to run this command")
 			return
 		}
 		argsString := strings.TrimPrefix(m.Content, h.prefix+cmd.Name)
@@ -81,6 +98,10 @@ func (h *Hanamaru) AddCommand(cmd *Command) {
 
 func (h *Hanamaru) EnableHelpCommand() {
 	h.AddCommand(help)
+}
+
+func (h *Hanamaru) EnableDB() {
+
 }
 
 func (h *Hanamaru) Close() {
