@@ -14,7 +14,7 @@ type Hanamaru struct {
 	*discordgo.Session
 	VoiceContext *voice.Context
 	commands     []*Command
-	db           *bolt.DB
+	Db           *bolt.DB
 }
 
 func New(t, prefix string) (bot *Hanamaru) {
@@ -112,7 +112,7 @@ func (h *Hanamaru) Close() {
 	if err != nil {
 		log.Fatalf("Failed to exit the bot correctly: %v", err)
 	}
-	if h.db != nil {
-		h.db.Close()
+	if h.Db != nil {
+		h.Db.Close()
 	}
 }
