@@ -12,7 +12,7 @@ var configCommand = &Command{
 	OwnerOnly:          true,
 	Help:               "Manage the key-value store of the bot",
 	Exec: func(ctx *Context) error {
-		err := ctx.Hanamaru.db.Update(func(tx *bolt.Tx) error {
+		err := ctx.Hanamaru.Db.Update(func(tx *bolt.Tx) error {
 			b, err := tx.CreateBucketIfNotExists([]byte(ctx.GuildID))
 			if err != nil {
 				return err
@@ -62,12 +62,12 @@ var configCommand = &Command{
 
 func (h *Hanamaru) SetupDB() (err error) {
 	if os.Getenv("IN_DOCKER") == "true" {
-		h.db, err = bolt.Open("/data/db.bbolt", 0666, nil)
+		h.Db, err = bolt.Open("/data/Db.bbolt", 0666, nil)
 		if err != nil {
 			return
 		}
 	}
-	h.db, err = bolt.Open("db.bbolt", 0666, nil)
+	h.Db, err = bolt.Open("Db.bbolt", 0666, nil)
 	h.AddCommand(configCommand)
 	if err != nil {
 		return
@@ -76,7 +76,7 @@ func (h *Hanamaru) SetupDB() (err error) {
 }
 
 func (c *Context) Set(key, value string) error {
-	return c.Hanamaru.db.Update(func(tx *bolt.Tx) error {
+	return c.Hanamaru.Db.Update(func(tx *bolt.Tx) error {
 		return c.setFromTx(tx, key, value)
 	})
 }
@@ -91,7 +91,7 @@ func (c *Context) setFromTx(tx *bolt.Tx, key, value string) error {
 
 func (c *Context) Get(key string) string {
 	var vCopy []byte
-	c.Hanamaru.db.View(func(tx *bolt.Tx) error {
+	c.Hanamaru.Db.View(func(tx *bolt.Tx) error {
 		b, err := tx.CreateBucketIfNotExists([]byte(c.GuildID))
 		if err != nil {
 			return err
