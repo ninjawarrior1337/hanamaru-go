@@ -2,17 +2,17 @@ package info
 
 import (
 	"fmt"
-	"hanamaru/hanamaru"
-	"hanamaru/util"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
+	"github.com/ninjawarrior1337/hanamaru-go/util"
 	"strconv"
 )
 
-var ExchangeRates = &hanamaru.Command{
+var ExchangeRates = &framework.Command{
 	Name:               "xr",
 	PermissionRequired: 0,
 	OwnerOnly:          false,
 	Help:               "Provides conversion from one currency to another: <val> <fromcurr> <tocurr (Default USD)>",
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		currValStr, err := ctx.GetArgIndex(0)
 		if err != nil {
 			return nil

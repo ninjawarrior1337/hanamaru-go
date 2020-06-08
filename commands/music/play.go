@@ -3,14 +3,14 @@ package music
 import (
 	"errors"
 	"fmt"
-	"hanamaru/hanamaru"
-	"hanamaru/hanamaru/voice"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
+	"github.com/ninjawarrior1337/hanamaru-go/framework/voice"
 )
 
-var Play = &hanamaru.Command{
+var Play = &framework.Command{
 	Name:               "play",
 	PermissionRequired: 0,
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		_, ok := ctx.VoiceContext.VCs[ctx.GuildID]
 		if !ok {
 			return fmt.Errorf("cannot play when im not connected")

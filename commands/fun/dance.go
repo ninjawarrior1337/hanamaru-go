@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/markbates/pkger"
-	"hanamaru/hanamaru"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"strings"
 )
 
@@ -16,10 +16,10 @@ func init() {
 	json.NewDecoder(file).Decode(&dmappings)
 }
 
-var Dance = &hanamaru.Command{
+var Dance = &framework.Command{
 	Name:               "dance",
 	PermissionRequired: 0,
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		input, err := ctx.GetArgIndex(0)
 		if err != nil {
 			return fmt.Errorf("please type something in (if it has spaces use quotes)")

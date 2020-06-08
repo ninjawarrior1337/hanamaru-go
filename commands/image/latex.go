@@ -2,15 +2,15 @@ package image
 
 import (
 	"github.com/disintegration/imaging"
-	"hanamaru/hanamaru"
-	"hanamaru/util/latex"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
+	"github.com/ninjawarrior1337/hanamaru-go/util/latex"
 )
 
-var Latex = &hanamaru.Command{
+var Latex = &framework.Command{
 	Name:               "latex",
 	PermissionRequired: 0,
 	OwnerOnly:          false,
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		input, err := ctx.GetArgIndex(0)
 		if err != nil {
 			return err

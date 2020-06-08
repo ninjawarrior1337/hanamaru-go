@@ -2,17 +2,17 @@ package fun
 
 import (
 	"fmt"
-	"hanamaru/hanamaru"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"math/rand"
 	"strconv"
 )
 
-var Roll = &hanamaru.Command{
+var Roll = &framework.Command{
 	Name:               "roll",
 	PermissionRequired: 0,
 	OwnerOnly:          false,
 	Help:               "",
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		rollStr := ctx.GetArgIndexDefault(0, "100")
 		rollInt, err := strconv.Atoi(rollStr)
 		if err != nil {

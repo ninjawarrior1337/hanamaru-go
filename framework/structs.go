@@ -1,9 +1,9 @@
-package hanamaru
+package framework
 
 import (
 	"bytes"
 	"fmt"
-	"hanamaru/hanamaru/voice"
+	"github.com/ninjawarrior1337/hanamaru-go/framework/voice"
 	"image"
 	"image/gif"
 	"image/jpeg"
