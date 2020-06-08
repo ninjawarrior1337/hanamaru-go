@@ -2,16 +2,16 @@ package fun
 
 import (
 	"fmt"
-	"hanamaru/hanamaru"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 )
 
 //Im bored lol
-var Talk = &hanamaru.Command{
+var Talk = &framework.Command{
 	Name:               "talk",
 	PermissionRequired: 0,
 	OwnerOnly:          true,
 	Help:               "",
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		chatId, err := ctx.GetArgIndex(0)
 		if err != nil {
 			return err

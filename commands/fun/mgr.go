@@ -3,15 +3,15 @@ package fun
 import (
 	"errors"
 	"github.com/bwmarrin/discordgo"
-	"hanamaru/hanamaru"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 )
 
-var Migrate = &hanamaru.Command{
+var Migrate = &framework.Command{
 	Name:               "mgr",
 	PermissionRequired: discordgo.PermissionManageChannels | discordgo.PermissionManageServer,
 	OwnerOnly:          false,
 	Help:               "",
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		toVC, err := ctx.GetArgIndex(0)
 		if err != nil {
 			return err

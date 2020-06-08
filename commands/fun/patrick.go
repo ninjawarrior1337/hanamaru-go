@@ -3,7 +3,7 @@ package fun
 import (
 	"github.com/markbates/pkger"
 	"github.com/markbates/pkger/pkging"
-	"hanamaru/hanamaru"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"strconv"
 )
 
@@ -13,12 +13,12 @@ func getPatrickImage(fileName string) pkging.File {
 	return f
 }
 
-var Patrick = &hanamaru.Command{
+var Patrick = &framework.Command{
 	Name:               "patrick",
 	PermissionRequired: 0,
 	OwnerOnly:          false,
 	Help:               "",
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		neck, _ := strconv.Atoi(ctx.GetArgIndexDefault(0, "0"))
 		if neck < 0 {
 			ctx.ReplyFile("0r.jpg", getPatrickImage("0r.jpg"))

@@ -1,4 +1,4 @@
-module hanamaru
+module github.com/ninjawarrior1337/hanamaru-go
 
 go 1.13
 

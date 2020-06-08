@@ -24,8 +24,8 @@ func Build() error {
 
 	for _, cOS := range OSes {
 		for _, tag := range TAGS {
-			fmt.Println("Generating hanamaru OS: " + cOS + " TAG: " + tag)
-			fileName := "hanamaru-" + cOS
+			fmt.Println("Generating framework OS: " + cOS + " TAG: " + tag)
+			fileName := "framework-" + cOS
 			if tag != "" {
 				fileName += "-" + tag
 			}
@@ -52,7 +52,7 @@ func Build() error {
 func BuildDocker() error {
 	mg.SerialDeps(InstallDeps, Generate)
 	fmt.Println("Building for Docker")
-	return sh.Run("go", "build", "-tags", "ij,jp", `-ldflags=-s -w`, "-o", "hanamaru")
+	return sh.Run("go", "build", "-tags", "ij,jp", `-ldflags=-s -w`, "-o", "framework")
 }
 
 func Test() error {

@@ -7,8 +7,8 @@ import (
 	"github.com/fogleman/gg"
 	"github.com/golang/freetype/truetype"
 	"github.com/markbates/pkger"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"golang.org/x/image/font"
-	"hanamaru/hanamaru"
 	"image"
 	"io/ioutil"
 )
@@ -35,9 +35,9 @@ func init() {
 	fontFace = truetype.NewFace(prarsedFont, &truetype.Options{Size: 32})
 }
 
-var Bishop = &hanamaru.Command{
+var Bishop = &framework.Command{
 	Name: "bic",
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		prevMsg, err := ctx.GetPreviousMessage()
 		if err != nil {
 			return err

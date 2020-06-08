@@ -3,8 +3,8 @@
 package main
 
 import (
-	"hanamaru/commands/image"
-	"hanamaru/events"
+	"github.com/ninjawarrior1337/hanamaru-go/commands/image"
+	"github.com/ninjawarrior1337/hanamaru-go/events"
 )
 
 func init() {

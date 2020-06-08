@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/ninjawarrior1337/hanamaru-go/events"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"github.com/spf13/viper"
-	"hanamaru/events"
-	"hanamaru/hanamaru"
 	"log"
 	"os"
 	"os/signal"
@@ -15,7 +15,7 @@ import (
 
 var config *viper.Viper
 
-var commands []*hanamaru.Command
+var commands []*framework.Command
 var optionalEvents []interface{}
 
 func init() {
@@ -43,7 +43,7 @@ func init() {
 func main() {
 	var syscallChan = make(chan os.Signal)
 
-	bot := hanamaru.New("Bot "+config.GetString("token"), config.GetString("prefix"))
+	bot := framework.New("Bot "+config.GetString("token"), config.GetString("prefix"))
 	defer bot.Close()
 
 	bot.SetOwner(config.GetString("owner"))

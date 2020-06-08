@@ -2,14 +2,14 @@ package image
 
 import (
 	"github.com/disintegration/imaging"
-	"hanamaru/hanamaru"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 )
 
-var Stretch = &hanamaru.Command{
+var Stretch = &framework.Command{
 	Name:               "stretch",
 	PermissionRequired: 0,
 	OwnerOnly:          false,
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		img, err := ctx.GetImage(0)
 		if err != nil {
 			return err

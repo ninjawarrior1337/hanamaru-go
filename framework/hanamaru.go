@@ -1,9 +1,9 @@
-package hanamaru
+package framework
 
 import (
 	"github.com/bwmarrin/discordgo"
+	"github.com/ninjawarrior1337/hanamaru-go/framework/voice"
 	bolt "go.etcd.io/bbolt"
-	"hanamaru/hanamaru/voice"
 	"log"
 	"strings"
 )

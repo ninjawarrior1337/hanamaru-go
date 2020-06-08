@@ -1,13 +1,13 @@
 package music
 
 import (
-	"hanamaru/hanamaru"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 )
 
-var Join = &hanamaru.Command{
+var Join = &framework.Command{
 	Name:               "join",
 	PermissionRequired: 0,
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		channel, err := ctx.GetSenderVoiceChannel()
 		if err != nil {
 			return err

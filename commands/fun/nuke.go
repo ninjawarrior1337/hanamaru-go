@@ -2,16 +2,16 @@ package fun
 
 import (
 	"github.com/bwmarrin/discordgo"
-	"hanamaru/hanamaru"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"strings"
 )
 
-var Nuke = &hanamaru.Command{
+var Nuke = &framework.Command{
 	Name:               "nuke",
 	PermissionRequired: 0,
 	OwnerOnly:          true,
 	Help:               "NEVER RUN THIS UNLESS U WANT TO NUKE THE SERVER",
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		var outerr error
 		ctx.Reply("Are you 100% sure you want to do this: (y or n)")
 		ctx.Hanamaru.AddHandlerOnce(func(session *discordgo.Session, m *discordgo.MessageCreate) {

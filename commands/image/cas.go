@@ -2,7 +2,7 @@ package image
 
 import (
 	"fmt"
-	"hanamaru/hanamaru"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"image"
 	"image/draw"
 	"strconv"
@@ -25,10 +25,10 @@ func NewProcessor(width, height int) *caire.Processor {
 	}
 }
 
-var CAS = &hanamaru.Command{
+var CAS = &framework.Command{
 	Name:               "cas",
 	PermissionRequired: 0,
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		img, err := ctx.GetImage(0)
 		if err != nil {
 			return err
