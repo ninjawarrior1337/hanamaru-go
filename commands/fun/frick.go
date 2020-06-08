@@ -3,15 +3,15 @@ package fun
 import (
 	"errors"
 	"github.com/bwmarrin/discordgo"
-	"hanamaru/hanamaru"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 )
 
-var Frick = &hanamaru.Command{
+var Frick = &framework.Command{
 	Name:               "frick",
 	PermissionRequired: discordgo.PermissionManageChannels | discordgo.PermissionManageServer,
 	OwnerOnly:          false,
 	Help:               "",
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		tmpCh, err := ctx.GuildChannelCreate(ctx.GuildID, "this is death", discordgo.ChannelTypeGuildVoice)
 		if err != nil {
 			return errors.New("failed to create temporary channel, check the permissions given to the bot")

@@ -4,14 +4,15 @@ package jp
 
 import (
 	"fmt"
-	"hanamaru/hanamaru"
-	"hanamaru/util/jp"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
+
+	"github.com/ninjawarrior1337/hanamaru-go/util/jp"
 )
 
-var Romaji = &hanamaru.Command{
+var Romaji = &framework.Command{
 	Name:               "roma",
 	PermissionRequired: 0,
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		input, err := ctx.GetArgIndex(0)
 		if err != nil {
 			return fmt.Errorf("please input a string to turn into romaji")

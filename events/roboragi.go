@@ -2,7 +2,7 @@ package events
 
 import (
 	"github.com/bwmarrin/discordgo"
-	"hanamaru/util"
+	"github.com/ninjawarrior1337/hanamaru-go/util"
 	"regexp"
 	"strconv"
 	"strings"

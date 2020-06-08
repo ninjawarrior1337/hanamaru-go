@@ -4,7 +4,7 @@ import (
 	"github.com/disintegration/imaging"
 	"github.com/fogleman/gg"
 	"github.com/markbates/pkger"
-	"hanamaru/hanamaru"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"image"
 	"log"
 )
@@ -23,10 +23,10 @@ func init() {
 	}
 }
 
-var Rumble = &hanamaru.Command{
+var Rumble = &framework.Command{
 	Name:               "rumble",
 	PermissionRequired: 0,
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		input, err := ctx.GetImage(0)
 		if err != nil {
 			return err

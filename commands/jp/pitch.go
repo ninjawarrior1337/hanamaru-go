@@ -4,16 +4,17 @@ package jp
 
 import (
 	"bytes"
-	"hanamaru/hanamaru"
-	"hanamaru/util/jp"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
+
+	"github.com/ninjawarrior1337/hanamaru-go/util/jp"
 	"image/png"
 )
 
-var Pitch = &hanamaru.Command{
+var Pitch = &framework.Command{
 	Name:               "pitch",
 	Help:               "Generates a Dogen-style pitch accent diagram. Uses OJAD Suzuki-kun for pitch info",
 	PermissionRequired: 0,
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		arg, err := ctx.GetArgIndex(0)
 		if err != nil {
 			return err

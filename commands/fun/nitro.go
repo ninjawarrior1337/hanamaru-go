@@ -2,15 +2,15 @@ package fun
 
 import (
 	"github.com/bwmarrin/discordgo"
-	"hanamaru/hanamaru"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 )
 
-var Nitro = &hanamaru.Command{
+var Nitro = &framework.Command{
 	Name:               "nitro",
 	PermissionRequired: 0,
 	OwnerOnly:          false,
 	Help:               "",
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		channel, err := ctx.Channel(ctx.ChannelID)
 		if err != nil {
 			return err

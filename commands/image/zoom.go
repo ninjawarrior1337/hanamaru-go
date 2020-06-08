@@ -2,17 +2,17 @@ package image
 
 import (
 	"fmt"
-	"hanamaru/hanamaru"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"image/gif"
 	"net/http"
 )
 
-var Zoom = &hanamaru.Command{
+var Zoom = &framework.Command{
 	Name:               "zoom",
 	PermissionRequired: 0,
 	OwnerOnly:          false,
 	Help:               "",
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		msg, err := ctx.GetPreviousMessage()
 		if err != nil {
 			return err

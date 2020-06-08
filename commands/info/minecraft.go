@@ -2,16 +2,16 @@ package info
 
 import (
 	"fmt"
-	"hanamaru/hanamaru"
-	"hanamaru/util"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
+	"github.com/ninjawarrior1337/hanamaru-go/util"
 )
 
-var Minecraft = &hanamaru.Command{
+var Minecraft = &framework.Command{
 	Name:               "mc",
 	PermissionRequired: 0,
 	OwnerOnly:          false,
 	Help:               "",
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		mcName, err := ctx.GetArgIndex(0)
 		rt := ctx.GetArgIndexDefault(1, util.Body)
 

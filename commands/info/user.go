@@ -3,14 +3,14 @@ package info
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
-	"hanamaru/hanamaru"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 )
 
-var UserInfo = &hanamaru.Command{
+var UserInfo = &framework.Command{
 	Name:               "user",
 	PermissionRequired: 0,
 	OwnerOnly:          false,
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		//ctx.Session.user
 		return nil
 	},

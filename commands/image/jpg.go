@@ -2,14 +2,14 @@ package image
 
 import (
 	"bytes"
-	"hanamaru/hanamaru"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"image/jpeg"
 )
 
-var Jpg = &hanamaru.Command{
+var Jpg = &framework.Command{
 	Name:               "jpg",
 	PermissionRequired: 0,
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		img, err := ctx.GetImage(0)
 		if err != nil {
 			return err

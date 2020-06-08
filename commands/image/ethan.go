@@ -4,8 +4,8 @@ import (
 	"github.com/fogleman/gg"
 	"github.com/golang/freetype/truetype"
 	"github.com/markbates/pkger"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"golang.org/x/image/font"
-	"hanamaru/hanamaru"
 	"image/color"
 	"io/ioutil"
 	"log"
@@ -30,12 +30,12 @@ func GetFont(size float64) font.Face {
 	return truetype.NewFace(f, &truetype.Options{Size: size})
 }
 
-var Ethan = &hanamaru.Command{
+var Ethan = &framework.Command{
 	Name:               "ethan",
 	PermissionRequired: 0,
 	OwnerOnly:          false,
 	Help:               "Generates an Ethan style meme",
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		img, err := ctx.GetImage(0)
 		if err != nil {
 			return err

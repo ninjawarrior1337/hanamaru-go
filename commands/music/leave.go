@@ -1,13 +1,11 @@
 package music
 
-import (
-	"hanamaru/hanamaru"
-)
+import "github.com/ninjawarrior1337/hanamaru-go/framework"
 
-var Leave = &hanamaru.Command{
+var Leave = &framework.Command{
 	Name:               "leave",
 	PermissionRequired: 0,
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		channel, err := ctx.GetSenderVoiceChannel()
 		if err != nil {
 			return err

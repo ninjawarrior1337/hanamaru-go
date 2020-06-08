@@ -2,7 +2,7 @@
 
 package events
 
-import "hanamaru/util"
+import "github.com/ninjawarrior1337/hanamaru-go/util"
 
 func init() {
 	expansionMap["🇮🇳"] = append([]string{"🆗"}, util.MustMapToEmoji("shiraz")...)

@@ -1,4 +1,4 @@
-package hanamaru
+package framework
 
 import (
 	"fmt"
@@ -62,12 +62,12 @@ var configCommand = &Command{
 
 func (h *Hanamaru) SetupDB() (err error) {
 	if os.Getenv("IN_DOCKER") == "true" {
-		h.Db, err = bolt.Open("/data/Db.bbolt", 0666, nil)
+		h.Db, err = bolt.Open("/data/db.bbolt", 0666, nil)
 		if err != nil {
 			return
 		}
 	}
-	h.Db, err = bolt.Open("Db.bbolt", 0666, nil)
+	h.Db, err = bolt.Open("db.bbolt", 0666, nil)
 	h.AddCommand(configCommand)
 	if err != nil {
 		return
