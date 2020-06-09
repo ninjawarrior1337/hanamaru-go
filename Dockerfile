@@ -7,6 +7,7 @@ COPY ./ /app/
 RUN mage buildDocker
 
 FROM alpine
+VOLUME /data
 RUN apk add --no-cache youtube-dl
 WORKDIR /app
 ENV IN_DOCKER true
