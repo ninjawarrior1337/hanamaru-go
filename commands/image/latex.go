@@ -1,24 +1,26 @@
 package image
 
 import (
-	"hanamaru/hanamaru"
-	"hanamaru/util/latex"
+	"github.com/disintegration/imaging"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
+	"github.com/ninjawarrior1337/hanamaru-go/util/latex"
 )
 
-var Latex = &hanamaru.Command{
+var Latex = &framework.Command{
 	Name:               "latex",
 	PermissionRequired: 0,
 	OwnerOnly:          false,
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		input, err := ctx.GetArgIndex(0)
 		if err != nil {
 			return err
 		}
-		image, err := latex.GeneratePNGFromLatex(input)
+		image, err := latex.GenerateLatexImage(input)
+		neg := imaging.Invert(image)
 		if err != nil {
 			return err
 		}
-		ctx.ReplyFile("latex.png", image)
+		ctx.ReplyPNGImg(neg, "latex")
 		return nil
 	},
 }

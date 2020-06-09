@@ -122,8 +122,8 @@ fabric.properties
 
 config.yml
 assets/test.mp3
+*.bbolt
 
 util/jp/*.png
 *.gen.go
-
 artifacts

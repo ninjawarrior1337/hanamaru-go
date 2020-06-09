@@ -1,15 +1,18 @@
-package hanamaru
+package framework
 
 import (
+	"bytes"
 	"fmt"
-	"hanamaru/hanamaru/voice"
+	"github.com/ninjawarrior1337/hanamaru-go/framework/voice"
 	"image"
+	"image/gif"
+	"image/jpeg"
+	"image/png"
 	"io"
 	"net/http"
 	"net/url"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/fogleman/gg"
 )
 
 type Command struct {
@@ -32,11 +35,44 @@ func (c *Context) Reply(m string) (*discordgo.Message, error) {
 	return c.ChannelMessageSend(c.ChannelID, m)
 }
 
+func (c *Context) ReplyEmbed(embed *discordgo.MessageEmbed) (*discordgo.Message, error) {
+	return c.ChannelMessageSendEmbed(c.ChannelID, embed)
+}
+
 func (c *Context) ReplyFile(name string, r io.Reader) (*discordgo.Message, error) {
 	return c.ChannelFileSend(c.ChannelID, name, r)
 }
 
-func (c *Context) GetImage(idx uint) (*gg.Context, error) {
+//This is name without extension btw, the following function will add it by itself
+func (c *Context) ReplyPNGImg(img image.Image, name string) (*discordgo.Message, error) {
+	var pngBuf = new(bytes.Buffer)
+	err := png.Encode(pngBuf, img)
+	if err != nil {
+		return nil, fmt.Errorf("failed to encode png image, please report to Treelar#1974: %v", err)
+	}
+	return c.ReplyFile(name+".png", pngBuf)
+}
+
+//This is name without extension btw, the following function will add it by itself
+func (c *Context) ReplyJPGImg(img image.Image, name string) (*discordgo.Message, error) {
+	jpgBuf := new(bytes.Buffer)
+	err := jpeg.Encode(jpgBuf, img, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to encode jpg image, please report to Treelar#1974: %v", err)
+	}
+	return c.ReplyFile(name+".jpg", jpgBuf)
+}
+
+func (c *Context) ReplyGIFImg(img *gif.GIF, name string) (*discordgo.Message, error) {
+	gifBuf := new(bytes.Buffer)
+	err := gif.EncodeAll(gifBuf, img)
+	if err != nil {
+		return nil, fmt.Errorf("failed to encode gif image, please report to Treelar#1974: %v", err)
+	}
+	return c.ReplyFile(name+".gif", gifBuf)
+}
+
+func (c *Context) GetImage(idx uint) (image.Image, error) {
 	var imgUrl string
 
 	if len(c.Message.Attachments) <= 0 {
@@ -63,7 +99,7 @@ func (c *Context) GetImage(idx uint) (*gg.Context, error) {
 		return nil, fmt.Errorf("failed to decode image sent: %v", img)
 	}
 
-	return gg.NewContextForImage(img), nil
+	return img, nil
 }
 
 func (c *Context) GetUser(idx int) (*discordgo.User, error) {
@@ -88,7 +124,7 @@ func (c *Context) GetMember(idx int) (*discordgo.Member, error) {
 	return c.Session.GuildMember(c.GuildID, c.Mentions[idx].ID)
 }
 
-func (c *Context) GetVoiceChannnel() (*discordgo.Channel, error) {
+func (c *Context) GetSenderVoiceChannel() (*discordgo.Channel, error) {
 	guild, err := c.Guild(c.GuildID)
 	if err != nil {
 		return nil, fmt.Errorf("you can only use this command in a guild")
@@ -109,6 +145,13 @@ func (c *Context) GetArgIndex(idx int) (string, error) {
 		return "", fmt.Errorf("failed to get arg with index %v", idx)
 	}
 	return c.Args[idx], nil
+}
+
+func (c *Context) GetArgIndexDefault(idx int, def string) string {
+	if idx > len(c.Args)-1 {
+		return def
+	}
+	return c.Args[idx]
 }
 
 func (c *Context) GetPreviousMessage() (*discordgo.Message, error) {

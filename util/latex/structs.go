@@ -7,14 +7,14 @@ const (
 	Error   Status = "error"
 )
 
-type LatexRequest struct {
+type Request struct {
 	Code    string `json:"code"`
 	Format  string `json:"format"`
 	Quality int    `json:"quality,omitempty"`
 	Density int    `json:"density,omitempty"`
 }
 
-type LatexResponse struct {
+type Response struct {
 	Status      Status `json:"status"`
 	Log         string `json:"log"`
 	Filename    string `json:"filename"`

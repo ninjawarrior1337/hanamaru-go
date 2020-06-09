@@ -2,8 +2,8 @@
 
 package main
 
-import "hanamaru/commands/jp"
+import "github.com/ninjawarrior1337/hanamaru-go/commands/jp"
 
 func init() {
-	optionals = append(optionals, jp.Romaji, jp.Pitch)
+	commands = append(commands, jp.Romaji, jp.Pitch)
 }

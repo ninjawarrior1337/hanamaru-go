@@ -2,12 +2,12 @@ package info
 
 import (
 	"fmt"
-	"hanamaru/hanamaru"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 )
 
-var Avatar = &hanamaru.Command{
+var Avatar = &framework.Command{
 	Name: "avatar",
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		user, err := ctx.GetUser(0)
 		if err != nil {
 			return fmt.Errorf("please enter a valid user")
