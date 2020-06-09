@@ -3,7 +3,7 @@ package events
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
-	"hanamaru/util"
+	"github.com/ninjawarrior1337/hanamaru-go/util"
 	"regexp"
 	"strconv"
 	"strings"
@@ -12,11 +12,19 @@ import (
 var nhr = regexp.MustCompile(`^(\d{6})$`)
 
 var Nhentai = func(s *discordgo.Session, m *discordgo.MessageCreate) {
+	content := m.Content
 	if m.Author.Bot || len(m.Mentions) > 0 {
 		return
 	}
-
-	matches, err := ParseStringWithSixDigits(m.Content)
+	//TODO: Have unified way to get the active prefix of the bot
+	if strings.HasPrefix(m.Content, "!") {
+		return
+	}
+	if channel, _ := s.Channel(m.ChannelID); channel != nil && !channel.NSFW {
+		return
+	}
+	content = strings.TrimSpace(content)
+	matches, err := ParseStringWithSixDigits(content)
 	if err != nil {
 		return
 	}
@@ -26,7 +34,10 @@ var Nhentai = func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if err != nil {
 			s.ChannelMessageSend(m.ChannelID, strconv.Itoa(match)+": Not Found")
 		}
-		s.ChannelMessageSendEmbed(m.ChannelID, ConstructEmbed(n))
+		_, err = s.ChannelMessageSendEmbed(m.ChannelID, ConstructEmbed(n))
+		if err != nil {
+			s.ChannelMessageSend(m.ChannelID, err.Error())
+		}
 	}
 }
 
@@ -58,6 +69,7 @@ func ParseStringWithSixDigits(msg string) ([]int, error) {
 
 func ConstructEmbed(n util.NHentai) *discordgo.MessageEmbed {
 	var fields []*discordgo.MessageEmbedField
+
 	for name, tags := range n.Tags {
 		fields = append(fields, &discordgo.MessageEmbedField{
 			Name:   name,

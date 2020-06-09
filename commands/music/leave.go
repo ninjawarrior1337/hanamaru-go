@@ -1,18 +1,19 @@
 package music
 
-import (
-	"fmt"
-	"hanamaru/hanamaru"
-)
+import "github.com/ninjawarrior1337/hanamaru-go/framework"
 
-var Leave = &hanamaru.Command{
+var Leave = &framework.Command{
 	Name:               "leave",
 	PermissionRequired: 0,
-	Exec: func(ctx *hanamaru.Context) error {
-		if val, ok := ctx.VoiceContext.VCs[ctx.GuildID]; !ok {
-			return fmt.Errorf("cannot disconnect when im not connected")
-		} else {
-			return val.Disconnect()
+	Exec: func(ctx *framework.Context) error {
+		channel, err := ctx.GetSenderVoiceChannel()
+		if err != nil {
+			return err
 		}
+		err = ctx.VoiceContext.LeaveChannel(ctx.GuildID, channel.ID)
+		if err != nil {
+			return err
+		}
+		return nil
 	},
 }

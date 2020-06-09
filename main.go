@@ -1,14 +1,10 @@
 package main
 
 import (
+	"fmt"
+	"github.com/ninjawarrior1337/hanamaru-go/events"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"github.com/spf13/viper"
-	"hanamaru/commands/debug"
-	"hanamaru/commands/fun"
-	"hanamaru/commands/image"
-	"hanamaru/commands/info"
-	"hanamaru/commands/music"
-	"hanamaru/events"
-	"hanamaru/hanamaru"
 	"log"
 	"os"
 	"os/signal"
@@ -19,7 +15,8 @@ import (
 
 var config *viper.Viper
 
-var optionals []*hanamaru.Command
+var commands []*framework.Command
+var optionalEvents []interface{}
 
 func init() {
 	config = viper.New()
@@ -46,38 +43,30 @@ func init() {
 func main() {
 	var syscallChan = make(chan os.Signal)
 
-	bot := hanamaru.New("Bot "+config.GetString("token"), config.GetString("prefix"))
+	bot := framework.New("Bot "+config.GetString("token"), config.GetString("prefix"))
 	defer bot.Close()
 
 	bot.SetOwner(config.GetString("owner"))
 	bot.EnableHelpCommand()
 
-	bot.AddCommand(debug.ListArgs)
+	err := bot.SetupDB()
+	if err != nil {
+		fmt.Println("Failed to setup db: " + err.Error())
+	}
 
-	bot.AddCommand(info.About)
-	bot.AddCommand(info.Avatar)
-
-	bot.AddCommand(image.Rumble)
-	bot.AddCommand(image.CAS)
-	bot.AddCommand(image.Jpg)
-	bot.AddCommand(image.Latex)
-	bot.AddCommand(image.Stretch)
-	bot.AddCommand(image.Bishop)
-
-	bot.AddCommand(music.Leave)
-	bot.AddCommand(music.Join)
-	bot.AddCommand(music.Play)
-
-	bot.AddCommand(fun.Dance)
-	bot.AddCommand(fun.Suntsu)
-
-	for _, command := range optionals {
+	for _, command := range commands {
 		bot.AddCommand(command)
 	}
 
+	for _, event := range optionalEvents {
+		bot.AddHandler(event)
+	}
+
 	bot.AddHandler(events.Nhentai)
-	bot.AddHandler(events.Boomer)
-	bot.AddHandler(events.RepeatMessage)
+	bot.AddHandler(events.ReactionExpansion)
+	bot.AddHandler(events.Roboragi)
+
+	bot.Session.UpdateListeningStatus("Perry the Platypus - Extended Version")
 
 	signal.Notify(syscallChan, syscall.SIGTERM, syscall.SIGINT)
 	<-syscallChan

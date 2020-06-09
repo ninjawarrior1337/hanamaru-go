@@ -1,4 +1,4 @@
-package hanamaru
+package framework
 
 import (
 	"fmt"

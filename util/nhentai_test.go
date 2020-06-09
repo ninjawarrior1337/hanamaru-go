@@ -1,17 +1,14 @@
 package util
 
 import (
-	"fmt"
-	"os"
+	"github.com/davecgh/go-spew/spew"
 	"testing"
 )
 
 func TestParseNhentai(t *testing.T) {
-	if _, isCI := os.LookupEnv("CI"); isCI {
-		return
-	}
+	PerformNotCI(t)
+	//I randomly picked these numbers
 	n, _ := ParseNhentai(308389)
 
-	fmt.Println(n)
-	fmt.Println(n.Tags)
+	spew.Dump(n)
 }

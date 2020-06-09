@@ -1,12 +1,10 @@
 package image
 
 import (
-	"bytes"
 	"fmt"
-	"hanamaru/hanamaru"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"image"
 	"image/draw"
-	"image/jpeg"
 	"strconv"
 )
 import "github.com/esimov/caire"
@@ -27,10 +25,10 @@ func NewProcessor(width, height int) *caire.Processor {
 	}
 }
 
-var CAS = &hanamaru.Command{
+var CAS = &framework.Command{
 	Name:               "cas",
 	PermissionRequired: 0,
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		img, err := ctx.GetImage(0)
 		if err != nil {
 			return err
@@ -47,18 +45,16 @@ var CAS = &hanamaru.Command{
 		nH, _ := strconv.Atoi(heightArg)
 		p := NewProcessor(nW, nH)
 
-		b := img.Image().Bounds()
+		b := img.Bounds()
 		m := image.NewNRGBA(b)
-		draw.Draw(m, b, img.Image(), b.Min, draw.Src)
+		draw.Draw(m, b, img, b.Min, draw.Src)
 
 		imgOut, err := p.Resize(m)
 		if err != nil {
 			return fmt.Errorf("failed to CAS image: %v", err)
 		}
 
-		outBuf := new(bytes.Buffer)
-		jpeg.Encode(outBuf, imgOut, nil)
-		ctx.ReplyFile("cas.jpg", outBuf)
+		ctx.ReplyJPGImg(imgOut, "cas")
 		return nil
 	},
 }
