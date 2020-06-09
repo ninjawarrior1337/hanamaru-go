@@ -8,13 +8,14 @@ import (
 	"github.com/magefile/mage/sh"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // Default target to run when none is specified
 // If not set, running mage will list available targets
 // var Default = Build
 
-var TAGS = []string{"", "jp", "ij"}
+var TAGS = []string{"", "jp,ij"}
 var OSes = []string{"windows", "linux"}
 
 func BuildCI() {
@@ -37,7 +38,7 @@ func build() error {
 			fmt.Println("Generating framework OS: " + cOS + " TAG: " + tag)
 			fileName := "framework-" + cOS
 			if tag != "" {
-				fileName += "-" + tag
+				fileName += "-" + strings.ReplaceAll(tag, ",", "-")
 			}
 			switch cOS {
 			case "windows":

@@ -29,7 +29,11 @@ Favorites such as poorly edited ゴゴゴ make a return plus some new ones such 
 ### And much more.
 
 ## Installing
-Ok, so about installing...there is no way to install yet besides building an executable by doing
+You can install from going to the latest build and grabbing one of the latest artifacts from [here](https://github.com/ninjawarrior1337/hanamaru-go/actions) <br>
+
+Or you may use the docker image hosted [here](https://github.com/ninjawarrior1337/hanamaru-go/actions) <br>
+
+Or you may build from source using these commands
 ```shell script
 git clone https://github.com/ninjawarrior1337/hanamaru-go
 go build
