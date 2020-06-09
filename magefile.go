@@ -17,9 +17,19 @@ import (
 var TAGS = []string{"", "jp", "ij"}
 var OSes = []string{"windows", "linux"}
 
-// A build step that requires additional params, or platform specific steps for example
-func Build() error {
+func BuildCI() {
+	mg.SerialDeps(InstallDeps, Generate)
+	build()
+}
+
+func Build() {
 	mg.SerialDeps(InstallDeps, Test, Generate)
+	build()
+}
+
+// A build step that requires additional params, or platform specific steps for example
+func build() error {
+
 	fmt.Println("Building...")
 
 	for _, cOS := range OSes {
