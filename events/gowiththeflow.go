@@ -1,3 +1,5 @@
+// +build ij
+
 package events
 
 import "github.com/bwmarrin/discordgo"

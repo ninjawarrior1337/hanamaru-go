@@ -1,19 +1,18 @@
 package image
 
 import (
-	"bytes"
 	"github.com/disintegration/imaging"
+	"github.com/fogleman/gg"
 	"github.com/markbates/pkger"
-	"hanamaru/hanamaru"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"image"
-	"image/jpeg"
 	"log"
 )
 
 var rumbleImg image.Image
 
 func init() {
-	file, err := pkger.Open("/assets/rumble.png")
+	file, err := pkger.Open("/assets/imgs/rumble.png")
 	if err != nil {
 		log.Fatalf("Failed to open rumble.png: %v", err)
 	}
@@ -24,20 +23,19 @@ func init() {
 	}
 }
 
-var Rumble = &hanamaru.Command{
+var Rumble = &framework.Command{
 	Name:               "rumble",
 	PermissionRequired: 0,
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 		input, err := ctx.GetImage(0)
 		if err != nil {
 			return err
 		}
-		mutRCtx := imaging.Resize(rumbleImg, input.Width(), input.Height()/2, imaging.Lanczos)
-		input.DrawImage(mutRCtx, 0, 0)
+		mutRCtx := imaging.Resize(rumbleImg, input.Bounds().Max.X, input.Bounds().Max.Y/2, imaging.Lanczos)
+		inputCtx := gg.NewContextForImage(input)
+		inputCtx.DrawImage(mutRCtx, 0, 0)
 
-		buf := new(bytes.Buffer)
-		jpeg.Encode(buf, input.Image(), nil)
-		ctx.ChannelFileSend(ctx.ChannelID, "bruh.jpg", buf)
+		ctx.ReplyJPGImg(inputCtx.Image(), "rumble")
 		return nil
 	},
 }

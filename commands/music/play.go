@@ -1,39 +1,33 @@
 package music
 
 import (
+	"errors"
 	"fmt"
-	"hanamaru/hanamaru"
-	"hanamaru/hanamaru/voice"
-	"path/filepath"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
+	"github.com/ninjawarrior1337/hanamaru-go/framework/voice"
 )
 
-var Play = &hanamaru.Command{
+var Play = &framework.Command{
 	Name:               "play",
 	PermissionRequired: 0,
-	Exec: func(ctx *hanamaru.Context) error {
-		vc, ok := ctx.VoiceContext.VCs[ctx.GuildID]
+	Exec: func(ctx *framework.Context) error {
+		_, ok := ctx.VoiceContext.VCs[ctx.GuildID]
 		if !ok {
 			return fmt.Errorf("cannot play when im not connected")
 		}
 
-		queue, ok := ctx.VoiceContext.Queues[ctx.GuildID]
+		queueChan, ok := ctx.VoiceContext.QueueChannels[ctx.GuildID]
 		if !ok {
-			return fmt.Errorf("this isnt supposed to happen what")
+			return fmt.Errorf("this isnt supposed to happen wot")
 		}
 
-		//queue.Push(&voice.YoutubeSrc{YtUrl:"https://www.youtube.com/watch?v=XQsMmtC91b4"})
-		fp, _ := filepath.Abs("assets/test.mp3")
-		queue.Push(&voice.StaticFile{FilePath: fp})
-		if queue.Length() == 1 {
-			song := queue.Pop()
-			//ctx.Reply(fmt.Sprintf("%v", song))
-			_, err := song.Play(vc)
-			if err != nil {
-				return fmt.Errorf("failed to play song: %v", err)
-			}
-			//err = <-doneChan
-
+		videoUrl, err := ctx.GetArgIndex(0)
+		if err != nil {
+			return errors.New("please pass in a valid video URL")
 		}
+
+		queueChan <- voice.NewYTSrc(videoUrl, ctx.VoiceContext.Ytdl)
+
 		return nil
 	},
 }

@@ -44,6 +44,9 @@ func ParseNhentai(digits int) (NHentai, error) {
 				return
 			}
 			tagName := strings.TrimSuffix(matches[0], ":")
+			if tagName == "Pages" || tagName == "Uploaded" {
+				return
+			}
 			var tagContent []string
 			element.ForEach("span > a", func(i int, element *colly.HTMLElement) {
 				matches := trg.FindStringSubmatch(element.Text)
@@ -56,18 +59,9 @@ func ParseNhentai(digits int) (NHentai, error) {
 		})
 	})
 
-	c.OnHTML("#info > div:nth-child(3)", func(element *colly.HTMLElement) {
-		matches := prg.FindAllStringSubmatch(element.Text, -1)
-		if len(matches) != 0 {
-			n.PageCount, _ = strconv.Atoi(matches[0][1])
-		}
-	})
-
-	c.OnHTML("#info > div:nth-child(4)", func(element *colly.HTMLElement) {
-		matches := prg.FindAllStringSubmatch(element.Text, -1)
-		if len(matches) != 0 {
-			n.PageCount, _ = strconv.Atoi(matches[0][1])
-		}
+	//Page number
+	c.OnHTML("#tags > div:nth-child(8) > span > a > span", func(element *colly.HTMLElement) {
+		n.PageCount, _ = strconv.Atoi(element.Text)
 	})
 
 	n.URL = "https://nhentai.net/g/" + strconv.Itoa(digits)

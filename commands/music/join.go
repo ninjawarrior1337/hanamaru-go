@@ -1,34 +1,21 @@
 package music
 
 import (
-	"fmt"
-	"hanamaru/hanamaru"
-	"hanamaru/hanamaru/voice"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 )
 
-var Join = &hanamaru.Command{
+var Join = &framework.Command{
 	Name:               "join",
 	PermissionRequired: 0,
-	Exec: func(ctx *hanamaru.Context) error {
-		channel, err := ctx.GetVoiceChannnel()
+	Exec: func(ctx *framework.Context) error {
+		channel, err := ctx.GetSenderVoiceChannel()
 		if err != nil {
 			return err
 		}
-		vc, err := ctx.ChannelVoiceJoin(ctx.GuildID, channel.ID, false, false)
+
+		err = ctx.VoiceContext.JoinChannel(ctx.Session, ctx.GuildID, channel.ID, ctx.ChannelID)
 		if err != nil {
-			return fmt.Errorf("failed to join VC: %v", err)
-		}
-		ctx.VoiceContext.VCs[ctx.GuildID] = vc
-
-		if _, ok := ctx.VoiceContext.Queues[ctx.GuildID]; !ok {
-			ctx.VoiceContext.Queues[ctx.GuildID] = &voice.Queue{}
-		}
-
-		for {
-			if vc.Ready {
-				ctx.Reply("Joined!")
-				break
-			}
+			return err
 		}
 
 		return nil

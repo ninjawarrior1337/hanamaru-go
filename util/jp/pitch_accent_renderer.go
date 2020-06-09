@@ -12,6 +12,7 @@ import (
 	"io/ioutil"
 	"log"
 	"strings"
+	"sync"
 	"unicode/utf8"
 )
 
@@ -23,7 +24,7 @@ const BottomOffset = 80
 const CenterOffset = KanaWidth / 2
 const DotRadius = 8
 
-var ff font.Face
+var ffData []byte
 
 func init() {
 	file, err := pkger.Open("/assets/noto.ttf")
@@ -31,11 +32,15 @@ func init() {
 		log.Fatalf("Failed to load noto font: %v", err)
 	}
 	entireFile, _ := ioutil.ReadAll(file)
-	f, err := truetype.Parse(entireFile)
+	ffData = entireFile
+}
+
+func GetFont() font.Face {
+	f, err := truetype.Parse(ffData)
 	if err != nil {
 		log.Fatalf("Failed to load noto font: %v", err)
 	}
-	ff = truetype.NewFace(f, &truetype.Options{Size: 32})
+	return truetype.NewFace(f, &truetype.Options{Size: 32})
 }
 
 func RenderPitchAccent(phrase string, pitchInfo []int) (image.Image, error) {
@@ -59,10 +64,42 @@ func RenderPitchAccent(phrase string, pitchInfo []int) (image.Image, error) {
 	return ctx.Image(), nil
 }
 
+func RenderPitchAccentConcurrent(phrase string, pitchInfo []int) (image.Image, error) {
+	if phrase == "" || len(pitchInfo) == 0 {
+		return nil, fmt.Errorf("invalid input")
+	}
+
+	if utf8.RuneCountInString(phrase) != len(pitchInfo) {
+		return nil, fmt.Errorf("please make sure the phrase is sent with the correct pitch info")
+	}
+
+	type Rune struct {
+		Pos int
+		Img image.Image
+	}
+
+	var wg sync.WaitGroup
+	ctx := gg.NewContext(KanaWidth*utf8.RuneCountInString(phrase), KanaHeight)
+
+	for i, mora := range strings.Split(phrase, "") {
+		wg.Add(1)
+		prevPitch := GetPitchAccentIndex(i-1, pitchInfo)
+		nextPitch := GetPitchAccentIndex(i+1, pitchInfo)
+		go func(mora string, pos int) {
+			defer wg.Done()
+			runeImg := RenderRune(mora, pitchInfo[pos], prevPitch, nextPitch)
+			ctx.DrawImage(runeImg, pos*KanaWidth, 0)
+		}(mora, i)
+	}
+	wg.Wait()
+
+	return ctx.Image(), nil
+}
+
 func RenderRune(char string, pitchPlacement, pPitch, nPitch int) image.Image {
 	ctx := gg.NewContext(KanaWidth, KanaHeight)
 
-	ctx.SetFontFace(ff)
+	ctx.SetFontFace(GetFont())
 	ctx.SetRGB255(255, 255, 255)
 	ctx.DrawStringAnchored(char, CenterOffset, 125, 0.5, 0.5)
 

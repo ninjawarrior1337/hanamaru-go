@@ -5,12 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
-	"io"
+	"image"
 	"io/ioutil"
 	"net/http"
 )
 
-var LatexTemplate = template.Must(template.New("latex").Parse(`
+var Template = template.Must(template.New("latex").Parse(`
 \documentclass{article}
 \begin{document}
 ${{.}}$
@@ -18,11 +18,11 @@ ${{.}}$
 \end{document}
 `))
 
-func GeneratePNGFromLatex(latex string) (io.Reader, error) {
+func GenerateLatexImage(latex string) (image.Image, error) {
 	// Get filename
 	buf := new(bytes.Buffer)
-	LatexTemplate.Execute(buf, latex)
-	postData := LatexRequest{
+	Template.Execute(buf, latex)
+	postData := Request{
 		Code:   buf.String(),
 		Format: "png",
 	}
@@ -36,7 +36,7 @@ func GeneratePNGFromLatex(latex string) (io.Reader, error) {
 	}
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
-	var lResp LatexResponse
+	var lResp Response
 	err = json.Unmarshal(body, &lResp)
 	if err != nil {
 		return nil, fmt.Errorf("failed to unmarshal response: %v", err)
@@ -51,6 +51,8 @@ func GeneratePNGFromLatex(latex string) (io.Reader, error) {
 		return nil, fmt.Errorf("failed to get finished image: %v", err)
 	}
 	defer resp.Body.Close()
-	body, _ = ioutil.ReadAll(resp.Body)
-	return bytes.NewReader(body), nil
+
+	img, _, _ := image.Decode(resp.Body)
+
+	return img, nil
 }

@@ -1,11 +1,13 @@
 package image
 
-import "hanamaru/hanamaru"
+import (
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
+)
 
-var Braile = &hanamaru.Command{
+var Braile = &framework.Command{
 	Name:               "braile",
 	PermissionRequired: 0,
-	Exec: func(ctx *hanamaru.Context) error {
+	Exec: func(ctx *framework.Context) error {
 
 		return nil
 	},
