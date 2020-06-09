@@ -17,7 +17,7 @@ package main
 
 import(
 	{{- range $index, $e := .}}
-	"github.com/ninjawarrior1337/framework-go/commands/{{$index}}"
+	"github.com/ninjawarrior1337/hanamaru-go/commands/{{$index}}"
 	{{- end}}
 )
 
