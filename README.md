@@ -28,7 +28,7 @@ Favorites such as poorly edited ゴゴゴ make a return plus some new ones such 
 
 ### And much more.
 
-##Installing
+## Installing
 Ok, so about installing...there is no way to install yet besides building an executable by doing
 ```shell script
 git clone https://github.com/ninjawarrior1337/hanamaru-go
