@@ -11,7 +11,7 @@ import (
 	"syscall"
 )
 
-//go:generate pkger
+//go:generate pkger list && pkger
 
 var config *viper.Viper
 
