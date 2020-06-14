@@ -11,8 +11,6 @@ import (
 	"syscall"
 )
 
-//go:generate pkger list && pkger
-
 var config *viper.Viper
 
 var commands []*framework.Command
@@ -27,6 +25,8 @@ func init() {
 	config.SetDefault("owner", "")
 	config.SetDefault("prefix", "!")
 	config.SetDefault("token", "")
+	config.SetDefault("listening", "")
+	config.SetDefault("playing", "")
 
 	err := config.ReadInConfig()
 	if err != nil {
@@ -66,7 +66,13 @@ func main() {
 	bot.AddHandler(events.ReactionExpansion)
 	bot.AddHandler(events.Roboragi)
 
-	bot.Session.UpdateListeningStatus("Perry the Platypus - Extended Version")
+	if playing := config.GetString("playing"); playing != "" {
+		bot.Session.UpdateListeningStatus(playing)
+	} else if listening := config.GetString("listening"); listening != "" {
+		bot.Session.UpdateListeningStatus(listening)
+	} else {
+		bot.Session.UpdateListeningStatus("Aqours' Songs")
+	}
 
 	signal.Notify(syscallChan, syscall.SIGTERM, syscall.SIGINT)
 	<-syscallChan

@@ -19,12 +19,12 @@ var TAGS = []string{"", "jp,ij"}
 var OSes = []string{"windows", "linux"}
 
 func BuildCI() {
-	mg.SerialDeps(InstallDeps, Generate)
+	mg.SerialDeps(InstallDeps, Pkger)
 	build()
 }
 
 func Build() {
-	mg.SerialDeps(InstallDeps, Test, Generate)
+	mg.SerialDeps(InstallDeps, Test, Pkger)
 	build()
 }
 
@@ -61,7 +61,7 @@ func build() error {
 }
 
 func BuildDocker() error {
-	mg.SerialDeps(InstallDeps, Generate)
+	mg.SerialDeps(InstallDeps, Pkger)
 	fmt.Println("Building for Docker")
 	return sh.RunWith(map[string]string{"CGO_ENABLED": "0"}, "go", "build", "-tags", "ij,jp", `-ldflags=-s -w`, "-o", "hanamaru")
 }
@@ -71,10 +71,14 @@ func Test() error {
 	return sh.Run("go", "test", "./...")
 }
 
-func Generate() error {
+func Pkger() error {
 	mg.SerialDeps(LinkCommands)
-	fmt.Println("Generating Necessary Code...")
-	return sh.Run("go", "generate")
+	fmt.Println("Packaging assets with pkger...")
+	err := sh.Run("pkger", "list")
+	if err != nil {
+		return err
+	}
+	return sh.Run("pkger")
 }
 
 func LinkCommands() error {
