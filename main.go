@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	_ "github.com/markbates/pkger"
 	"github.com/ninjawarrior1337/hanamaru-go/events"
 	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"github.com/spf13/viper"
@@ -25,14 +26,15 @@ func init() {
 	config.SetDefault("owner", "")
 	config.SetDefault("prefix", "!")
 	config.SetDefault("token", "")
-	config.SetDefault("listening", "")
+	config.SetDefault("listening", "Aqours' Songs")
 	config.SetDefault("playing", "")
 
 	err := config.ReadInConfig()
 	if err != nil {
 		_ = config.WriteConfigAs("config.yml")
 		log.Printf("Failed to read config: %v\n", err)
-		log.Fatalln("A default config file has been created for you at config.yml")
+		log.Println("A default config file has been created for you at config.yml")
+		log.Fatalln("Or you may set environment variables...Exiting now.")
 	}
 
 	if !config.IsSet("token") || len(config.GetString("token")) == 0 {
