@@ -21,6 +21,7 @@ type Command struct {
 	OwnerOnly          bool
 	Help               string
 	Exec               func(ctx *Context) error
+	Setup              func() error
 }
 
 type Context struct {

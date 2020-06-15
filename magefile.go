@@ -19,12 +19,12 @@ var TAGS = []string{"", "jp,ij"}
 var OSes = []string{"windows", "linux"}
 
 func BuildCI() {
-	mg.SerialDeps(InstallDeps, Pkger)
+	mg.SerialDeps(InstallDeps, Generate)
 	build()
 }
 
 func Build() {
-	mg.SerialDeps(InstallDeps, Test, Pkger)
+	mg.SerialDeps(InstallDeps, Test, Generate)
 	build()
 }
 
@@ -47,8 +47,9 @@ func build() error {
 				fileName += ""
 			}
 			env := map[string]string{
-				"GOOS":   cOS,
-				"GOARCH": "amd64",
+				"GOOS":        cOS,
+				"GOARCH":      "amd64",
+				"CGO_ENABLED": "0",
 			}
 			cmd := sh.RunWith(env, "go", "build", "-tags", tag, `-ldflags=-s -w`, "-o", "artifacts/"+fileName)
 
@@ -61,9 +62,18 @@ func build() error {
 }
 
 func BuildDocker() error {
-	mg.SerialDeps(InstallDeps, Pkger)
+	mg.SerialDeps(InstallDeps, Generate)
 	fmt.Println("Building for Docker")
-	return sh.RunWith(map[string]string{"CGO_ENABLED": "0"}, "go", "build", "-tags", "ij,jp", `-ldflags=-s -w`, "-o", "hanamaru")
+	flags := []string{
+		"build",
+		"-a",
+		"-tags",
+		"jp,ij",
+		`-ldflags=-s -w`,
+		"-o",
+		"hanamaru",
+	}
+	return sh.RunWith(map[string]string{"CGO_ENABLED": "0"}, "go", flags...)
 }
 
 func Test() error {
@@ -71,17 +81,22 @@ func Test() error {
 	return sh.Run("go", "test", "./...")
 }
 
-func Pkger() error {
-	mg.SerialDeps(LinkCommands)
+func pkger() error {
+	mg.SerialDeps(linkCommands)
 	fmt.Println("Packaging assets with pkger...")
-	err := sh.Run("pkger", "list")
+	err := sh.RunV("pkger", "list")
 	if err != nil {
 		return err
 	}
 	return sh.Run("pkger")
 }
 
-func LinkCommands() error {
+func Generate() error {
+	mg.SerialDeps(linkCommands, pkger)
+	return nil
+}
+
+func linkCommands() error {
 	fmt.Println("Linking Commands...")
 	return sh.Run("go", "run", filepath.FromSlash("./tools/cmd/gen_command_imports.go"))
 }
