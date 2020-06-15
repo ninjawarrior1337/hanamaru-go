@@ -3,6 +3,7 @@
 package image
 
 import (
+	"errors"
 	"fmt"
 	"github.com/fogleman/gg"
 	"github.com/golang/freetype/truetype"
@@ -15,25 +16,6 @@ import (
 
 var baseImg image.Image
 var fontFace font.Face
-
-func init() {
-	f, err := pkger.Open("/assets/imgs/thefrick.png")
-	if err != nil {
-		panic("failed to load bishop base image")
-	}
-	baseImg, _, err = image.Decode(f)
-	if err != nil {
-		panic("failed to decode bishop base image")
-	}
-
-	fontF, err := pkger.Open("/assets/Impact.ttf")
-	if err != nil {
-		panic("failed to load impact prarsedFont")
-	}
-	entireFile, _ := ioutil.ReadAll(fontF)
-	prarsedFont, _ := truetype.Parse(entireFile)
-	fontFace = truetype.NewFace(prarsedFont, &truetype.Options{Size: 32})
-}
 
 var Bishop = &framework.Command{
 	Name: "bic",
@@ -72,6 +54,25 @@ var Bishop = &framework.Command{
 
 		ctx.ReplyJPGImg(finalImg.Image(), "bishop")
 
+		return nil
+	},
+	Setup: func() error {
+		f, err := pkger.Open("/assets/imgs/thefrick.png")
+		if err != nil {
+			return errors.New("failed to load bishop base image")
+		}
+		baseImg, _, err = image.Decode(f)
+		if err != nil {
+			return errors.New("failed to decode bishop base image")
+		}
+
+		fontF, err := pkger.Open("/assets/Impact.ttf")
+		if err != nil {
+			return errors.New("failed to load impact prarsedFont")
+		}
+		entireFile, _ := ioutil.ReadAll(fontF)
+		prarsedFont, _ := truetype.Parse(entireFile)
+		fontFace = truetype.NewFace(prarsedFont, &truetype.Options{Size: 32})
 		return nil
 	},
 }

@@ -10,12 +10,6 @@ import (
 
 var dmappings map[string]string
 
-func init() {
-	file, _ := pkger.Open("/assets/dance.json")
-	defer file.Close()
-	json.NewDecoder(file).Decode(&dmappings)
-}
-
 var Dance = &framework.Command{
 	Name:               "dance",
 	PermissionRequired: 0,
@@ -31,6 +25,15 @@ var Dance = &framework.Command{
 		for _, char := range targetSlice {
 			ctx.Reply(dmappings[char])
 		}
+		return nil
+	},
+	Setup: func() error {
+		file, err := pkger.Open("/assets/dance.json")
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+		json.NewDecoder(file).Decode(&dmappings)
 		return nil
 	},
 }

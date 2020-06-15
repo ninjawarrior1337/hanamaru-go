@@ -1,27 +1,15 @@
 package image
 
 import (
+	"errors"
 	"github.com/disintegration/imaging"
 	"github.com/fogleman/gg"
 	"github.com/markbates/pkger"
 	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"image"
-	"log"
 )
 
 var rumbleImg image.Image
-
-func init() {
-	file, err := pkger.Open("/assets/imgs/rumble.png")
-	if err != nil {
-		log.Fatalf("Failed to open rumble.png: %v", err)
-	}
-
-	rumbleImg, _, err = image.Decode(file)
-	if err != nil {
-		log.Fatalf("Failed to process rumble.png: %v", err)
-	}
-}
 
 var Rumble = &framework.Command{
 	Name:               "rumble",
@@ -36,6 +24,18 @@ var Rumble = &framework.Command{
 		inputCtx.DrawImage(mutRCtx, 0, 0)
 
 		ctx.ReplyJPGImg(inputCtx.Image(), "rumble")
+		return nil
+	},
+	Setup: func() error {
+		file, err := pkger.Open("/assets/imgs/rumble.png")
+		if err != nil {
+			return errors.New("failed to open rumble.png")
+		}
+
+		rumbleImg, _, err = image.Decode(file)
+		if err != nil {
+			return errors.New("failed to decode rumble.png")
+		}
 		return nil
 	},
 }

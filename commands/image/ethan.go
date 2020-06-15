@@ -1,6 +1,7 @@
 package image
 
 import (
+	"errors"
 	"github.com/fogleman/gg"
 	"github.com/golang/freetype/truetype"
 	"github.com/markbates/pkger"
@@ -12,15 +13,6 @@ import (
 )
 
 var ffData []byte
-
-func init() {
-	file, err := pkger.Open("/assets/noto.ttf")
-	if err != nil {
-		log.Fatalf("Failed to load noto font: %v", err)
-	}
-	entireFile, _ := ioutil.ReadAll(file)
-	ffData = entireFile
-}
 
 func GetFont(size float64) font.Face {
 	f, err := truetype.Parse(ffData)
@@ -57,6 +49,15 @@ var Ethan = &framework.Command{
 		ethanCtx.DrawImage(textCtx.Image(), 0, 0)
 		ethanCtx.DrawImage(img, 0, textCtx.Height())
 		ctx.ReplyPNGImg(ethanCtx.Image(), "ethan.png")
+		return nil
+	},
+	Setup: func() error {
+		file, err := pkger.Open("/assets/noto.ttf")
+		if err != nil {
+			return errors.New("failed to load noto font")
+		}
+		entireFile, _ := ioutil.ReadAll(file)
+		ffData = entireFile
 		return nil
 	},
 }

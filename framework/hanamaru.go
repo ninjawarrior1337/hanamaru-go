@@ -1,6 +1,7 @@
 package framework
 
 import (
+	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/ninjawarrior1337/hanamaru-go/framework/voice"
 	bolt "go.etcd.io/bbolt"
@@ -59,9 +60,27 @@ func HasPermission(s *discordgo.Session, member *discordgo.Member, permission in
 	return false, nil
 }
 
-func (h *Hanamaru) AddCommand(cmd *Command) {
+type ErrAddCommand struct {
+	cmd *Command
+	error
+}
+
+func (e ErrAddCommand) Error() string {
+	return fmt.Sprintf("failed to add command: %v: reason: %v", e.cmd.Name, e)
+}
+
+func (h *Hanamaru) AddCommand(cmd *Command) error {
 	if cmd.Name == "" {
 		panic("A command must not have an empty name!")
+	}
+	if cmd.Setup != nil {
+		err := cmd.Setup()
+		if err != nil {
+			return ErrAddCommand{
+				cmd:   cmd,
+				error: err,
+			}
+		}
 	}
 	var handleFunc = func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if !strings.HasPrefix(m.Content, h.prefix+cmd.Name) {
@@ -94,6 +113,7 @@ func (h *Hanamaru) AddCommand(cmd *Command) {
 	}
 	h.AddHandler(handleFunc)
 	h.commands = append(h.commands, cmd)
+	return nil
 }
 
 func (h *Hanamaru) EnableHelpCommand() {
