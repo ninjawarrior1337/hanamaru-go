@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	_ "github.com/markbates/pkger"
 	"github.com/ninjawarrior1337/hanamaru-go/events"
@@ -9,6 +10,8 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"runtime"
+	"runtime/pprof"
 	"syscall"
 )
 
@@ -42,7 +45,10 @@ func init() {
 	}
 }
 
+var memprofile = flag.String("memprofile", "", "write memory profile to a file")
+
 func main() {
+	flag.Parse()
 	var syscallChan = make(chan os.Signal)
 
 	bot := framework.New("Bot "+config.GetString("token"), config.GetString("prefix"))
@@ -78,4 +84,19 @@ func main() {
 
 	signal.Notify(syscallChan, syscall.SIGTERM, syscall.SIGINT)
 	<-syscallChan
+	if *memprofile != "" {
+		doMemprofile()
+	}
+}
+
+func doMemprofile() {
+	f, err := os.Create(*memprofile)
+	if err != nil {
+		log.Fatal("could not create memory profile: ", err)
+	}
+	defer f.Close()
+	runtime.GC()
+	if err := pprof.WriteHeapProfile(f); err != nil {
+		log.Fatal("could not create memory profile: ", err)
+	}
 }

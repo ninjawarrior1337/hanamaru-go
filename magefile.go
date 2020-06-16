@@ -81,7 +81,7 @@ func Test() error {
 	return sh.Run("go", "test", "./...")
 }
 
-func pkger() error {
+func pkg() error {
 	mg.SerialDeps(linkCommands)
 	fmt.Println("Packaging assets with pkger...")
 	err := sh.RunV("pkger", "list")
@@ -92,7 +92,7 @@ func pkger() error {
 }
 
 func Generate() error {
-	mg.SerialDeps(linkCommands, pkger)
+	mg.SerialDeps(linkCommands, pkg)
 	return nil
 }
 
