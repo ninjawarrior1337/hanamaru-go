@@ -128,3 +128,5 @@ util/jp/*.png
 *.gen.go
 artifacts
 pkged.go
+*.pprof
+pkged.go
