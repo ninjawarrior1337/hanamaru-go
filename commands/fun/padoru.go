@@ -1,16 +1,18 @@
 package fun
 
 import (
+	"hanamaru/util"
+	"image"
+	"os"
+
 	"github.com/markbates/pkger"
 	"github.com/ninjawarrior1337/hanamaru-go/framework"
-	"image"
-	"math/rand"
-	"os"
 )
 
-const PadoruDir = "/assets/imgs/padoru"
+const padoruDir = "/assets/imgs/padoru"
 
 var padoruList = make([]string, 0)
+var prevPick = 0
 
 var Padoru = &framework.Command{
 	Name:               "padoru",
@@ -18,14 +20,14 @@ var Padoru = &framework.Command{
 	OwnerOnly:          false,
 	Help:               "",
 	Exec: func(ctx *framework.Context) error {
-		imgFile, _ := pkger.Open(PadoruDir + "/" + padoruList[rand.Intn(len(padoruList))])
+		imgFile, _ := pkger.Open(padoruDir + "/" + padoruList[util.IntnNoDup(len(padoruList), &prevPick)])
 		defer imgFile.Close()
 		img, _, _ := image.Decode(imgFile)
 		ctx.ReplyJPGImg(img, imgFile.Name())
 		return nil
 	},
 	Setup: func() error {
-		err := pkger.Walk(PadoruDir, func(path string, info os.FileInfo, err error) error {
+		err := pkger.Walk(padoruDir, func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
 			}
