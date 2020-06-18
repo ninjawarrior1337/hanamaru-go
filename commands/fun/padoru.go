@@ -1,9 +1,10 @@
 package fun
 
 import (
-	"hanamaru/util"
 	"image"
 	"os"
+
+	"github.com/ninjawarrior1337/hanamaru-go/util"
 
 	"github.com/markbates/pkger"
 	"github.com/ninjawarrior1337/hanamaru-go/framework"
