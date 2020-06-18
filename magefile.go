@@ -30,9 +30,9 @@ func Build() {
 
 // A build step that requires additional params, or platform specific steps for example
 func build() error {
-
 	fmt.Println("Building...")
-
+	commitHashFlag := "-X github.com/ninjawarrior1337/hanamaru-go/commands/info.CommitHash=" + os.Getenv("GITHUB_SHA")
+	buildDateFlag := "-X github.com/ninjawarrior1337/hanamaru-go/commands/info.BuildDate=$(TZ=America/Los_Angeles date)"
 	for _, cOS := range OSes {
 		for _, tag := range TAGS {
 			fmt.Println("Generating hanamaru: OS: " + cOS + " TAG: " + tag)
@@ -51,7 +51,14 @@ func build() error {
 				"GOARCH":      "amd64",
 				"CGO_ENABLED": "0",
 			}
-			cmd := sh.RunWith(env, "go", "build", "-tags", tag, `-ldflags=-s -w`, "-o", "artifacts/"+fileName)
+			cmd := sh.RunWith(env, "go",
+				"build",
+				"-tags",
+				tag,
+				`-ldflags=-s -w `+commitHashFlag+" "+buildDateFlag,
+				"-o",
+				"artifacts/"+fileName,
+			)
 
 			if err := cmd; err != nil {
 				return err
