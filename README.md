@@ -6,17 +6,17 @@ and immediately aimed for a 6/9 public "release" (basically just turning off pri
 
 ## Whats new?
 Everything has been rewritten in Go which makes the new project more memory and CPU efficient.
-The framework has been written by hand to provide a nicer dev experience and some custom tooling was built 
+The framework has been written by hand to provide a nicer dev experience, and some custom tooling was built 
 to implement linking commands to the framework. Also because Go is the base of the language, the entire project can be
 put into a single binary with the help of pkger.
 
 ## Ok that's cool but what about the bot iself.
 ### JP Features
 New features such as pitch accent diagram generation (ever watched Dogen), improved Jisho lookup
-and returning features such as turning a sentance to romaji
+and returning features such as turning a sentence to romaji.
 
 ### Audio Playback
-Currently, there is a loose concept of a playlist and youtube playback which reqires youtube-dl to be installed on the host
+Currently, there is a loose concept of a playlist and youtube playback which reqires youtube-dl to be installed on the host.
 There will be improved queue support and skip support later.
 
 ### Roboragi
@@ -25,6 +25,10 @@ the data.
 
 ### More Image Editing
 Favorites such as poorly edited ゴゴゴ make a return plus some new ones such as JPEG
+
+### Utility Commands
+Commands I've always wanted to add the bot such as currency conversion, 
+timezone localization, a more stable translation command, and Minecraft skin lookup have been finally added.
 
 ### And much more.
 
