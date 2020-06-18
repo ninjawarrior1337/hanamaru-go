@@ -55,7 +55,7 @@ func build() error {
 				"build",
 				"-tags",
 				tag,
-				`-ldflags=-s -w `+commitHashFlag+" "+buildDateFlag,
+				`-ldflags="-s -w `+commitHashFlag+" "+buildDateFlag+`"`,
 				"-o",
 				"artifacts/"+fileName,
 			)
