@@ -31,8 +31,6 @@ func Build() {
 // A build step that requires additional params, or platform specific steps for example
 func build() error {
 	fmt.Println("Building...")
-	commitHashFlag := "-X github.com/ninjawarrior1337/hanamaru-go/commands/info.CommitHash=" + os.Getenv("GITHUB_SHA")
-	buildDateFlag := "-X github.com/ninjawarrior1337/hanamaru-go/commands/info.BuildDate=$(TZ=America/Los_Angeles date)"
 	for _, cOS := range OSes {
 		for _, tag := range TAGS {
 			fmt.Println("Generating hanamaru: OS: " + cOS + " TAG: " + tag)
@@ -55,7 +53,7 @@ func build() error {
 				"build",
 				"-tags",
 				tag,
-				`-ldflags="-s -w `+commitHashFlag+" "+buildDateFlag+`"`,
+				"-ldflags="+flags(),
 				"-o",
 				"artifacts/"+fileName,
 			)
@@ -119,4 +117,12 @@ func Clean() {
 	fmt.Println("Cleaning...")
 	os.RemoveAll("artifacts")
 	os.Remove("pkged.go")
+}
+
+func flags() string {
+	commitHash := os.Getenv("GITHUB_SHA")
+	buildDate, _ := sh.OutputWith(map[string]string{
+		"TZ": "America/Los_Angeles",
+	}, "date")
+	return fmt.Sprintf(`-s -w -X "github.com/ninjawarrior1337/hanamaru-go/commands/info.CommitHash=%v" -X "github.com/ninjawarrior1337/hanamaru-go/commands/info.BuildDate=%v"`, commitHash, buildDate)
 }
