@@ -1,88 +1,67 @@
 package jp
 
 import (
-	"errors"
+	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"github.com/ninjawarrior1337/hanamaru-go/util/jisho"
-	"strconv"
 	"strings"
-	"unicode/utf8"
 )
-
-var j = jisho.NewJisho()
 
 var JishoCmd = &framework.Command{
 	Name:               "jisho",
 	PermissionRequired: 0,
 	OwnerOnly:          false,
-	Help:               "",
+	Help:               "Searches jisho and displays the first result",
 	Exec: func(ctx *framework.Context) error {
-		kanjiStr, err := ctx.GetArgIndex(0)
+		search, err := ctx.GetArgIndex(0)
 		if err != nil {
 			return err
 		}
-		if utf8.RuneCountInString(kanjiStr) > 1 {
-			return errors.New("kanji are always one character")
-		}
-		k, err := j.SearchForKanji(kanjiStr)
+		sr, err := j.SearchKeyword(search)
 		if err != nil {
 			return err
 		}
-		ctx.ReplyEmbed(TransformKanjiToEmbed(k))
+		ctx.ReplyEmbed(JishoResponseAsEmbed(sr))
 		return nil
 	},
+	Setup: nil,
 }
 
-func TransformKanjiToEmbed(k *jisho.Kanji) *discordgo.MessageEmbed {
-	var fl = []*discordgo.MessageEmbedField{
-		{
-			Name:  "Taught In",
-			Value: strings.Title(k.TaughtIn),
-		},
-		{
-			Name:  "JLPT",
-			Value: string(k.JLPT),
-		},
-		{
-			Name:  "Newspaper Frequency",
-			Value: strconv.Itoa(k.NewspaperFreqRank),
-		},
-		{
-			Name:  "Stroke Count",
-			Value: strconv.Itoa(k.StrokeCount),
-		},
-		{
-			Name:  "Kunyomi",
-			Value: strings.Join(k.Kunyomi, ", "),
-		},
-		{
-			Name:  "Onyomi",
-			Value: strings.Join(k.Onyomi, ", "),
-		},
-		{
-			Name:  "Radical",
-			Value: k.Radical.Symbol + ": " + k.Radical.Meaning,
-		},
-		{
-			Name:  "Parts",
-			Value: strings.Join(k.Parts, ", "),
-		},
-	}
-	for _, f := range fl {
-		f.Inline = true
-	}
+func JishoResponseAsEmbed(sr *jisho.SearchResp) *discordgo.MessageEmbed {
+	d := sr.Data[0]
 	return &discordgo.MessageEmbed{
-		URL:         k.JishoUri,
-		Title:       string(k.Rune),
-		Description: k.Meaning,
+		URL:         fmt.Sprintf("https://jisho.org/search/%s", sr.Data[0].Slug),
+		Title:       d.Slug + fmt.Sprintf(" (%s)", d.Japanese[0].Reading),
+		Description: strings.Join(d.Senses[0].EnglishDefinitions, ", "),
+		Timestamp:   "",
 		Color:       0x56D926,
-		Footer:      nil,
-		Image: &discordgo.MessageEmbedImage{
-			URL: k.StrokeOrderDiagram,
+		Fields: []*discordgo.MessageEmbedField{
+			{
+				Name:   "Tags",
+				Value:  strings.Join(d.Tags, ", "),
+				Inline: true,
+			},
+			{
+				Name: "Common?",
+				Value: func() string {
+					if d.IsCommon {
+						return "Yes"
+					} else {
+						return "No"
+					}
+				}(),
+				Inline: true,
+			},
+			{
+				Name:   "Part of Speech",
+				Value:  strings.Join(d.Senses[0].PartsOfSpeech, ", "),
+				Inline: true,
+			},
+			{
+				Name:  "JLPT",
+				Value: strings.ToUpper(strings.Join(d.Jlpt, ", ")),
+			},
 		},
-		Thumbnail: nil,
-		Author:    nil,
-		Fields:    fl,
 	}
 }
