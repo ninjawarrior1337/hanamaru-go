@@ -65,7 +65,7 @@ func parseExample(exampleRaw string) *ReadingExample {
 
 func (j *Jisho) SearchForKanji(kanji string) (*Kanji, error) {
 	rel := "/" + kanji + "%20%23kanji"
-	u := j.BaseScrapeURI + rel
+	u := j.BaseScrapeUri + rel
 	c := colly.NewCollector()
 
 	var k Kanji
