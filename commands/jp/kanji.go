@@ -28,8 +28,8 @@ var KanjiCmd = &framework.Command{
 		if err != nil {
 			return err
 		}
-		ctx.ReplyEmbed(TransformKanjiToEmbed(k))
-		return nil
+		_, err = ctx.ReplyEmbed(TransformKanjiToEmbed(k))
+		return err
 	},
 }
 

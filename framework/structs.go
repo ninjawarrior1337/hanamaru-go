@@ -37,11 +37,15 @@ func (c *Context) Reply(m string) (*discordgo.Message, error) {
 }
 
 func (c *Context) ReplyEmbed(embed *discordgo.MessageEmbed) (*discordgo.Message, error) {
-	for i, f := range embed.Fields {
-		if f.Name == "" || f.Value == "" {
-			embed.Fields = append(embed.Fields[0:i], embed.Fields[i+1:]...)
+	var validFields []*discordgo.MessageEmbedField
+	for _, f := range embed.Fields {
+		if f.Name != "" && f.Value != "" {
+			validFields = append(validFields, f)
 		}
 	}
+
+	embed.Fields = validFields
+
 	return c.ChannelMessageSendEmbed(c.ChannelID, embed)
 }
 
