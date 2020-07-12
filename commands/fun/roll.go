@@ -14,11 +14,16 @@ var Roll = &framework.Command{
 	Help:               "",
 	Exec: func(ctx *framework.Context) error {
 		rollStr := ctx.GetArgIndexDefault(0, "100")
-		rollInt, err := strconv.Atoi(rollStr)
+		rollInt64, err := strconv.ParseInt(rollStr, 10, 64)
 		if err != nil {
-			return fmt.Errorf("%v is not a number", rollStr)
+			rollInt64 = 100
+			//return fmt.Errorf("%v is not a number", rollStr)
 		}
-		ctx.Reply(fmt.Sprintf("%v rolls %v point(s)!", ctx.Author.Username, rand.Intn(rollInt)+1))
+		if rollInt64 <= 0 {
+			ctx.Reply(fmt.Sprintf("0 is how many friends you have %s", ctx.Member.Mention()))
+			return nil
+		}
+		ctx.Reply(fmt.Sprintf("%v rolls %v point(s)!", ctx.Author.Username, rand.Int63n(rollInt64)+1))
 		return nil
 	},
 }
