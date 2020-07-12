@@ -20,7 +20,7 @@ var Roll = &framework.Command{
 			//return fmt.Errorf("%v is not a number", rollStr)
 		}
 		if rollInt64 <= 0 {
-			ctx.Reply(fmt.Sprintf("%v is how many friends you have %s", rollInt64, ctx.Member.Mention()))
+			ctx.Reply(fmt.Sprintf("%v is how many friends you have %s", rollInt64, ctx.Message.Author.Mention()))
 			return nil
 		}
 		ctx.Reply(fmt.Sprintf("%v rolls %v point(s)!", ctx.Author.Username, rand.Int63n(rollInt64)+1))
