@@ -6,6 +6,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.5.1 // indirect
 	github.com/antchfx/htmlquery v1.2.3 // indirect
 	github.com/antchfx/xmlquery v1.2.4 // indirect
+	github.com/anthonynsimon/bild v0.12.0
 	github.com/bwmarrin/discordgo v0.20.3
 	github.com/davecgh/go-spew v1.1.1
 	github.com/disintegration/imaging v1.6.2
