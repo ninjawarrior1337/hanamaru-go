@@ -14,7 +14,7 @@ var ServerInfo = &framework.Command{
 		if err != nil {
 			return err
 		}
-		g, err := ctx.Guild(serverid)
+		g, err := ctx.Hanamaru.Guild(serverid)
 		if err != nil {
 			return err
 		}

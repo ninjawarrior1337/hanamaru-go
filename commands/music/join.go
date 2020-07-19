@@ -13,7 +13,7 @@ var Join = &framework.Command{
 			return err
 		}
 
-		err = ctx.VoiceContext.JoinChannel(ctx.Session, ctx.GuildID, channel.ID, ctx.ChannelID)
+		err = ctx.Hanamaru.VoiceContext.JoinChannel(ctx.Hanamaru.Session, ctx.GuildID, channel.ID, ctx.ChannelID)
 		if err != nil {
 			return err
 		}

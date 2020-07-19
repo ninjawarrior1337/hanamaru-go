@@ -18,7 +18,7 @@ import (
 var config *viper.Viper
 
 var commands []*framework.Command
-var optionalEvents []interface{}
+var optionalEvents []*framework.EventListener
 
 func init() {
 	config = viper.New()
@@ -51,10 +51,9 @@ func main() {
 	flag.Parse()
 	var syscallChan = make(chan os.Signal)
 
-	bot := framework.New("Bot "+config.GetString("token"), config.GetString("prefix"))
+	bot := framework.New("Bot "+config.GetString("token"), config.GetString("prefix"), config.GetString("owner"))
 	defer bot.Close()
 
-	bot.SetOwner(config.GetString("owner"))
 	bot.EnableHelpCommand()
 
 	err := bot.SetupDB()
@@ -67,12 +66,12 @@ func main() {
 	}
 
 	for _, event := range optionalEvents {
-		bot.AddHandler(event)
+		bot.AddEventListener(event)
 	}
 
-	bot.AddHandler(events.Nhentai)
-	bot.AddHandler(events.ReactionExpansion)
-	bot.AddHandler(events.Roboragi)
+	bot.AddEventListener(events.Nhentai)
+	bot.AddEventListener(events.ReactionExpansion)
+	bot.AddEventListener(events.Roboragi)
 
 	if playing := config.GetString("playing"); playing != "" {
 		bot.Session.UpdateListeningStatus(playing)

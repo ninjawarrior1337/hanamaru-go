@@ -25,6 +25,16 @@ var help = &Command{
 				output += fmt.Sprintf("%v, ", strings.Title(cmd.Name))
 			}
 		}
+		output += "\n"
+		output += "\n"
+		output += "Listeners: "
+		listenerNames := []string{}
+		{
+			for _, ev := range ctx.Hanamaru.eventListeners {
+				listenerNames = append(listenerNames, ev.Name)
+			}
+		}
+		output += strings.Join(listenerNames, ", ")
 		ctx.Reply(output)
 		return nil
 	},

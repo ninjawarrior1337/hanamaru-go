@@ -16,7 +16,7 @@ var Invite = &framework.Command{
 	Help:               "",
 	Exec: func(ctx *framework.Context) error {
 		var inviteString bytes.Buffer
-		InviteTemplate.Execute(&inviteString, ctx.State.User.ID)
+		InviteTemplate.Execute(&inviteString, ctx.Hanamaru.State.User.ID)
 		ctx.Reply(fmt.Sprintf("Have fun with this: <%v>", inviteString.String()))
 		return nil
 	},

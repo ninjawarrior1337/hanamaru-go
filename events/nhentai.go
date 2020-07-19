@@ -3,6 +3,7 @@ package events
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"github.com/ninjawarrior1337/hanamaru-go/util"
 	"regexp"
 	"strconv"
@@ -11,34 +12,38 @@ import (
 
 var nhr = regexp.MustCompile(`^(\d{6})$`)
 
-var Nhentai = func(s *discordgo.Session, m *discordgo.MessageCreate) {
-	content := m.Content
-	if m.Author.Bot || len(m.Mentions) > 0 {
-		return
-	}
-	//TODO: Have unified way to get the active prefix of the bot
-	if strings.HasPrefix(m.Content, "!") {
-		return
-	}
-	if channel, _ := s.Channel(m.ChannelID); channel != nil && !channel.NSFW {
-		return
-	}
-	content = strings.TrimSpace(content)
-	matches, err := ParseStringWithSixDigits(content)
-	if err != nil {
-		return
-	}
+var Nhentai = &framework.EventListener{
+	Name: "NHentai",
+	HandlerConstructor: func(h *framework.Hanamaru) interface{} {
+		return func(s *discordgo.Session, m *discordgo.MessageCreate) {
+			content := m.Content
+			if m.Author.Bot || len(m.Mentions) > 0 {
+				return
+			}
+			if strings.HasPrefix(m.Content, h.GetPrefix()) {
+				return
+			}
+			if channel, _ := s.Channel(m.ChannelID); channel != nil && !channel.NSFW {
+				return
+			}
+			content = strings.TrimSpace(content)
+			matches, err := ParseStringWithSixDigits(content)
+			if err != nil {
+				return
+			}
 
-	for _, match := range matches {
-		n, err := util.ParseNhentai(match)
-		if err != nil {
-			s.ChannelMessageSend(m.ChannelID, strconv.Itoa(match)+": Not Found")
+			for _, match := range matches {
+				n, err := util.ParseNhentai(match)
+				if err != nil {
+					s.ChannelMessageSend(m.ChannelID, strconv.Itoa(match)+": Not Found")
+				}
+				_, err = s.ChannelMessageSendEmbed(m.ChannelID, ConstructEmbed(n))
+				if err != nil {
+					s.ChannelMessageSend(m.ChannelID, err.Error())
+				}
+			}
 		}
-		_, err = s.ChannelMessageSendEmbed(m.ChannelID, ConstructEmbed(n))
-		if err != nil {
-			s.ChannelMessageSend(m.ChannelID, err.Error())
-		}
-	}
+	},
 }
 
 func ParseStringWithSixDigits(msg string) ([]int, error) {

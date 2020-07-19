@@ -2,6 +2,7 @@ package events
 
 import (
 	"github.com/bwmarrin/discordgo"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"github.com/ninjawarrior1337/hanamaru-go/util"
 	"regexp"
 	"strconv"
@@ -10,24 +11,28 @@ import (
 
 var animeRegex = regexp.MustCompile(`{(.*)}`)
 
-var Roboragi = func(s *discordgo.Session, m *discordgo.MessageCreate) {
-	if m.Author.Bot {
-		return
-	}
-	//TODO: Have unified way to get the active prefix of the bot
-	if strings.HasPrefix(m.Content, "!") {
-		return
-	}
-	if matches := animeRegex.FindAllStringSubmatch(m.Content, -1); len(matches) > 0 {
-		media, err := util.GetAnimeInfo(matches[0][1])
-		if err != nil {
-			return
+var Roboragi = &framework.EventListener{
+	Name: "Roboragi",
+	HandlerConstructor: func(h *framework.Hanamaru) interface{} {
+		return func(s *discordgo.Session, m *discordgo.MessageCreate) {
+			if m.Author.Bot {
+				return
+			}
+			if strings.HasPrefix(m.Content, h.GetPrefix()) {
+				return
+			}
+			if matches := animeRegex.FindAllStringSubmatch(m.Content, -1); len(matches) > 0 {
+				media, err := util.GetAnimeInfo(matches[0][1])
+				if err != nil {
+					return
+				}
+				_, err = s.ChannelMessageSendEmbed(m.ChannelID, roboragiEmbed(media))
+				if err != nil {
+					s.ChannelMessageSend(m.ChannelID, err.Error())
+				}
+			}
 		}
-		_, err = s.ChannelMessageSendEmbed(m.ChannelID, roboragiEmbed(media))
-		if err != nil {
-			s.ChannelMessageSend(m.ChannelID, err.Error())
-		}
-	}
+	},
 }
 
 func roboragiEmbed(media util.ALMedia) *discordgo.MessageEmbed {
