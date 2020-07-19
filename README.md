@@ -35,7 +35,7 @@ timezone localization, a more stable translation command, and Minecraft skin loo
 ## Installing
 You can install from going to the latest build and grabbing one of the latest artifacts from [here](https://github.com/ninjawarrior1337/hanamaru-go/actions) <br>
 
-Or you may use the docker image hosted [here](https://github.com/ninjawarrior1337/hanamaru-go/actions) <br>
+Or you may use the docker image hosted [here](https://hub.docker.com/repository/docker/treelar/hanamaru) <br>
 
 Or you may build from source using these commands
 ```shell script

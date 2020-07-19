@@ -3,7 +3,6 @@ package framework
 import (
 	"bytes"
 	"fmt"
-	"github.com/ninjawarrior1337/hanamaru-go/framework/voice"
 	"image"
 	"image/gif"
 	"image/jpeg"
@@ -11,9 +10,15 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
 )
+
+type EventListener struct {
+	Name               string
+	HandlerConstructor func(h *Hanamaru) interface{}
+}
 
 type Command struct {
 	Name               string
@@ -26,14 +31,25 @@ type Command struct {
 
 type Context struct {
 	Hanamaru *Hanamaru
-	*discordgo.Session
+	Command  *Command
 	*discordgo.MessageCreate
-	Args         []string
-	VoiceContext *voice.Context
+	Args []string
+}
+
+func NewContext(h *Hanamaru, cmd *Command, m *discordgo.MessageCreate) *Context {
+	ctx := &Context{
+		Hanamaru:      h,
+		Command:       cmd,
+		MessageCreate: m,
+		Args:          []string{},
+	}
+	argsString := strings.TrimPrefix(m.Content, h.prefix+cmd.Name)
+	ctx.Args = ParseArgs(argsString)
+	return ctx
 }
 
 func (c *Context) Reply(m string) (*discordgo.Message, error) {
-	return c.ChannelMessageSend(c.ChannelID, m)
+	return c.Hanamaru.ChannelMessageSend(c.ChannelID, m)
 }
 
 func (c *Context) ReplyEmbed(embed *discordgo.MessageEmbed) (*discordgo.Message, error) {
@@ -46,11 +62,11 @@ func (c *Context) ReplyEmbed(embed *discordgo.MessageEmbed) (*discordgo.Message,
 
 	embed.Fields = validFields
 
-	return c.ChannelMessageSendEmbed(c.ChannelID, embed)
+	return c.Hanamaru.ChannelMessageSendEmbed(c.ChannelID, embed)
 }
 
 func (c *Context) ReplyFile(name string, r io.Reader) (*discordgo.Message, error) {
-	return c.ChannelFileSend(c.ChannelID, name, r)
+	return c.Hanamaru.ChannelFileSend(c.ChannelID, name, r)
 }
 
 //This is name without extension btw, the following function will add it by itself
@@ -89,8 +105,8 @@ func (c *Context) GetImage(idx uint) (image.Image, error) {
 		if len(c.Args) == 0 {
 			return nil, fmt.Errorf("this doesn't contain an image")
 		} else {
-			if _, err := url.Parse(c.Args[0]); err != nil {
-				return nil, fmt.Errorf("this invalid image: %v", c.Args[0])
+			if _, err := url.Parse(c.Args[idx]); err != nil {
+				return nil, fmt.Errorf("this invalid image: %v", c.Args[idx])
 			}
 			imgUrl, c.Args = c.Args[0], c.Args[1:]
 		}
@@ -117,7 +133,7 @@ func (c *Context) GetUser(idx int) (*discordgo.User, error) {
 		if len(c.Args) == 0 {
 			return nil, fmt.Errorf("this doesn't contain any mentions")
 		} else {
-			usr, err := c.Session.User(c.Args[idx])
+			usr, err := c.Hanamaru.User(c.Args[idx])
 			if err != nil {
 				return nil, fmt.Errorf("invalid user: %v", err)
 			}
@@ -131,17 +147,17 @@ func (c *Context) GetMember(idx int) (*discordgo.Member, error) {
 	if len(c.Mentions) <= 0 {
 		return nil, fmt.Errorf("this doesn't contain any mentions")
 	}
-	return c.Session.GuildMember(c.GuildID, c.Mentions[idx].ID)
+	return c.Hanamaru.GuildMember(c.GuildID, c.Mentions[idx].ID)
 }
 
 func (c *Context) GetSenderVoiceChannel() (*discordgo.Channel, error) {
-	guild, err := c.Guild(c.GuildID)
+	guild, err := c.Hanamaru.Guild(c.GuildID)
 	if err != nil {
 		return nil, fmt.Errorf("you can only use this command in a guild")
 	}
 	for _, state := range guild.VoiceStates {
 		if state.UserID == c.Author.ID {
-			channel, _ := c.State.Channel(state.ChannelID)
+			channel, _ := c.Hanamaru.State.Channel(state.ChannelID)
 
 			return channel, nil
 		}
@@ -164,8 +180,13 @@ func (c *Context) GetArgIndexDefault(idx int, def string) string {
 	return c.Args[idx]
 }
 
+func (c *Context) TakeRest() string {
+	msgArgs := strings.TrimPrefix(c.Message.Content, c.Hanamaru.prefix+c.Command.Name)
+	return strings.ReplaceAll(msgArgs, "```", "")
+}
+
 func (c *Context) GetPreviousMessage() (*discordgo.Message, error) {
-	msgs, err := c.Session.ChannelMessages(c.ChannelID, 1, c.Message.ID, "", "")
+	msgs, err := c.Hanamaru.ChannelMessages(c.ChannelID, 1, c.Message.ID, "", "")
 	if err != nil {
 		return nil, fmt.Errorf("no messages found before previously executed command")
 	}

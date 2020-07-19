@@ -16,7 +16,7 @@ var Migrate = &framework.Command{
 		if err != nil {
 			return err
 		}
-		_, err = ctx.Guild(toVC)
+		_, err = ctx.Hanamaru.Guild(toVC)
 		if err != nil {
 			return errors.New("please use a guild id that exists")
 		}
@@ -24,13 +24,13 @@ var Migrate = &framework.Command{
 		if err != nil {
 			return nil
 		}
-		guild, err := ctx.Guild(ctx.GuildID)
+		guild, err := ctx.Hanamaru.Guild(ctx.GuildID)
 		if err != nil {
 			return nil
 		}
 		for _, s := range guild.VoiceStates {
 			if s.ChannelID == fromVC.ID {
-				ctx.GuildMemberMove(ctx.GuildID, s.UserID, toVC)
+				ctx.Hanamaru.GuildMemberMove(ctx.GuildID, s.UserID, toVC)
 			}
 		}
 		return nil

@@ -11,13 +11,13 @@ var Nitro = &framework.Command{
 	OwnerOnly:          false,
 	Help:               "",
 	Exec: func(ctx *framework.Context) error {
-		channel, err := ctx.Channel(ctx.ChannelID)
+		channel, err := ctx.Hanamaru.Channel(ctx.ChannelID)
 		if err != nil {
 			return err
 		}
 		if channel.Type != discordgo.ChannelTypeDM {
 			if channel.Type != discordgo.ChannelTypeGroupDM {
-				ctx.ChannelMessageDelete(ctx.ChannelID, ctx.Message.ID)
+				ctx.Hanamaru.ChannelMessageDelete(ctx.ChannelID, ctx.Message.ID)
 				ctx.ReplyEmbed(constructNitroEmbed())
 			}
 		} else {

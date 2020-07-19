@@ -17,7 +17,6 @@ var Roll = &framework.Command{
 		rollInt64, err := strconv.ParseInt(rollStr, 10, 64)
 		if err != nil {
 			rollInt64 = 100
-			//return fmt.Errorf("%v is not a number", rollStr)
 		}
 		if rollInt64 <= 0 {
 			ctx.Reply(fmt.Sprintf("%v is how many friends you have %s", rollInt64, ctx.Message.Author.Mention()))
