@@ -11,12 +11,12 @@ var Play = &framework.Command{
 	Name:               "play",
 	PermissionRequired: 0,
 	Exec: func(ctx *framework.Context) error {
-		_, ok := ctx.VoiceContext.VCs[ctx.GuildID]
+		_, ok := ctx.Hanamaru.VoiceContext.VCs[ctx.GuildID]
 		if !ok {
 			return fmt.Errorf("cannot play when im not connected")
 		}
 
-		queueChan, ok := ctx.VoiceContext.QueueChannels[ctx.GuildID]
+		queueChan, ok := ctx.Hanamaru.VoiceContext.QueueChannels[ctx.GuildID]
 		if !ok {
 			return fmt.Errorf("this isnt supposed to happen wot")
 		}
@@ -26,7 +26,7 @@ var Play = &framework.Command{
 			return errors.New("please pass in a valid video URL")
 		}
 
-		queueChan <- voice.NewYTSrc(videoUrl, ctx.VoiceContext.Ytdl)
+		queueChan <- voice.NewYTSrc(videoUrl, ctx.Hanamaru.VoiceContext.Ytdl)
 
 		return nil
 	},

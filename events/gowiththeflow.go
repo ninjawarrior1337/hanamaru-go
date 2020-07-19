@@ -2,7 +2,10 @@
 
 package events
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"github.com/bwmarrin/discordgo"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
+)
 
 type Sent struct {
 	Content string
@@ -11,23 +14,28 @@ type Sent struct {
 
 var lastTwoMessages = make(map[string][]Sent)
 
-var RepeatMessage = func(s *discordgo.Session, m *discordgo.MessageCreate) {
-	sent := Sent{Content: m.Content, User: m.Author}
-	if len(lastTwoMessages[m.ChannelID]) < 2 {
-		lastTwoMessages[m.ChannelID] = append(lastTwoMessages[m.ChannelID], Sent{})
-		lastTwoMessages[m.ChannelID] = append(lastTwoMessages[m.ChannelID], sent)
-	}
-	lastTwoMessages[m.ChannelID][0], lastTwoMessages[m.ChannelID][1] = lastTwoMessages[m.ChannelID][1], sent
+var RepeatMessage = &framework.EventListener{
+	Name: "Repeat Message",
+	HandlerConstructor: func(h *framework.Hanamaru) interface{} {
+		return func(s *discordgo.Session, m *discordgo.MessageCreate) {
+			sent := Sent{Content: m.Content, User: m.Author}
+			if len(lastTwoMessages[m.ChannelID]) < 2 {
+				lastTwoMessages[m.ChannelID] = append(lastTwoMessages[m.ChannelID], Sent{})
+				lastTwoMessages[m.ChannelID] = append(lastTwoMessages[m.ChannelID], sent)
+			}
+			lastTwoMessages[m.ChannelID][0], lastTwoMessages[m.ChannelID][1] = lastTwoMessages[m.ChannelID][1], sent
 
-	if lastTwoMessages[m.ChannelID][0].User.Bot || lastTwoMessages[m.ChannelID][1].User.Bot {
-		return
-	}
+			if lastTwoMessages[m.ChannelID][0].User.Bot || lastTwoMessages[m.ChannelID][1].User.Bot {
+				return
+			}
 
-	if lastTwoMessages[m.ChannelID][0].User.ID == lastTwoMessages[m.ChannelID][1].User.ID {
-		return
-	}
+			if lastTwoMessages[m.ChannelID][0].User.ID == lastTwoMessages[m.ChannelID][1].User.ID {
+				return
+			}
 
-	if lastTwoMessages[m.ChannelID][0].Content == lastTwoMessages[m.ChannelID][1].Content {
-		s.ChannelMessageSend(m.ChannelID, lastTwoMessages[m.ChannelID][0].Content)
-	}
+			if lastTwoMessages[m.ChannelID][0].Content == lastTwoMessages[m.ChannelID][1].Content {
+				s.ChannelMessageSend(m.ChannelID, lastTwoMessages[m.ChannelID][0].Content)
+			}
+		}
+	},
 }

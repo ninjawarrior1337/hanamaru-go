@@ -40,6 +40,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.6.3
 	github.com/stretchr/testify v1.5.1
+	github.com/yuin/gopher-lua v0.0.0-20200603152657-dc2b0ca8b37e
 	go.etcd.io/bbolt v1.3.2
 	golang.org/x/crypto v0.0.0-20200429183012-4b2356b1ed79 // indirect
 	golang.org/x/image v0.0.0-20200430140353-33d19683fad8
@@ -50,4 +51,5 @@ require (
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 	gopkg.in/ini.v1 v1.55.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
+	layeh.com/gopher-luar v1.0.8
 )

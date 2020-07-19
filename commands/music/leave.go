@@ -10,7 +10,7 @@ var Leave = &framework.Command{
 		if err != nil {
 			return err
 		}
-		err = ctx.VoiceContext.LeaveChannel(ctx.GuildID, channel.ID)
+		err = ctx.Hanamaru.VoiceContext.LeaveChannel(ctx.GuildID, channel.ID)
 		if err != nil {
 			return err
 		}

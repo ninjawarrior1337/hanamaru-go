@@ -11,15 +11,16 @@ import (
 
 type Hanamaru struct {
 	prefix  string
-	ownerid string
+	ownerId string
 	*discordgo.Session
-	VoiceContext *voice.Context
-	commands     []*Command
-	Db           *bolt.DB
+	VoiceContext   *voice.Context
+	commands       []*Command
+	eventListeners []*EventListener
+	Db             *bolt.DB
 }
 
-func New(t, prefix string) (bot *Hanamaru) {
-	s, err := discordgo.New(t)
+func New(token, prefix, ownerid string) (bot *Hanamaru) {
+	s, err := discordgo.New(token)
 
 	if err != nil {
 		log.Fatalf("Failed to create bot: %v", err)
@@ -38,25 +39,29 @@ func New(t, prefix string) (bot *Hanamaru) {
 		prefix:       prefix,
 		Session:      s,
 		VoiceContext: voiceContext,
-		ownerid:      "",
+		ownerId:      ownerid,
 		commands:     []*Command{},
 	}
 }
 
-func (h *Hanamaru) SetOwner(id string) {
-	h.ownerid = id
+func (h *Hanamaru) GetPrefix() string {
+	return h.prefix
 }
 
-func HasPermission(s *discordgo.Session, member *discordgo.Member, permission int) (bool, error) {
-	for _, rid := range member.Roles {
-		role, err := s.State.Role(member.GuildID, rid)
-		if err != nil {
-			return false, err
-		}
-		if role.Permissions&permission != 0 {
-			return true, nil
-		}
+func (h *Hanamaru) GetOwnerID() string {
+	return h.ownerId
+}
+
+func HasPermission(s *discordgo.Session, userID string, channelID string, reqPerm int) (bool, error) {
+	userPerms, err := s.State.UserChannelPermissions(userID, channelID)
+	if err != nil {
+		return false, err
 	}
+
+	if (userPerms | reqPerm) == userPerms {
+		return true, nil
+	}
+
 	return false, nil
 }
 
@@ -89,39 +94,38 @@ func (h *Hanamaru) AddCommand(cmd *Command) error {
 		if m.Author.ID == s.State.User.ID || m.Author.Bot {
 			return
 		}
-		if cmd.OwnerOnly && h.ownerid != m.Author.ID {
+		if cmd.OwnerOnly && h.ownerId != m.Author.ID {
 			s.ChannelMessageSend(m.ChannelID, "ERROR: You must be the owner of this instance to run this command")
 			return
 		}
-		if ok, _ := HasPermission(s, m.Member, cmd.PermissionRequired); cmd.PermissionRequired > 0 && !ok {
+		if ok, _ := HasPermission(s, m.Author.ID, m.ChannelID, cmd.PermissionRequired); cmd.PermissionRequired > 0 && !ok {
 			s.ChannelMessageSend(m.ChannelID, "ERROR: You don't have the required permissions to run this command")
 			return
 		}
-		argsString := strings.TrimPrefix(m.Content, h.prefix+cmd.Name)
-		args := ParseArgs(argsString)
-		ctx := &Context{
-			Session:       s,
-			MessageCreate: m,
-			Args:          args,
-			VoiceContext:  h.VoiceContext,
-			Hanamaru:      h,
-		}
+		ctx := NewContext(h, cmd, m)
 		err := cmd.Exec(ctx)
 		if err != nil {
 			s.ChannelMessageSend(m.ChannelID, "ERROR: "+err.Error())
 		}
 	}
-	h.AddHandler(handleFunc)
+	h.Session.AddHandler(handleFunc)
 	h.commands = append(h.commands, cmd)
+	return nil
+}
+
+func (h *Hanamaru) AddEventListener(listener *EventListener) error {
+	h.Session.AddHandler(listener.HandlerConstructor(h))
+	h.eventListeners = append(h.eventListeners, listener)
+	return nil
+}
+
+func (h *Hanamaru) AddEventListenerOnce(listener *EventListener) error {
+	h.Session.AddHandlerOnce(listener.HandlerConstructor(h))
 	return nil
 }
 
 func (h *Hanamaru) EnableHelpCommand() {
 	h.AddCommand(help)
-}
-
-func (h *Hanamaru) EnableDB() {
-
 }
 
 func (h *Hanamaru) Close() {

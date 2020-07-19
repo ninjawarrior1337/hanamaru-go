@@ -14,16 +14,20 @@ var Nuke = &framework.Command{
 	Exec: func(ctx *framework.Context) error {
 		var outerr error
 		ctx.Reply("Are you 100% sure you want to do this: (y or n)")
-		ctx.Hanamaru.AddHandlerOnce(func(session *discordgo.Session, m *discordgo.MessageCreate) {
-			if ctx.GuildID == m.GuildID && strings.Contains(m.Content, "y") && ctx.Author == m.Author {
-				err := NukeGuild(ctx.Session, ctx.GuildID)
-				if err != nil {
-					outerr = err
+		ctx.Hanamaru.AddEventListenerOnce(&framework.EventListener{
+			Name: "Nuke confirmer",
+			HandlerConstructor: func(h *framework.Hanamaru) interface{} {
+				return func(session *discordgo.Session, m *discordgo.MessageCreate) {
+					if ctx.GuildID == m.GuildID && strings.Contains(m.Content, "y") && ctx.Author == m.Author {
+						err := NukeGuild(ctx.Hanamaru.Session, ctx.GuildID)
+						if err != nil {
+							outerr = err
+						}
+					} else {
+						ctx.Reply("Canceled")
+					}
 				}
-			} else {
-				ctx.Reply("Canceled")
-			}
-		})
+			}})
 		if outerr != nil {
 			return outerr
 		}

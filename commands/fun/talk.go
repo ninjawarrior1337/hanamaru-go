@@ -20,7 +20,7 @@ var Talk = &framework.Command{
 		if err != nil {
 			return err
 		}
-		_, err = ctx.ChannelMessageSend(chatId, message)
+		_, err = ctx.Hanamaru.ChannelMessageSend(chatId, message)
 		if err != nil {
 			fmt.Errorf("message failed to send, maybe the channel doesn't exist")
 		}
