@@ -7,7 +7,7 @@ import (
 	"github.com/ninjawarrior1337/hanamaru-go/framework"
 )
 
-const GO_WITH_THE_FLOW_LIMIT = 3
+const GoWithTheFlowLimit = 3
 
 type Sent struct {
 	Content string
@@ -22,7 +22,7 @@ var RepeatMessage = &framework.EventListener{
 		return func(s *discordgo.Session, m *discordgo.MessageCreate) {
 			sent := Sent{Content: m.Content, User: m.Author}
 			sentArr := lastTwoMessages[m.ChannelID]
-			shiftSent(&sentArr, sent, GO_WITH_THE_FLOW_LIMIT)
+			shiftSent(&sentArr, sent, GoWithTheFlowLimit)
 
 			if didGoWithTheFlow(sentArr) {
 				s.ChannelMessageSend(m.ChannelID, lastTwoMessages[m.ChannelID][0].Content)
@@ -72,7 +72,12 @@ func shiftSent(arr *[]Sent, msg Sent, limit int) {
 		}
 		(*arr)[i+1] = s
 	}
-	(*arr)[0] = msg
+	if len(*arr) == 0 {
+		*arr = append(*arr, msg)
+	} else {
+		(*arr)[0] = msg
+	}
+
 	if len(*arr) > limit {
 		*arr = (*arr)[0:limit]
 	}
