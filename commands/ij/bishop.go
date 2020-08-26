@@ -1,6 +1,6 @@
-// +build ij
+//+build ij
 
-package image
+package ij
 
 import (
 	"errors"

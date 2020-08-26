@@ -124,7 +124,7 @@ config.yml
 assets/test.mp3
 *.bbolt
 
-util/jp/*.png
+util/**/*.png
 *.gen.go
 artifacts
 pkged.go

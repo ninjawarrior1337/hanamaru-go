@@ -12,7 +12,7 @@ var Avatar = &framework.Command{
 		if err != nil {
 			return fmt.Errorf("please enter a valid user")
 		}
-		ctx.Reply(user.AvatarURL(""))
+		ctx.Reply(user.AvatarURL("2048"))
 		return nil
 	},
 }

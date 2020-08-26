@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 )
 
 func GetAnimeInfo(title string) (ALMedia, error) {
@@ -18,7 +19,7 @@ func GetAnimeInfo(title string) (ALMedia, error) {
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		return ALMedia{}, errors.New("failed to get info for requested show; Status code: " + string(resp.StatusCode))
+		return ALMedia{}, errors.New("failed to get info for requested show; Status code: " + strconv.Itoa(resp.StatusCode))
 	}
 	var ar ALResponse
 	json.NewDecoder(resp.Body).Decode(&ar)
