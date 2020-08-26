@@ -24,8 +24,8 @@ var RepeatMessage = &framework.EventListener{
 			sentArr := lastTwoMessages[m.ChannelID]
 			shiftSent(&sentArr, sent, GoWithTheFlowLimit)
 
-			if didGoWithTheFlow(sentArr) {
-				s.ChannelMessageSend(m.ChannelID, lastTwoMessages[m.ChannelID][0].Content)
+			if didGoWithTheFlow(sentArr, GoWithTheFlowLimit) {
+				s.ChannelMessageSend(m.ChannelID, sentArr[0].Content)
 			}
 
 			lastTwoMessages[m.ChannelID] = sentArr
@@ -33,7 +33,10 @@ var RepeatMessage = &framework.EventListener{
 	},
 }
 
-func didGoWithTheFlow(arr []Sent) bool {
+func didGoWithTheFlow(arr []Sent, flowLen int) bool {
+	if len(arr) != flowLen {
+		return false
+	}
 	testString := arr[0].Content
 	for _, s := range arr {
 		if s.User.Bot {
@@ -46,6 +49,7 @@ func didGoWithTheFlow(arr []Sent) bool {
 	if !areIdsUnique(arr) {
 		return false
 	}
+
 	return true
 }
 
