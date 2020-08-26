@@ -1,4 +1,4 @@
-//+build ij
+// +build ij
 
 package ij
 
