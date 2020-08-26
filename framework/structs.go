@@ -49,6 +49,9 @@ func NewContext(h *Hanamaru, cmd *Command, m *discordgo.MessageCreate) *Context 
 }
 
 func (c *Context) Reply(m string) (*discordgo.Message, error) {
+	if m == "" {
+		return c.Hanamaru.ChannelMessageSend(c.ChannelID, "ERROR...idk")
+	}
 	return c.Hanamaru.ChannelMessageSend(c.ChannelID, m)
 }
 

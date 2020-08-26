@@ -13,18 +13,19 @@ var help = &Command{
 
 		for _, cmd := range ctx.Hanamaru.commands {
 			if cmd.Help != "" {
-				output += fmt.Sprintf("**%v**: %v\n", strings.Title(cmd.Name), cmd.Help)
+				output += fmt.Sprintf("**%v**: %v\n", cmd.Name, cmd.Help)
 			}
 		}
 
 		output += "\n"
 		output += "Commands without documentation: "
-
+		commandNames := []string{}
 		for _, cmd := range ctx.Hanamaru.commands {
 			if cmd.Help == "" {
-				output += fmt.Sprintf("%v, ", strings.Title(cmd.Name))
+				commandNames = append(commandNames, cmd.Name)
 			}
 		}
+		output += strings.Join(commandNames, ", ")
 		output += "\n"
 		output += "\n"
 		output += "Listeners: "
