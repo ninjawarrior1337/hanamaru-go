@@ -12,6 +12,7 @@ var UserInfo = &framework.Command{
 	OwnerOnly:          false,
 	Exec: func(ctx *framework.Context) error {
 		//ctx.Session.user
+		//TODO: Actually finish this
 		return nil
 	},
 }

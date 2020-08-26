@@ -29,7 +29,7 @@ func init() {
 	config.SetDefault("owner", "")
 	config.SetDefault("prefix", "!")
 	config.SetDefault("token", "")
-	config.SetDefault("listening", "Aqours' Songs")
+	config.SetDefault("listening", "地元愛 Dash")
 	config.SetDefault("playing", "")
 
 	err := config.ReadInConfig()
@@ -72,6 +72,7 @@ func main() {
 	bot.AddEventListener(events.Nhentai)
 	bot.AddEventListener(events.ReactionExpansion)
 	bot.AddEventListener(events.Roboragi)
+	bot.AddEventListener(events.BigEmoji)
 
 	if playing := config.GetString("playing"); playing != "" {
 		bot.Session.UpdateListeningStatus(playing)
