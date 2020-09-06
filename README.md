@@ -1,4 +1,4 @@
-# Hanamaru
+# Hanamaru ![Hanamaru Logo]("https://github.com/ninjawarrior1337/hanamaru-go/blob/master/logos/hanamaru.png?raw=true")
 ### A rework of [crocs-and-socks](https://github.com/ninjawarrior1337/crocs-and-socks/)
 Sidenote btw: The target was for a 6/9 release for the funny number. Then I remembered that
 Nozomi's birthday. Then I remembered that [this magazine cover](https://i.redd.it/dnittba9sfm41.jpg) exists 
