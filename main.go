@@ -3,16 +3,18 @@ package main
 import (
 	"flag"
 	"fmt"
-	_ "github.com/markbates/pkger"
-	"github.com/ninjawarrior1337/hanamaru-go/events"
-	"github.com/ninjawarrior1337/hanamaru-go/framework"
-	"github.com/spf13/viper"
 	"log"
 	"os"
 	"os/signal"
 	"runtime"
 	"runtime/pprof"
 	"syscall"
+	"time"
+
+	_ "github.com/markbates/pkger"
+	"github.com/ninjawarrior1337/hanamaru-go/events"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
+	"github.com/spf13/viper"
 )
 
 var config *viper.Viper
@@ -74,13 +76,17 @@ func main() {
 	bot.AddEventListener(events.Roboragi)
 	bot.AddEventListener(events.BigEmoji)
 
-	if playing := config.GetString("playing"); playing != "" {
-		bot.Session.UpdateListeningStatus(playing)
-	} else if listening := config.GetString("listening"); listening != "" {
-		bot.Session.UpdateListeningStatus(listening)
-	} else {
-		bot.Session.UpdateListeningStatus("Aqours' Songs")
-	}
+	go func() {
+		for range time.Tick(time.Hour * 12) {
+			if playing := config.GetString("playing"); playing != "" {
+				bot.Session.UpdateListeningStatus(playing)
+			} else if listening := config.GetString("listening"); listening != "" {
+				bot.Session.UpdateListeningStatus(listening)
+			} else {
+				bot.Session.UpdateListeningStatus("Aqours' Songs")
+			}
+		}
+	}()
 
 	signal.Notify(syscallChan, syscall.SIGTERM, syscall.SIGINT)
 	<-syscallChan
