@@ -77,7 +77,7 @@ func main() {
 	bot.AddEventListener(events.BigEmoji)
 
 	go func() {
-		for range time.Tick(time.Hour * 12) {
+		setStatus := func() {
 			if playing := config.GetString("playing"); playing != "" {
 				bot.Session.UpdateListeningStatus(playing)
 			} else if listening := config.GetString("listening"); listening != "" {
@@ -85,6 +85,10 @@ func main() {
 			} else {
 				bot.Session.UpdateListeningStatus("Aqours' Songs")
 			}
+		}
+		setStatus()
+		for range time.Tick(time.Hour * 12) {
+			setStatus()
 		}
 	}()
 
