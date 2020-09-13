@@ -1,9 +1,12 @@
+// +build ij
+
 package events
 
 import (
+	"testing"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestShiftSent(t *testing.T) {
