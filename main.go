@@ -87,7 +87,7 @@ func main() {
 			}
 		}
 		setStatus()
-		for range time.Tick(time.Hour * 12) {
+		for range time.Tick(time.Hour * 4) {
 			setStatus()
 		}
 	}()
