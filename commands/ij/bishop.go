@@ -66,13 +66,13 @@ var Bishop = &framework.Command{
 			return errors.New("failed to decode bishop base image")
 		}
 
-		fontF, err := pkger.Open("/assets/Impact.ttf")
+		fontF, err := pkger.Open("/assets/LeagueGothic.ttf")
 		if err != nil {
 			return errors.New("failed to load impact prarsedFont")
 		}
 		entireFile, _ := ioutil.ReadAll(fontF)
 		prarsedFont, _ := truetype.Parse(entireFile)
-		fontFace = truetype.NewFace(prarsedFont, &truetype.Options{Size: 32})
+		fontFace = truetype.NewFace(prarsedFont, &truetype.Options{Size: 64})
 		return nil
 	},
 }
