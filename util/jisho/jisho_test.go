@@ -7,7 +7,7 @@ import (
 )
 
 func TestJisho_SearchForKanji(t *testing.T) {
-	util.PerformNotCI(t)
+	util.SkipCI(t)
 	j := NewJisho()
 	spew.Dump(j.SearchForKanji("君"))
 	spew.Dump(j.SearchForKanji("謎"))

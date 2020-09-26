@@ -6,7 +6,7 @@ import (
 )
 
 func TestParseNhentai(t *testing.T) {
-	PerformNotCI(t)
+	SkipCI(t)
 	//I randomly picked these numbers
 	n, _ := ParseNhentai(308389)
 

@@ -22,7 +22,7 @@ var Roboragi = &framework.EventListener{
 				return
 			}
 			if matches := animeRegex.FindAllStringSubmatch(m.Content, -1); len(matches) > 0 {
-				media, err := util.GetAnimeInfo(matches[0][1])
+				media, err := util.GetAnimeInfoFromTitle(matches[0][1])
 				if err != nil {
 					return
 				}

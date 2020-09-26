@@ -13,6 +13,6 @@ func init() {
 }
 
 func TestJisho_SearchKeyword(t *testing.T) {
-	util.PerformNotCI(t)
+	util.SkipCI(t)
 	spew.Dump(j.SearchKeyword("始まる"))
 }

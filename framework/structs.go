@@ -104,17 +104,32 @@ func (c *Context) ReplyGIFImg(img *gif.GIF, name string) (*discordgo.Message, er
 func (c *Context) GetImage(idx uint) (image.Image, error) {
 	var imgUrl string
 
-	if len(c.Message.Attachments) <= 0 {
-		if len(c.Args) == 0 {
-			return nil, fmt.Errorf("this doesn't contain an image")
-		} else {
+	if len(c.Message.Attachments) > 0 {
+		imgUrl = c.Message.Attachments[idx].URL
+		// if ends here
+	} else {
+		if len(c.Args) != 0 {
 			if _, err := url.Parse(c.Args[idx]); err != nil {
-				return nil, fmt.Errorf("this invalid image: %v", c.Args[idx])
+				imgUrl = ""
 			}
 			imgUrl, c.Args = c.Args[0], c.Args[1:]
+			// if ends here
+		} else {
+			msg, err := c.GetPreviousMessage()
+			if err != nil {
+				imgUrl = ""
+				// if ends here
+			} else if len(msg.Attachments) > 0 {
+				imgUrl = msg.Attachments[idx].URL
+				// if ends here
+			} else if len(msg.Embeds) > 0 {
+				imgUrl = msg.Embeds[0].URL
+			}
 		}
-	} else {
-		imgUrl = c.Message.Attachments[idx].URL
+	}
+
+	if imgUrl == "" {
+		return nil, fmt.Errorf("unable to determine which image to use")
 	}
 
 	resp, err := http.Get(imgUrl)
