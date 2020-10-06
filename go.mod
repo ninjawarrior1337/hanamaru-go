@@ -13,7 +13,7 @@ require (
 	github.com/esimov/caire v1.2.5
 	github.com/esimov/pigo v1.4.1 // indirect
 	github.com/fogleman/gg v1.3.0
-	github.com/fsnotify/fsnotify v1.4.9 // indirect
+	github.com/fsnotify/fsnotify v1.4.9
 	github.com/gobuffalo/here v0.6.2 // indirect
 	github.com/gocolly/colly v1.2.0
 	github.com/gocolly/colly/v2 v2.0.1

@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/fsnotify/fsnotify"
 	"log"
 	"os"
 	"os/signal"
@@ -24,9 +25,14 @@ var optionalEvents []*framework.EventListener
 
 func init() {
 	config = viper.New()
-	config.AddConfigPath(".")
+	if os.Getenv("IN_DOCKER") != "" {
+		config.AddConfigPath("/data")
+	} else {
+		config.AddConfigPath(".")
+	}
 	config.AllSettings()
 	config.AutomaticEnv()
+	config.WatchConfig()
 
 	config.SetDefault("owner", "")
 	config.SetDefault("prefix", "!")
@@ -87,6 +93,9 @@ func main() {
 			}
 		}
 		setStatus()
+		config.OnConfigChange(func(in fsnotify.Event) {
+			setStatus()
+		})
 		for range time.Tick(time.Hour * 2) {
 			setStatus()
 		}
