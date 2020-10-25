@@ -1,7 +1,7 @@
 package util
 
 var SearchQueryTemplate = `query {
-  Media(%v: %v) {
+  Media(%v: %v, %v: %v) {
     siteUrl
     title {
       english

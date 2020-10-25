@@ -20,3 +20,9 @@ func TestDecodeFlag(t *testing.T) {
 	resultData, _ := DecodeFlag(flag)
 	assert.Equal(t, testString, string(resultData))
 }
+
+func TestEncodeNullFlag(t *testing.T) {
+	data := []byte("")
+	flag := EncodeFlag(data)
+	gg.SavePNG("flag_test.png", flag)
+}

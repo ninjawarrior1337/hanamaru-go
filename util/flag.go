@@ -18,6 +18,9 @@ func EncodeFlag(data []byte) image.Image {
 	for i := 0; i < len(hexString)%6; i++ {
 		hexString = "0" + hexString
 	}
+	if len(hexString) == 0 {
+		hexString = "000000"
+	}
 	//Setup context
 	ctx := gg.NewContext(WIDTH, HEIGHT)
 	//Compute width

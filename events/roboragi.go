@@ -10,6 +10,9 @@ import (
 )
 
 var animeRegex = regexp.MustCompile(`{(.*)}`)
+var mangaRegex = regexp.MustCompile(`[(.*)]`)
+
+var regexes = []*regexp.Regexp{animeRegex, mangaRegex}
 
 var Roboragi = &framework.EventListener{
 	Name: "Roboragi",
@@ -21,14 +24,25 @@ var Roboragi = &framework.EventListener{
 			if strings.HasPrefix(m.Content, h.GetPrefix()) {
 				return
 			}
-			if matches := animeRegex.FindAllStringSubmatch(m.Content, -1); len(matches) > 0 {
-				media, err := util.GetAnimeInfoFromTitle(matches[0][1])
-				if err != nil {
+			for _, regex := range regexes {
+				if matches := regex.FindAllStringSubmatch(m.Content, -1); len(matches) > 0 {
+					var err error
+					var media util.ALMedia
+					if regex == animeRegex {
+						media, err = util.GetAnimeInfoFromTitle(matches[0][1])
+					}
+					if regex == mangaRegex {
+						media, err = util.GetMangaInfoFromTitle(matches[0][1])
+					}
+					if err != nil {
+						return
+					}
+					_, err = s.ChannelMessageSendEmbed(m.ChannelID, roboragiEmbed(media))
+					if err != nil {
+						s.ChannelMessageSend(m.ChannelID, err.Error())
+						return
+					}
 					return
-				}
-				_, err = s.ChannelMessageSendEmbed(m.ChannelID, roboragiEmbed(media))
-				if err != nil {
-					s.ChannelMessageSend(m.ChannelID, err.Error())
 				}
 			}
 		}

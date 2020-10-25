@@ -33,6 +33,10 @@ var FlagDec = &framework.Command{
 		if err != nil {
 			return err
 		}
+		if string(data) == "" {
+			ctx.Reply("This flag contains no data.")
+			return nil
+		}
 		ctx.Reply(string(data))
 		return nil
 	},
