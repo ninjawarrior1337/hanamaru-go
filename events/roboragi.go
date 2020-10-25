@@ -10,7 +10,7 @@ import (
 )
 
 var animeRegex = regexp.MustCompile(`{(.*)}`)
-var mangaRegex = regexp.MustCompile(`[(.*)]`)
+var mangaRegex = regexp.MustCompile(`\[(.*)\]`)
 
 var regexes = []*regexp.Regexp{animeRegex, mangaRegex}
 
