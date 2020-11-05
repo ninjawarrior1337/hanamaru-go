@@ -16,7 +16,9 @@ import (
 )
 
 type EventListener struct {
-	Name               string
+	// Name of the event listener.
+	Name string
+	// HandlerConstructor is a function that depends on a Hanamaru pointer and must return an event listener
 	HandlerConstructor func(h *Hanamaru) interface{}
 }
 

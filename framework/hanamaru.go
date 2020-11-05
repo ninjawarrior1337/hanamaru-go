@@ -113,6 +113,7 @@ func (h *Hanamaru) AddCommand(cmd *Command) error {
 	return nil
 }
 
+// AddEventListener adds and event listener to the bot.
 func (h *Hanamaru) AddEventListener(listener *EventListener) error {
 	h.Session.AddHandler(listener.HandlerConstructor(h))
 	h.eventListeners = append(h.eventListeners, listener)

@@ -130,3 +130,5 @@ artifacts
 pkged.go
 *.pprof
 pkged.go
+
+*.test.db
