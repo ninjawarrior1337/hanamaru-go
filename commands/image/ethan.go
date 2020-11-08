@@ -1,26 +1,11 @@
 package image
 
 import (
-	"errors"
-	"github.com/fogleman/gg"
-	"github.com/golang/freetype/truetype"
-	"github.com/markbates/pkger"
-	"github.com/ninjawarrior1337/hanamaru-go/framework"
-	"golang.org/x/image/font"
 	"image/color"
-	"io/ioutil"
-	"log"
+
+	"github.com/fogleman/gg"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 )
-
-var ffData []byte
-
-func GetFont(size float64) font.Face {
-	f, err := truetype.Parse(ffData)
-	if err != nil {
-		log.Fatalf("Failed to load noto font: %v", err)
-	}
-	return truetype.NewFace(f, &truetype.Options{Size: size})
-}
 
 var Ethan = &framework.Command{
 	Name:               "ethan",
@@ -42,22 +27,13 @@ var Ethan = &framework.Command{
 		textCtx.DrawRectangle(0, 0, float64(textCtx.Width()), float64(textCtx.Height()))
 		textCtx.Fill()
 		textCtx.SetColor(color.Black)
-		textCtx.SetFontFace(GetFont(16))
+		textCtx.SetFontFace(GetNotoFont(16))
 		textCtx.DrawStringWrapped(text, float64(textCtx.Width()/2), float64(textCtx.Height()/2), 0.5, 0.5, float64(textCtx.Width())*0.8, 1.0, gg.AlignCenter)
 
 		ethanCtx := gg.NewContext(img.Bounds().Max.X, img.Bounds().Max.Y+textCtx.Height())
 		ethanCtx.DrawImage(textCtx.Image(), 0, 0)
 		ethanCtx.DrawImage(img, 0, textCtx.Height())
 		ctx.ReplyPNGImg(ethanCtx.Image(), "ethan.png")
-		return nil
-	},
-	Setup: func() error {
-		file, err := pkger.Open("/assets/noto.ttf")
-		if err != nil {
-			return errors.New("failed to load noto font")
-		}
-		entireFile, _ := ioutil.ReadAll(file)
-		ffData = entireFile
 		return nil
 	},
 }

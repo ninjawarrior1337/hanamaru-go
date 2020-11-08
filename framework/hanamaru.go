@@ -2,11 +2,12 @@ package framework
 
 import (
 	"fmt"
+	"log"
+	"strings"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/ninjawarrior1337/hanamaru-go/framework/voice"
 	bolt "go.etcd.io/bbolt"
-	"log"
-	"strings"
 )
 
 type Hanamaru struct {
@@ -103,7 +104,10 @@ func (h *Hanamaru) AddCommand(cmd *Command) error {
 			return
 		}
 		ctx := NewContext(h, cmd, m)
+
+		h.Session.ChannelTyping(ctx.ChannelID)
 		err := cmd.Exec(ctx)
+
 		if err != nil {
 			s.ChannelMessageSend(m.ChannelID, "ERROR: "+err.Error())
 		}
