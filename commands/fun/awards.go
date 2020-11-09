@@ -2,9 +2,10 @@ package fun
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/ninjawarrior1337/hanamaru-go/events"
 	"github.com/ninjawarrior1337/hanamaru-go/framework"
-	"strings"
 )
 
 var AwardsCommand = &framework.Command{
@@ -58,7 +59,10 @@ func generateLeaderboard(h *framework.Hanamaru) string {
 	finalString := "Leaderboard: \n"
 
 	for k, v := range leaderBoard {
-		user, _ := h.User(v.Uid)
+		user, err := h.User(v.Uid)
+		if err != nil {
+			return "Failed to generate leaderboard: " + err.Error()
+		}
 		finalString += fmt.Sprintf("Most %v: %v with %d award(s)\n", strings.Split(k, "_")[0], user.String(), v.Count)
 	}
 	return finalString

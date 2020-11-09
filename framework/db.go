@@ -2,8 +2,9 @@ package framework
 
 import (
 	"fmt"
-	bolt "go.etcd.io/bbolt"
 	"os"
+
+	bolt "go.etcd.io/bbolt"
 )
 
 var configCommand = &Command{
@@ -63,9 +64,7 @@ var configCommand = &Command{
 func (h *Hanamaru) SetupDB() (err error) {
 	if os.Getenv("IN_DOCKER") == "true" {
 		h.Db, err = bolt.Open("/data/db.bbolt", 0666, nil)
-		if err != nil {
-			return
-		}
+		return
 	}
 	h.Db, err = bolt.Open("db.bbolt", 0666, nil)
 	h.AddCommand(configCommand)
