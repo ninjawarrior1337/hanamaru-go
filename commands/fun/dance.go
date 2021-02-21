@@ -1,12 +1,17 @@
 package fun
 
 import (
+	"bytes"
+	_ "embed"
 	"encoding/json"
 	"fmt"
-	"github.com/markbates/pkger"
-	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"strings"
+
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 )
+
+//go:embed assets/dance.json
+var danceBytes []byte
 
 var dmappings map[string]string
 
@@ -28,12 +33,7 @@ var Dance = &framework.Command{
 		return nil
 	},
 	Setup: func() error {
-		file, err := pkger.Open("/assets/dance.json")
-		if err != nil {
-			return err
-		}
-		defer file.Close()
-		json.NewDecoder(file).Decode(&dmappings)
+		json.NewDecoder(bytes.NewReader(danceBytes)).Decode(&dmappings)
 		return nil
 	},
 }

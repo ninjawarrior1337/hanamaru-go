@@ -4,12 +4,15 @@ package jp
 
 import (
 	"bytes"
+	_ "embed"
 	"encoding/csv"
 	"errors"
-	"github.com/markbates/pkger"
 	"strings"
 	"unicode/utf8"
 )
+
+//go:embed rtk.csv
+var rtkCSVBytes []byte
 
 var ErrorEntryNotFound = errors.New("kanji with the provided search params not found")
 
@@ -35,11 +38,7 @@ func NewRtkDatabase() *RtkDatabase {
 }
 
 func (r *RtkDatabase) parseDict() {
-	db, err := pkger.Open("/assets/rtk.csv")
-	if err != nil {
-		panic(err)
-	}
-	rd := csv.NewReader(db)
+	rd := csv.NewReader(bytes.NewReader(rtkCSVBytes))
 	rd.Comma = ';'
 	rd.LazyQuotes = true
 	rd.FieldsPerRecord = -1

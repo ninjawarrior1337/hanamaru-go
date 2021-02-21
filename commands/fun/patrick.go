@@ -1,15 +1,18 @@
 package fun
 
 import (
-	"github.com/markbates/pkger"
-	"github.com/markbates/pkger/pkging"
-	"github.com/ninjawarrior1337/hanamaru-go/framework"
+	"embed"
+	"io"
 	"strconv"
+
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 )
 
-func getPatrickImage(fileName string) pkging.File {
-	pkger.Include("/assets/imgs/patrick")
-	f, _ := pkger.Open("/assets/imgs/patrick/" + fileName)
+//go:embed assets/patrick/*
+var patrickFS embed.FS
+
+func getPatrickImage(fileName string) io.Reader {
+	f, _ := patrickFS.Open("assets/patrick/" + fileName)
 	return f
 }
 

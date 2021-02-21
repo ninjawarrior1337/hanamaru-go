@@ -1,16 +1,19 @@
 package fun
 
 import (
+	"embed"
 	"errors"
-	"github.com/markbates/pkger"
-	"github.com/markbates/pkger/pkging"
-	"github.com/ninjawarrior1337/hanamaru-go/framework"
+	"io"
 	"strconv"
+
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 )
 
-func getSpoonfulImage(fileName string) pkging.File {
-	pkger.Include("/assets/imgs/spoonful")
-	f, _ := pkger.Open("/assets/imgs/spoonful/" + fileName)
+//go:embed assets/spoonful/*
+var spoonfulFS embed.FS
+
+func getSpoonfulImage(fileName string) io.Reader {
+	f, _ := spoonfulFS.Open("assets/spoonful/" + fileName)
 	return f
 }
 

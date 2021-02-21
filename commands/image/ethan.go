@@ -5,6 +5,7 @@ import (
 
 	"github.com/fogleman/gg"
 	"github.com/ninjawarrior1337/hanamaru-go/framework"
+	"github.com/ninjawarrior1337/hanamaru-go/util"
 )
 
 var Ethan = &framework.Command{
@@ -27,7 +28,7 @@ var Ethan = &framework.Command{
 		textCtx.DrawRectangle(0, 0, float64(textCtx.Width()), float64(textCtx.Height()))
 		textCtx.Fill()
 		textCtx.SetColor(color.Black)
-		textCtx.SetFontFace(GetNotoFont(16))
+		textCtx.SetFontFace(util.GetNotoFont(16))
 		textCtx.DrawStringWrapped(text, float64(textCtx.Width()/2), float64(textCtx.Height()/2), 0.5, 0.5, float64(textCtx.Width())*0.8, 1.0, gg.AlignCenter)
 
 		ethanCtx := gg.NewContext(img.Bounds().Max.X, img.Bounds().Max.Y+textCtx.Height())

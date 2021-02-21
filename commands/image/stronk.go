@@ -1,13 +1,19 @@
 package image
 
 import (
+	"bytes"
+	"image"
+
+	_ "embed"
+
 	"github.com/disintegration/imaging"
 	"github.com/fogleman/gg"
-	"github.com/markbates/pkger"
 	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"golang.org/x/image/colornames"
-	"image"
 )
+
+//go:embed assets/stronk.png
+var stronkImgBytes []byte
 
 var Stronk = &framework.Command{
 	Name:               "stronk",
@@ -39,7 +45,6 @@ var Stronk = &framework.Command{
 }
 
 func getStronkImage() image.Image {
-	f, _ := pkger.Open("/assets/imgs/stronk.png")
-	i, _, _ := image.Decode(f)
+	i, _, _ := image.Decode(bytes.NewReader(stronkImgBytes))
 	return i
 }

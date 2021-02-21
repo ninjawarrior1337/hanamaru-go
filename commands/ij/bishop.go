@@ -3,16 +3,20 @@
 package ij
 
 import (
+	"embed"
 	"errors"
 	"fmt"
-	"github.com/fogleman/gg"
-	"github.com/golang/freetype/truetype"
-	"github.com/markbates/pkger"
-	"github.com/ninjawarrior1337/hanamaru-go/framework"
-	"golang.org/x/image/font"
 	"image"
 	"io/ioutil"
+
+	"github.com/fogleman/gg"
+	"github.com/golang/freetype/truetype"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
+	"golang.org/x/image/font"
 )
+
+//go:embed assets/*
+var bishopFS embed.FS
 
 var baseImg image.Image
 var fontFace font.Face
@@ -57,7 +61,7 @@ var Bishop = &framework.Command{
 		return nil
 	},
 	Setup: func() error {
-		f, err := pkger.Open("/assets/imgs/thefrick.png")
+		f, err := bishopFS.Open("assets/thefrick.png")
 		if err != nil {
 			return errors.New("failed to load bishop base image")
 		}
@@ -66,7 +70,7 @@ var Bishop = &framework.Command{
 			return errors.New("failed to decode bishop base image")
 		}
 
-		fontF, err := pkger.Open("/assets/LeagueGothic.ttf")
+		fontF, err := bishopFS.Open("assets/LeagueGothic.ttf")
 		if err != nil {
 			return errors.New("failed to load impact prarsedFont")
 		}

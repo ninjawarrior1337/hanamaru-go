@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/fsnotify/fsnotify"
 	"log"
 	"os"
 	"os/signal"
@@ -12,7 +11,8 @@ import (
 	"syscall"
 	"time"
 
-	_ "github.com/markbates/pkger"
+	"github.com/fsnotify/fsnotify"
+
 	"github.com/ninjawarrior1337/hanamaru-go/events"
 	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"github.com/spf13/viper"

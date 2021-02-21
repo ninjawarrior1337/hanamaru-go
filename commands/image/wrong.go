@@ -1,15 +1,21 @@
 package image
 
 import (
+	"bytes"
 	"image"
 	"image/draw"
 	"image/gif"
 	"sync"
 
+	_ "embed"
+
 	"github.com/fogleman/gg"
-	"github.com/markbates/pkger"
 	"github.com/ninjawarrior1337/hanamaru-go/framework"
+	"github.com/ninjawarrior1337/hanamaru-go/util"
 )
+
+//go:embed assets/spies.gif
+var spiesGifBytes []byte
 
 type editData struct {
 	Width  int
@@ -26,7 +32,7 @@ func computeEditData(i image.Image, text string) editData {
 	ws.Fill()
 
 	ws.SetHexColor("#000000")
-	ws.SetFontFace(GetNotoBoldFont(48))
+	ws.SetFontFace(util.GetNotoBoldFont(48))
 	ws.DrawStringWrapped("*"+text, float64(ws.Width()/2), float64(ws.Height()/2), 0.5, 0.5, float64(ws.Width()), 1.2, gg.AlignCenter)
 
 	return editData{
@@ -49,8 +55,7 @@ func insertText(i image.PalettedImage, e editData) *image.Paletted {
 }
 
 func getSpiesGif() *gif.GIF {
-	f, _ := pkger.Open("/assets/imgs/spies.gif")
-	g, _ := gif.DecodeAll(f)
+	g, _ := gif.DecodeAll(bytes.NewReader(spiesGifBytes))
 	return g
 }
 

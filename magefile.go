@@ -19,12 +19,12 @@ var TAGS = []string{"", "jp,ij"}
 var OSes = []string{"windows", "linux"}
 
 func BuildCI() {
-	mg.SerialDeps(InstallDeps, Generate)
+	mg.SerialDeps(Generate)
 	build()
 }
 
 func Build() {
-	mg.SerialDeps(InstallDeps, Test, Generate)
+	mg.SerialDeps(Test, Generate)
 	build()
 }
 
@@ -67,7 +67,7 @@ func build() error {
 }
 
 func BuildDocker() error {
-	mg.SerialDeps(InstallDeps, Generate)
+	mg.SerialDeps(Generate)
 	fmt.Println("Building for Docker")
 	flags := []string{
 		"build",
@@ -86,30 +86,14 @@ func Test() error {
 	return sh.Run("go", "test", "./...")
 }
 
-func pkg() error {
-	mg.SerialDeps(linkCommands)
-	fmt.Println("Packaging assets with pkger...")
-	err := sh.RunV("pkger", "list")
-	if err != nil {
-		return err
-	}
-	return sh.Run("pkger")
-}
-
 func Generate() error {
-	mg.SerialDeps(linkCommands, pkg)
+	mg.SerialDeps(linkCommands)
 	return nil
 }
 
 func linkCommands() error {
 	fmt.Println("Linking Commands...")
 	return sh.Run("go", "run", filepath.FromSlash("./tools/cmd/gen_command_imports.go"))
-}
-
-// Manage your deps, or running package managers.
-func InstallDeps() error {
-	fmt.Println("Installing Deps...")
-	return sh.Run("go", "get", "github.com/markbates/pkger/cmd/pkger")
 }
 
 // Clean up after yourself

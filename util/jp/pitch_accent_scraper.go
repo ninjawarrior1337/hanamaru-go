@@ -36,7 +36,7 @@ func ScrapePitchAccent(in string) (string, []int) {
 		if element.Text != "" {
 			matches := regex.FindAllStringSubmatch(element.Text, -1)
 			if len(matches) > 0 {
-				json.NewDecoder(bytes.NewBuffer([]byte(matches[0][1]))).Decode(&outSlice)
+				json.NewDecoder(bytes.NewReader([]byte(matches[0][1]))).Decode(&outSlice)
 			}
 		}
 	})

@@ -3,17 +3,14 @@
 package jp
 
 import (
-	"errors"
 	"fmt"
-	"github.com/fogleman/gg"
-	"github.com/golang/freetype/truetype"
-	"github.com/markbates/pkger"
-	"golang.org/x/image/font"
 	"image"
-	"io/ioutil"
 	"strings"
 	"sync"
 	"unicode/utf8"
+
+	"github.com/fogleman/gg"
+	"github.com/ninjawarrior1337/hanamaru-go/util"
 )
 
 const KanaWidth = 75
@@ -26,21 +23,21 @@ const DotRadius = 8
 
 var ffData []byte
 
-func GetFont() (font.Face, error) {
-	if ffData == nil {
-		file, err := pkger.Open("/assets/noto.ttf")
-		if err != nil {
-			return nil, errors.New("failed to load noto font")
-		}
-		entireFile, _ := ioutil.ReadAll(file)
-		ffData = entireFile
-	}
-	f, err := truetype.Parse(ffData)
-	if err != nil {
-		return nil, errors.New("failed to parse noto font")
-	}
-	return truetype.NewFace(f, &truetype.Options{Size: 32}), nil
-}
+// func GetFont() (font.Face, error) {
+// 	if ffData == nil {
+// 		file, err := pkger.Open("/assets/noto.ttf")
+// 		if err != nil {
+// 			return nil, errors.New("failed to load noto font")
+// 		}
+// 		entireFile, _ := ioutil.ReadAll(file)
+// 		ffData = entireFile
+// 	}
+// 	f, err := truetype.Parse(ffData)
+// 	if err != nil {
+// 		return nil, errors.New("failed to parse noto font")
+// 	}
+// 	return truetype.NewFace(f, &truetype.Options{Size: 32}), nil
+// }
 
 func RenderPitchAccent(phrase string, pitchInfo []int) (image.Image, error) {
 	if phrase == "" || len(pitchInfo) == 0 {
@@ -98,7 +95,7 @@ func RenderPitchAccentConcurrent(phrase string, pitchInfo []int) (image.Image, e
 func RenderRune(char string, pitchPlacement, pPitch, nPitch int) image.Image {
 	ctx := gg.NewContext(KanaWidth, KanaHeight)
 
-	f, _ := GetFont()
+	f := util.GetNotoFont(32)
 	ctx.SetFontFace(f)
 	ctx.SetRGB255(255, 255, 255)
 	ctx.DrawStringAnchored(char, CenterOffset, 125, 0.5, 0.5)

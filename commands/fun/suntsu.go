@@ -3,11 +3,16 @@ package fun
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/markbates/pkger"
-	"github.com/ninjawarrior1337/hanamaru-go/framework"
-	"html/template"
 	"math/rand"
+	"text/template"
+
+	_ "embed"
+
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 )
+
+//go:embed assets/suntsu.json
+var suntsuJSON []byte
 
 var quotes []string
 var quoteTempl = template.Must(template.New("suntsu").Parse(`"{{.}}" - Sun Tsu, Art of War`))
@@ -22,11 +27,7 @@ var Suntsu = &framework.Command{
 		return nil
 	},
 	Setup: func() error {
-		file, err := pkger.Open("/assets/suntsu.json")
-		if err != nil {
-			return err
-		}
-		json.NewDecoder(file).Decode(&quotes)
+		json.NewDecoder(bytes.NewReader(suntsuJSON)).Decode(&quotes)
 		return nil
 	},
 }

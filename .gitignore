@@ -132,3 +132,4 @@ pkged.go
 pkged.go
 
 *.test.db
+test_files
