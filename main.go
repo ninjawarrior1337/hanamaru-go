@@ -20,6 +20,7 @@ import (
 
 var config *viper.Viper
 
+//go:generate go run tools/cmd/gen_command_imports.go
 var commands []*framework.Command
 var optionalEvents []*framework.EventListener
 
@@ -41,7 +42,7 @@ func init() {
 	config.SetDefault("playing", "")
 
 	err := config.ReadInConfig()
-	if err != nil {
+	if err != nil && os.Getenv("IN_DOCKER") == "" {
 		_ = config.WriteConfigAs("config.yml")
 		log.Printf("Failed to read config: %v\n", err)
 		log.Println("A default config file has been created for you at config.yml")

@@ -14,10 +14,7 @@ var JishoCmd = &framework.Command{
 	OwnerOnly:          false,
 	Help:               "Searches jisho and displays the first result",
 	Exec: func(ctx *framework.Context) error {
-		search, err := ctx.GetArgIndex(0)
-		if err != nil {
-			return err
-		}
+		search := ctx.TakeRest()[1:]
 		sr, err := j.SearchKeyword(search)
 		if err != nil {
 			return err

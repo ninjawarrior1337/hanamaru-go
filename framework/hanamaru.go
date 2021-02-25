@@ -67,12 +67,13 @@ func HasPermission(s *discordgo.Session, userID string, channelID string, reqPer
 }
 
 type ErrAddCommand struct {
-	cmd *Command
+	cmd    *Command
+	reason string
 	error
 }
 
 func (e ErrAddCommand) Error() string {
-	return fmt.Sprintf("failed to add command: %v: reason: %v", e.cmd.Name, e)
+	return fmt.Sprintf("failed to add command: %v: reason: %v", e.cmd.Name, e.reason)
 }
 
 func (h *Hanamaru) AddCommand(cmd *Command) error {
@@ -83,8 +84,8 @@ func (h *Hanamaru) AddCommand(cmd *Command) error {
 		err := cmd.Setup()
 		if err != nil {
 			return ErrAddCommand{
-				cmd:   cmd,
-				error: err,
+				cmd:    cmd,
+				reason: err.Error(),
 			}
 		}
 	}
