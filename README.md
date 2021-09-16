@@ -1,6 +1,6 @@
 # Hanamaru
 
-<img align="right" src="https://github.com/ninjawarrior1337/hanamaru-go/blob/master/logos/hanamaru.png?raw=true" alt="Hanamaru Logo" height="128"/>
+<img align="right" src="https://github.com/ninjawarrior1337/hanamaru-go/blob/main/logos/hanamaru.png?raw=true" alt="Hanamaru Logo" height="128"/>
 
 ### A rework of [crocs-and-socks](https://github.com/ninjawarrior1337/crocs-and-socks/)
 
