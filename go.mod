@@ -7,9 +7,10 @@ require (
 	github.com/antchfx/htmlquery v1.2.3 // indirect
 	github.com/antchfx/xmlquery v1.2.4 // indirect
 	github.com/anthonynsimon/bild v0.12.0
-	github.com/bwmarrin/discordgo v0.20.3
+	github.com/bwmarrin/discordgo v0.23.2
 	github.com/davecgh/go-spew v1.1.1
 	github.com/disintegration/imaging v1.6.2
+	github.com/dop251/goja v0.0.0-20210630164231-8f81471d5d0b
 	github.com/esimov/caire v1.2.5
 	github.com/esimov/pigo v1.4.1 // indirect
 	github.com/fogleman/gg v1.3.0
@@ -24,11 +25,8 @@ require (
 	github.com/ikawaha/kagome v1.11.2
 	github.com/jonas747/dca v0.0.0-20200403191804-067b814772f1
 	github.com/jonas747/ogg v0.0.0-20161220051205-b4f6f4cf3757 // indirect
-	github.com/kr/text v0.2.0 // indirect
-	github.com/magefile/mage v1.9.0
 	github.com/magiconair/properties v1.8.1
 	github.com/mitchellh/mapstructure v1.3.0 // indirect
-	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/pelletier/go-toml v1.7.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/smartystreets/assertions v1.1.0 // indirect
@@ -44,10 +42,8 @@ require (
 	golang.org/x/image v0.0.0-20200430140353-33d19683fad8
 	golang.org/x/net v0.0.0-20200501053045-e0ff5e5a1de5 // indirect
 	golang.org/x/sys v0.0.0-20200501145240-bc7a7d42d5c3 // indirect
-	golang.org/x/text v0.3.2
+	golang.org/x/text v0.3.6
 	google.golang.org/appengine v1.6.6 // indirect
-	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 	gopkg.in/ini.v1 v1.55.0 // indirect
-	gopkg.in/yaml.v2 v2.3.0 // indirect
 	layeh.com/gopher-luar v1.0.8
 )

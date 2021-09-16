@@ -30,7 +30,7 @@ var Migrate = &framework.Command{
 		}
 		for _, s := range guild.VoiceStates {
 			if s.ChannelID == fromVC.ID {
-				ctx.Hanamaru.GuildMemberMove(ctx.GuildID, s.UserID, toVC)
+				ctx.Hanamaru.GuildMemberMove(ctx.GuildID, s.UserID, &toVC)
 			}
 		}
 		return nil

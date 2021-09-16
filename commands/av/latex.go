@@ -1,4 +1,4 @@
-package image
+package av
 
 import (
 	"github.com/disintegration/imaging"

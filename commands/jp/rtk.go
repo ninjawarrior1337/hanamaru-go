@@ -1,13 +1,14 @@
-//+build jp
+//go:build jp
 
 package jp
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"github.com/ninjawarrior1337/hanamaru-go/util/jp"
-	"strings"
 )
 
 var rtkDB *jp.RtkDatabase

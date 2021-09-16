@@ -15,6 +15,7 @@ var fontsFS embed.FS
 
 func GetFontByName(name string, size float64) font.Face {
 	file, _ := fontsFS.Open(fmt.Sprintf("fonts/%v.ttf", name))
+	defer file.Close()
 	entireFile, _ := ioutil.ReadAll(file)
 	f, err := truetype.Parse(entireFile)
 	if err != nil {

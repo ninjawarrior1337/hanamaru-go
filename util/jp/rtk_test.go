@@ -1,10 +1,11 @@
-//+build jp
+//go:build jp
 
 package jp
 
 import (
-	"github.com/davecgh/go-spew/spew"
 	"testing"
+
+	"github.com/davecgh/go-spew/spew"
 )
 
 func TestNewRtkDatabase(t *testing.T) {

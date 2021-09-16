@@ -1,4 +1,4 @@
-// +build ij
+//go:build ij
 
 package ij
 

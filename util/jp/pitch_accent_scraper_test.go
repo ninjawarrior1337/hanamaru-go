@@ -1,11 +1,12 @@
-//+build jp
+//go:build jp
 
 package jp
 
 import (
-	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestScrapePitchAccent(t *testing.T) {

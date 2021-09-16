@@ -1,4 +1,4 @@
-//+build jp
+//go:build jp
 
 package jp
 

@@ -1,13 +1,14 @@
-//+build jp
+//go:build jp
 
 package jp
 
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/gocolly/colly/v2"
 	"regexp"
 	"strings"
+
+	"github.com/gocolly/colly/v2"
 )
 
 func generateFormData(in string) map[string][]byte {

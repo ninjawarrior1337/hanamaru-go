@@ -1,10 +1,11 @@
-package image
+package av
 
 import (
 	"fmt"
-	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"image/gif"
 	"net/http"
+
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
 )
 
 var Zoom = &framework.Command{

@@ -9,6 +9,15 @@ var Join = &framework.Command{
 	PermissionRequired: 0,
 	Exec: func(ctx *framework.Context) error {
 		channel, err := ctx.GetSenderVoiceChannel()
+		optionalVCId := ctx.GetArgIndexDefault(0, "")
+
+		if len(optionalVCId) > 0 {
+			err = ctx.Hanamaru.VoiceContext.JoinChannel(ctx.Hanamaru.Session, ctx.GuildID, optionalVCId, ctx.ChannelID)
+			if err != nil {
+				return err
+			}
+		}
+
 		if err != nil {
 			return err
 		}

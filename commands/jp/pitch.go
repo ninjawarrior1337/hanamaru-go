@@ -1,13 +1,15 @@
-// +build jp
+//go:build jp
 
 package jp
 
 import (
 	"bytes"
+
 	"github.com/ninjawarrior1337/hanamaru-go/framework"
 
-	"github.com/ninjawarrior1337/hanamaru-go/util/jp"
 	"image/png"
+
+	"github.com/ninjawarrior1337/hanamaru-go/util/jp"
 )
 
 var Pitch = &framework.Command{

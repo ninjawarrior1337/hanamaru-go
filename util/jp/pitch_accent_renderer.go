@@ -23,22 +23,6 @@ const DotRadius = 8
 
 var ffData []byte
 
-// func GetFont() (font.Face, error) {
-// 	if ffData == nil {
-// 		file, err := pkger.Open("/assets/noto.ttf")
-// 		if err != nil {
-// 			return nil, errors.New("failed to load noto font")
-// 		}
-// 		entireFile, _ := ioutil.ReadAll(file)
-// 		ffData = entireFile
-// 	}
-// 	f, err := truetype.Parse(ffData)
-// 	if err != nil {
-// 		return nil, errors.New("failed to parse noto font")
-// 	}
-// 	return truetype.NewFace(f, &truetype.Options{Size: 32}), nil
-// }
-
 func RenderPitchAccent(phrase string, pitchInfo []int) (image.Image, error) {
 	if phrase == "" || len(pitchInfo) == 0 {
 		return nil, fmt.Errorf("invalid input")

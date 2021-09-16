@@ -53,7 +53,7 @@ func (h *Hanamaru) GetOwnerID() string {
 	return h.ownerId
 }
 
-func HasPermission(s *discordgo.Session, userID string, channelID string, reqPerm int) (bool, error) {
+func HasPermission(s *discordgo.Session, userID string, channelID string, reqPerm int64) (bool, error) {
 	userPerms, err := s.State.UserChannelPermissions(userID, channelID)
 	if err != nil {
 		return false, err
@@ -110,7 +110,7 @@ func (h *Hanamaru) AddCommand(cmd *Command) error {
 		err := cmd.Exec(ctx)
 
 		if err != nil {
-			s.ChannelMessageSend(m.ChannelID, "ERROR: "+err.Error())
+			s.ChannelMessageSendReply(m.ChannelID, "ERROR: "+err.Error(), ctx.Reference())
 		}
 	}
 	h.Session.AddHandler(handleFunc)

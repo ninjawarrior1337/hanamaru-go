@@ -26,7 +26,7 @@ var Frick = &framework.Command{
 		}
 		for _, s := range guild.VoiceStates {
 			if s.ChannelID == fromVC.ID {
-				ctx.Hanamaru.GuildMemberMove(ctx.GuildID, s.UserID, tmpCh.ID)
+				ctx.Hanamaru.GuildMemberMove(ctx.GuildID, s.UserID, &tmpCh.ID)
 			}
 		}
 		ctx.Hanamaru.ChannelDelete(tmpCh.ID)

@@ -24,7 +24,7 @@ type EventListener struct {
 
 type Command struct {
 	Name               string
-	PermissionRequired int
+	PermissionRequired int64
 	OwnerOnly          bool
 	Help               string
 	Exec               func(ctx *Context) error
@@ -52,9 +52,15 @@ func NewContext(h *Hanamaru, cmd *Command, m *discordgo.MessageCreate) *Context 
 
 func (c *Context) Reply(m string) (*discordgo.Message, error) {
 	if m == "" {
-		return c.Hanamaru.ChannelMessageSend(c.ChannelID, "ERROR...idk")
+		return c.Hanamaru.ChannelMessageSendComplex(c.ChannelID, &discordgo.MessageSend{
+			Content:   "ERROR...idk",
+			Reference: c.Reference(),
+		})
 	}
-	return c.Hanamaru.ChannelMessageSend(c.ChannelID, m)
+	return c.Hanamaru.ChannelMessageSendComplex(c.ChannelID, &discordgo.MessageSend{
+		Content:   m,
+		Reference: c.Reference(),
+	})
 }
 
 func (c *Context) ReplyEmbed(embed *discordgo.MessageEmbed) (*discordgo.Message, error) {
@@ -67,14 +73,23 @@ func (c *Context) ReplyEmbed(embed *discordgo.MessageEmbed) (*discordgo.Message,
 
 	embed.Fields = validFields
 
-	return c.Hanamaru.ChannelMessageSendEmbed(c.ChannelID, embed)
+	return c.Hanamaru.ChannelMessageSendComplex(c.ChannelID, &discordgo.MessageSend{
+		Embed:     embed,
+		Reference: c.Reference(),
+	})
 }
 
 func (c *Context) ReplyFile(name string, r io.Reader) (*discordgo.Message, error) {
-	return c.Hanamaru.ChannelFileSend(c.ChannelID, name, r)
+	return c.Hanamaru.ChannelMessageSendComplex(c.ChannelID, &discordgo.MessageSend{
+		File: &discordgo.File{
+			Name:   name,
+			Reader: r,
+		},
+		Reference: c.Reference(),
+	})
 }
 
-//This is name without extension btw, the following function will add it by itself
+// ReplyPNGImg Sends img into the chat where the command is executed. Name excludes the extension
 func (c *Context) ReplyPNGImg(img image.Image, name string) (*discordgo.Message, error) {
 	var pngBuf = new(bytes.Buffer)
 	err := png.Encode(pngBuf, img)
