@@ -11,12 +11,12 @@ import (
 )
 
 type Hanamaru struct {
-	prefix  string
+	Prefix  string
 	ownerId string
 	*discordgo.Session
 	VoiceContext   *voice.Context
-	commands       []*Command
-	eventListeners []*EventListener
+	Commands       []*Command
+	EventListeners []*EventListener
 	Db             *bolt.DB
 }
 
@@ -26,6 +26,8 @@ func New(token, prefix, ownerid string) (bot *Hanamaru) {
 	if err != nil {
 		log.Fatalf("Failed to create bot: %v", err)
 	}
+
+	s.Identify.Intents = discordgo.IntentsAllWithoutPrivileged | discordgo.IntentsGuildMembers
 
 	err = s.Open()
 	if err != nil {
@@ -37,20 +39,12 @@ func New(token, prefix, ownerid string) (bot *Hanamaru) {
 	log.Printf("Ready and logged in as %v zura!", s.State.User.Username+"#"+s.State.User.Discriminator)
 
 	return &Hanamaru{
-		prefix:       prefix,
+		Prefix:       prefix,
 		Session:      s,
 		VoiceContext: voiceContext,
 		ownerId:      ownerid,
-		commands:     []*Command{},
+		Commands:     []*Command{},
 	}
-}
-
-func (h *Hanamaru) GetPrefix() string {
-	return h.prefix
-}
-
-func (h *Hanamaru) GetOwnerID() string {
-	return h.ownerId
 }
 
 func HasPermission(s *discordgo.Session, userID string, channelID string, reqPerm int64) (bool, error) {
@@ -90,7 +84,7 @@ func (h *Hanamaru) AddCommand(cmd *Command) error {
 		}
 	}
 	var handleFunc = func(s *discordgo.Session, m *discordgo.MessageCreate) {
-		if !strings.HasPrefix(m.Content, h.prefix+cmd.Name) {
+		if !strings.HasPrefix(m.Content, h.Prefix+cmd.Name) {
 			return
 		}
 		if m.Author.ID == s.State.User.ID || m.Author.Bot {
@@ -114,14 +108,14 @@ func (h *Hanamaru) AddCommand(cmd *Command) error {
 		}
 	}
 	h.Session.AddHandler(handleFunc)
-	h.commands = append(h.commands, cmd)
+	h.Commands = append(h.Commands, cmd)
 	return nil
 }
 
 // AddEventListener adds and event listener to the bot.
 func (h *Hanamaru) AddEventListener(listener *EventListener) error {
 	h.Session.AddHandler(listener.HandlerConstructor(h))
-	h.eventListeners = append(h.eventListeners, listener)
+	h.EventListeners = append(h.EventListeners, listener)
 	return nil
 }
 

@@ -11,7 +11,7 @@ var help = &Command{
 	Exec: func(ctx *Context) error {
 		output := ""
 
-		for _, cmd := range ctx.Hanamaru.commands {
+		for _, cmd := range ctx.Hanamaru.Commands {
 			if cmd.Help != "" {
 				output += fmt.Sprintf("**%v**: %v\n", cmd.Name, cmd.Help)
 			}
@@ -20,7 +20,7 @@ var help = &Command{
 		output += "\n"
 		output += "Commands without documentation: "
 		commandNames := []string{}
-		for _, cmd := range ctx.Hanamaru.commands {
+		for _, cmd := range ctx.Hanamaru.Commands {
 			if cmd.Help == "" {
 				commandNames = append(commandNames, cmd.Name)
 			}
@@ -31,7 +31,7 @@ var help = &Command{
 		output += "Listeners: "
 		listenerNames := []string{}
 		{
-			for _, ev := range ctx.Hanamaru.eventListeners {
+			for _, ev := range ctx.Hanamaru.EventListeners {
 				listenerNames = append(listenerNames, ev.Name)
 			}
 		}

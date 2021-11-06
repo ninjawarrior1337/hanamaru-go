@@ -1,12 +1,13 @@
 package events
 
 import (
-	"github.com/bwmarrin/discordgo"
-	"github.com/ninjawarrior1337/hanamaru-go/framework"
-	"github.com/ninjawarrior1337/hanamaru-go/util"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/bwmarrin/discordgo"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
+	"github.com/ninjawarrior1337/hanamaru-go/util"
 )
 
 var animeRegex = regexp.MustCompile(`{(.*)}`)
@@ -21,7 +22,7 @@ var Roboragi = &framework.EventListener{
 			if m.Author.Bot {
 				return
 			}
-			if strings.HasPrefix(m.Content, h.GetPrefix()) {
+			if strings.HasPrefix(m.Content, h.Prefix) {
 				return
 			}
 			for _, regex := range regexes {

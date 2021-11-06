@@ -2,12 +2,13 @@ package events
 
 import (
 	"fmt"
-	"github.com/bwmarrin/discordgo"
-	"github.com/ninjawarrior1337/hanamaru-go/framework"
-	"github.com/ninjawarrior1337/hanamaru-go/util"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/bwmarrin/discordgo"
+	"github.com/ninjawarrior1337/hanamaru-go/framework"
+	"github.com/ninjawarrior1337/hanamaru-go/util"
 )
 
 var nhr = regexp.MustCompile(`^(\d{6})$`)
@@ -20,7 +21,7 @@ var Nhentai = &framework.EventListener{
 			if m.Author.Bot || len(m.Mentions) > 0 {
 				return
 			}
-			if strings.HasPrefix(m.Content, h.GetPrefix()) {
+			if strings.HasPrefix(m.Content, h.Prefix) {
 				return
 			}
 			if channel, _ := s.Channel(m.ChannelID); channel != nil && !channel.NSFW {

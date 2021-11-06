@@ -81,7 +81,7 @@ func main() {
 	bot.AddEventListener(events.Nhentai)
 	bot.AddEventListener(events.ReactionExpansion)
 	bot.AddEventListener(events.Roboragi)
-	bot.AddEventListener(events.BigEmoji)
+	// bot.AddEventListener(events.BigEmoji)
 	bot.AddEventListener(events.AwardsAddHandler)
 	bot.AddEventListener(events.AwardsRemoveHandler)
 

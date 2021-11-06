@@ -1,3 +1,4 @@
+//go:build ij
 // +build ij
 
 package main
@@ -9,5 +10,5 @@ import (
 
 func init() {
 	commands = append(commands, ij.Bishop, ij.Schedule)
-	optionalEvents = append(optionalEvents, events.RepeatMessage)
+	optionalEvents = append(optionalEvents, events.RepeatMessage, events.JoinNotif)
 }

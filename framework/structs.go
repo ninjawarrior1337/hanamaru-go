@@ -45,7 +45,7 @@ func NewContext(h *Hanamaru, cmd *Command, m *discordgo.MessageCreate) *Context 
 		MessageCreate: m,
 		Args:          []string{},
 	}
-	argsString := strings.TrimPrefix(m.Content, h.prefix+cmd.Name)
+	argsString := strings.TrimPrefix(m.Content, h.Prefix+cmd.Name)
 	ctx.Args = ParseArgs(argsString)
 	return ctx
 }
@@ -216,7 +216,7 @@ func (c *Context) GetArgIndexDefault(idx int, def string) string {
 }
 
 func (c *Context) TakeRest() string {
-	msgArgs := strings.TrimPrefix(c.Message.Content, c.Hanamaru.prefix+c.Command.Name)
+	msgArgs := strings.TrimPrefix(c.Message.Content, c.Hanamaru.Prefix+c.Command.Name)
 	return strings.ReplaceAll(msgArgs, "```", "")
 }
 
