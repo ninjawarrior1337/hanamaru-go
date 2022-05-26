@@ -11,6 +11,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/bwmarrin/discordgo"
 	"github.com/fsnotify/fsnotify"
 
 	"github.com/ninjawarrior1337/hanamaru-go/events"
@@ -38,8 +39,6 @@ func init() {
 	config.SetDefault("owner", "")
 	config.SetDefault("prefix", "!")
 	config.SetDefault("token", "")
-	config.SetDefault("listening", "地元愛 Dash")
-	config.SetDefault("playing", "")
 
 	err := config.ReadInConfig()
 	if err != nil && os.Getenv("IN_DOCKER") == "" {
@@ -86,14 +85,30 @@ func main() {
 	bot.AddEventListener(events.AwardsRemoveHandler)
 
 	go func() {
+		usd := discordgo.UpdateStatusData{
+			Status:     "online",
+			AFK:        false,
+			Activities: []*discordgo.Activity{{}},
+		}
 		setStatus := func() {
 			if playing := config.GetString("playing"); playing != "" {
-				bot.Session.UpdateListeningStatus(playing)
+				usd.Activities[0].Name = playing
+				usd.Activities[0].Type = discordgo.ActivityTypeGame
 			} else if listening := config.GetString("listening"); listening != "" {
-				bot.Session.UpdateListeningStatus(listening)
+				usd.Activities[0].Name = listening
+				usd.Activities[0].Type = discordgo.ActivityTypeListening
+			} else if watching := config.GetString("watching"); watching != "" {
+				usd.Activities[0].Name = watching
+				usd.Activities[0].Type = discordgo.ActivityTypeWatching
+			} else if streaming := config.GetString("streaming"); streaming != "" {
+				usd.Activities[0].Details = streaming
+				usd.Activities[0].Type = discordgo.ActivityTypeStreaming
+				usd.Activities[0].URL = "https://twitch.tv/btreelar"
 			} else {
-				bot.Session.UpdateListeningStatus("Aqours' Songs")
+				usd.Activities[0].Name = "Aqours' Songs"
+				usd.Activities[0].Type = discordgo.ActivityTypeListening
 			}
+			bot.Session.UpdateStatusComplex(usd)
 		}
 		setStatus()
 		config.OnConfigChange(func(in fsnotify.Event) {
