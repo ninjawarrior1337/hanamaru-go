@@ -27,7 +27,7 @@ func New(token, prefix, ownerid string) (bot *Hanamaru) {
 		log.Fatalf("Failed to create bot: %v", err)
 	}
 
-	s.Identify.Intents = discordgo.IntentsAllWithoutPrivileged | discordgo.IntentsGuildMembers
+	s.Identify.Intents = discordgo.IntentsAllWithoutPrivileged | discordgo.IntentsGuildMembers | discordgo.IntentsMessageContent
 
 	err = s.Open()
 	if err != nil {
