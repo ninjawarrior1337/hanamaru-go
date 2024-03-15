@@ -57,7 +57,7 @@ var memprofile = flag.String("memprofile", "", "write memory profile to a file")
 
 func main() {
 	flag.Parse()
-	var syscallChan = make(chan os.Signal)
+	var syscallChan = make(chan os.Signal, 32)
 
 	bot := framework.New("Bot "+config.GetString("token"), config.GetString("prefix"), config.GetString("owner"))
 	defer bot.Close()
@@ -105,7 +105,7 @@ func main() {
 				usd.Activities[0].Type = discordgo.ActivityTypeStreaming
 				usd.Activities[0].URL = "https://twitch.tv/btreelar"
 			} else {
-				usd.Activities[0].Name = "Aqours' Songs"
+				usd.Activities[0].Name = "Aqours"
 				usd.Activities[0].Type = discordgo.ActivityTypeListening
 			}
 			bot.Session.UpdateStatusComplex(usd)
