@@ -76,10 +76,10 @@ func setup() error {
 	if err != nil {
 		return err
 	}
-	err = setupEthers(vm)
-	if err != nil {
-		return err
-	}
+	// err = setupEthers(vm)
+	// if err != nil {
+	// 	return err
+	// }
 	transpile, err = setupBabel(vm)
 	if err != nil {
 		return err

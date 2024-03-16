@@ -51,7 +51,7 @@ func GetMinecraftSkin(player *Player, renderType MinecraftRenderType) (image.Ima
 	case Avatars:
 		urlBase = "https://crafatar.com/avatars/%v"
 	case Body:
-		urlBase = "https://crafatar.com/renders/body/%v"
+		urlBase = "https://crafatar.com/renders/body/%v?overlay"
 	case Head:
 		urlBase = "https://crafatar.com/renders/head/%v"
 	case Skins:
@@ -66,5 +66,5 @@ func GetMinecraftSkin(player *Player, renderType MinecraftRenderType) (image.Ima
 	}
 	defer resp.Body.Close()
 	img, _, err := image.Decode(resp.Body)
-	return img, nil
+	return img, err
 }
