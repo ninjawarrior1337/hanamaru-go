@@ -1,11 +1,13 @@
 package fun
 
 import (
+	"errors"
 	"fmt"
-	"strings"
 
-	"github.com/ninjawarrior1337/hanamaru-go/events"
+	"github.com/ninjawarrior1337/hanamaru-go/db"
 	"github.com/ninjawarrior1337/hanamaru-go/framework"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 var AwardsCommand = &framework.Command{
@@ -19,12 +21,19 @@ var AwardsCommand = &framework.Command{
 		switch arg {
 		case "get":
 			{
-				akv := events.GetUserAwards(ctx.Hanamaru.Db, ctx.Author.ID)
+				akv, err := db.QueryAwardCounts(ctx.Hanamaru.Db, ctx.GuildID, ctx.Author.ID)
+				if err != nil {
+					return err
+				}
 				ctx.Reply(formatAwardKV(akv))
 			}
 		case "leaderboard":
 			{
-				ctx.Reply(generateLeaderboard(ctx.Hanamaru))
+				lbString, err := generateLeaderboard(ctx.Hanamaru, ctx.GuildID)
+				if err != nil {
+					return err
+				}
+				ctx.Reply(lbString)
 			}
 		}
 
@@ -34,45 +43,31 @@ var AwardsCommand = &framework.Command{
 	Setup: nil,
 }
 
-func generateLeaderboard(h *framework.Hanamaru) string {
-	type LeaderData struct {
-		Count int
-		Uid   string
+var ErrGenerateLeaderboard = errors.New("failed to generate leaderboard")
+
+func generateLeaderboard(h *framework.Hanamaru, guild_id string) (string, error) {
+	lb, err := db.QueryLeaderboard(h.Db, guild_id)
+	if err != nil {
+		return "", errors.Join(ErrGenerateLeaderboard, err)
 	}
-	leaderBoard := make(map[string]LeaderData)
-	ai := events.GetAllAwardsInfo(h.Db)
-	for id, akv := range ai {
-		for award, num := range akv {
-			awardStr := string(award)
-			// Make sure values about to be compared actually exist
-			if _, ok := leaderBoard[awardStr]; !ok {
-				leaderBoard[awardStr] = LeaderData{}
-			}
-			if num > leaderBoard[awardStr].Count {
-				leaderBoard[awardStr] = LeaderData{
-					Count: num,
-					Uid:   id,
-				}
-			}
-		}
-	}
+
 	finalString := "Leaderboard: \n"
 
-	for k, v := range leaderBoard {
-		user, err := h.User(v.Uid)
+	for _, entry := range lb {
+		user, err := h.User(entry.EarnerId)
 		if err != nil {
-			return "Failed to generate leaderboard: " + err.Error()
+			return "", errors.Join(ErrGenerateLeaderboard, err)
 		}
-		finalString += fmt.Sprintf("Most %v: %v with %d award(s)\n", strings.Split(k, "_")[0], user.String(), v.Count)
+		finalString += fmt.Sprintf("%v: %v with %d award(s)\n", entry.AwardName, user.Username, entry.Count)
 	}
-	return finalString
+	return finalString, nil
 }
 
-func formatAwardKV(akv events.AwardKV) string {
+func formatAwardKV(akv db.AwardKV) string {
+	caser := cases.Title(language.English)
 	var output = "Here are your awards stats: \n"
 	for k, v := range akv {
-		name, _ := k.Name()
-		output += fmt.Sprintf("%v award: %d \n", name, v)
+		output += fmt.Sprintf("%v award: %d \n", caser.String(k), v)
 	}
 	return output
 }

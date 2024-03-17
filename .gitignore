@@ -132,4 +132,5 @@ pkged.go
 pkged.go
 
 *.test.db
+*.sqlite
 test_files

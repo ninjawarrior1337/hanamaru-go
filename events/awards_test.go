@@ -1,45 +1,54 @@
 package events
 
 import (
+	"database/sql"
 	"fmt"
-	"go.etcd.io/bbolt"
-	"os"
 	"testing"
+
+	hdb "github.com/ninjawarrior1337/hanamaru-go/db"
 )
 
-var db *bbolt.DB
+var db *sql.DB
 
 const Chad AwardType = "chad_award"
 
 func init() {
-	os.Remove("bbolt.test.db")
-	db, _ = bbolt.Open("bbolt.test.db", 0600, nil)
+	db, _ = sql.Open("sqlite3", ":memory:")
+	err := hdb.RunMigrations(db)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 func TestAddPointToUser(t *testing.T) {
-	ModifyUserAwardCount(db, Chad, "1000001", Add, 5)
+	guild_id := "guild_1"
+	uid := "1000001"
+	err := hdb.MutateAwardCount(db, guild_id, uid, Chad.MustName(), hdb.AwardIncrement)
+	if err != nil {
+		t.Error(err)
+		return
+	}
 
-	if a := GetUserAwards(db, "1000001"); a[Chad] != 5 {
+	a, _ := hdb.QueryAwardCounts(db, guild_id, uid)
+	fmt.Println(a)
+
+	if a, _ := hdb.QueryAwardCounts(db, guild_id, uid); a[Chad.MustName()] != 1 {
 		t.Fail()
 	}
 
-	ModifyUserAwardCount(db, Chad, "1000001", Add, 1)
-	if a := GetUserAwards(db, "1000001"); a[Chad] != 6 {
+	hdb.MutateAwardCount(db, guild_id, uid, Chad.MustName(), hdb.AwardIncrement)
+	if a, _ := hdb.QueryAwardCounts(db, guild_id, uid); a[Chad.MustName()] != 2 {
 		t.Fail()
 	}
 
-	ModifyUserAwardCount(db, Chad, "1000001", Subtract, 1)
-	if a := GetUserAwards(db, "1000001"); a[Chad] != 5 {
+	hdb.MutateAwardCount(db, guild_id, uid, Chad.MustName(), hdb.AwardDecrement)
+	if a, _ := hdb.QueryAwardCounts(db, guild_id, uid); a[Chad.MustName()] != 1 {
 		t.Fail()
 	}
-
-	ModifyUserAwardCount(db, Chad, "1000001", Set, 0)
-	if a := GetUserAwards(db, "1000001"); a[Chad] != 0 {
-		t.Fail()
-	}
+	db.Close()
 }
 
 func TestGetUserAwards(t *testing.T) {
-	a := GetUserAwards(db, "1")
+	a, _ := hdb.QueryAwardCounts(db, "guild_1", "1000001")
 	fmt.Println(a)
 }

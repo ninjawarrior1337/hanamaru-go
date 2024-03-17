@@ -1,11 +1,10 @@
 package fun
 
 import (
-	"fmt"
 	"github.com/ninjawarrior1337/hanamaru-go/framework"
 )
 
-//Im bored lol
+// Im bored lol
 var Talk = &framework.Command{
 	Name:               "talk",
 	PermissionRequired: 0,
@@ -22,7 +21,7 @@ var Talk = &framework.Command{
 		}
 		_, err = ctx.Hanamaru.ChannelMessageSend(chatId, message)
 		if err != nil {
-			fmt.Errorf("message failed to send, maybe the channel doesn't exist")
+			ctx.Reply("message failed to send, maybe the channel doesn't exist")
 		}
 		return nil
 	},
