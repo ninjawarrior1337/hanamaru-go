@@ -3,65 +3,70 @@ package info
 import (
 	"errors"
 	"fmt"
+	"strings"
+
+	hdb "github.com/ninjawarrior1337/hanamaru-go/db"
 	"github.com/ninjawarrior1337/hanamaru-go/framework"
-	bolt "go.etcd.io/bbolt"
 )
 
 var Tag = &framework.Command{
 	Name:               "tag",
 	PermissionRequired: 0,
 	OwnerOnly:          false,
-	Help:               "Let's you tag pieces of text: <get|add|delete> <key> <value>",
+	Help:               "Let's you tag messages",
 	Exec: func(ctx *framework.Context) error {
 		db := ctx.Hanamaru.Db
-
-		return db.Update(func(tx *bolt.Tx) error {
-			b, _ := tx.CreateBucketIfNotExists([]byte(ctx.GuildID))
-			tb, _ := b.CreateBucketIfNotExists([]byte("tags"))
-			tagOp := ctx.GetArgIndexDefault(0, "get")
-			switch tagOp {
-			case "get":
-				key := ctx.GetArgIndexDefault(1, "")
-				if key == "" {
-					output := "```"
-					tb.ForEach(func(k, v []byte) error {
-						output += fmt.Sprintf("%s: %s\n", k, v)
-						return nil
-					})
-					output += "```"
-					if output == "" {
-						return errors.New("no tags saved")
-					}
-					ctx.Reply(output)
-				} else {
-					v := tb.Get([]byte(key))
-					ctx.Reply(fmt.Sprintf("%s -> %s", key, v))
-				}
-			case "delete":
-				label, err := ctx.GetArgIndex(0)
-				if err != nil {
-					return err
-				}
-				err = tb.Delete([]byte(label))
-				if err != nil {
-					return err
-				}
-			default:
-				label, err := ctx.GetArgIndex(0)
-				if err != nil {
-					return err
-				}
-				val, err := ctx.GetArgIndex(1)
-				if err != nil {
-					return err
-				}
-				err = tb.Put([]byte(label), []byte(val))
-				if err != nil {
-					return err
-				}
-				ctx.Reply(fmt.Sprintf("Set: %s -> %s", label, val))
+		if target := ctx.Message.ReferencedMessage; target != nil {
+			name, err := ctx.GetArgIndex(0)
+			if err != nil {
+				return err
 			}
-			return nil
-		})
+
+			err = hdb.MutateAddTag(db, name, ctx.GuildID, target.ChannelID, target.ID)
+			if err != nil {
+				return err
+			}
+			ctx.Reply("Message tagged!")
+		} else {
+			option, err := ctx.GetArgIndex(0)
+			if err != nil {
+				return err
+			}
+
+			switch option {
+			case "delete":
+				tagName, err := ctx.GetArgIndex(1)
+				if err != nil {
+					return err
+				}
+				hdb.MutateRemoveTagByName(db, ctx.GuildID, tagName)
+			case "search":
+				query, err := ctx.GetArgIndex(1)
+				if err != nil {
+					return err
+				}
+
+				res, err := hdb.QuerySearchTags(db, query, ctx.GuildID)
+				if err != nil {
+					return err
+				}
+				if len(res) < 1 {
+					return errors.New("no results found")
+				}
+
+				var s = "Results: \n"
+				s += strings.Join(res, "\n")
+				ctx.Reply(s)
+			default:
+				tag, err := hdb.QueryTagByName(db, option, ctx.GuildID)
+				if err != nil {
+					return err
+				}
+
+				ctx.Reply(fmt.Sprintf("https://discord.com/channels/%v/%v/%v", tag.GuildID, tag.ChannelID, tag.MessageID))
+			}
+		}
+
+		return nil
 	},
 }

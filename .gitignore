@@ -122,7 +122,6 @@ fabric.properties
 
 config.yml
 assets/test.mp3
-*.bbolt
 
 util/**/*.png
 *.gen.go
@@ -132,4 +131,5 @@ pkged.go
 pkged.go
 
 *.test.db
+*.sqlite
 test_files

@@ -1,13 +1,13 @@
 package framework
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/ninjawarrior1337/hanamaru-go/framework/voice"
-	bolt "go.etcd.io/bbolt"
 )
 
 type Hanamaru struct {
@@ -17,7 +17,7 @@ type Hanamaru struct {
 	VoiceContext   *voice.Context
 	Commands       []*Command
 	EventListeners []*EventListener
-	Db             *bolt.DB
+	Db             *sql.DB
 }
 
 func New(token, prefix, ownerid string) (bot *Hanamaru) {
@@ -62,8 +62,7 @@ func HasPermission(s *discordgo.Session, userID string, channelID string, reqPer
 
 type ErrAddCommand struct {
 	cmd    *Command
-	reason string
-	error
+	reason error
 }
 
 func (e ErrAddCommand) Error() string {
@@ -79,7 +78,7 @@ func (h *Hanamaru) AddCommand(cmd *Command) error {
 		if err != nil {
 			return ErrAddCommand{
 				cmd:    cmd,
-				reason: err.Error(),
+				reason: err,
 			}
 		}
 	}
