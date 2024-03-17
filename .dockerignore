@@ -3,5 +3,4 @@
 .github
 config.yml
 *.gen.go
-*.bbolt
 Dockerfile*

@@ -64,31 +64,3 @@ var sqlCommand = &Command{
 		return nil
 	},
 }
-
-// func (c *Context) Set(key, value string) error {
-// 	return c.Hanamaru.Db.Update(func(tx *bolt.Tx) error {
-// 		return c.setFromTx(tx, key, value)
-// 	})
-// }
-
-// func (c *Context) setFromTx(tx *bolt.Tx, key, value string) error {
-// 	b, err := tx.CreateBucketIfNotExists([]byte(c.GuildID))
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return b.Put([]byte(key), []byte(value))
-// }
-
-// func (c *Context) Get(key string) string {
-// 	var vCopy []byte
-// 	c.Hanamaru.Db.View(func(tx *bolt.Tx) error {
-// 		b, err := tx.CreateBucketIfNotExists([]byte(c.GuildID))
-// 		if err != nil {
-// 			return err
-// 		}
-// 		v := b.Get([]byte(key))
-// 		copy(vCopy, v)
-// 		return nil
-// 	})
-// 	return string(vCopy)
-// }
