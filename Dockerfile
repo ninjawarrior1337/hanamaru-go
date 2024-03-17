@@ -11,6 +11,7 @@ RUN go build -ldflags='-s -w' -tags="ij,jp"
 FROM registry.access.redhat.com/ubi9/ubi-minimal
 ENV IN_DOCKER=true
 WORKDIR /app
+RUN microdnf install tzdata
 VOLUME [ "/data" ]
 COPY --from=builder /hanamaru/hanamaru-go .
 CMD [ "/app/hanamaru-go" ]
