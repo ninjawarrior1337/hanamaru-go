@@ -99,7 +99,7 @@ func (c *Context) ReplyPNGImg(img image.Image, name string) (*discordgo.Message,
 	return c.ReplyFile(name+".png", pngBuf)
 }
 
-//This is name without extension btw, the following function will add it by itself
+// This is name without extension btw, the following function will add it by itself
 func (c *Context) ReplyJPGImg(img image.Image, name string) (*discordgo.Message, error) {
 	jpgBuf := new(bytes.Buffer)
 	err := jpeg.Encode(jpgBuf, img, nil)

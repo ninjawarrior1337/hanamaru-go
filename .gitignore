@@ -133,3 +133,4 @@ pkged.go
 *.test.db
 *.sqlite
 test_files
+hanamaru-go
