@@ -9,5 +9,5 @@ build_native:
 gen:
     go generate .
 
-build-docker:
-    docker build -t hanamaru:latest .
+build_docker:
+    docker build -t ghcr.io/ninjawarrior1337/hanamaru-go:main .

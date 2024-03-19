@@ -15,8 +15,13 @@ COPY --from=builder_rs /hanamaru/target/release/libhanamaru_lib.a  ./lib/target/
 RUN go generate
 RUN go build -ldflags='-s -w' -tags="ij,jp"
 
-FROM ubuntu
-RUN apt update && apt install -y ca-certificates ffmpeg
+FROM debian:12-slim
+
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 ENV IN_DOCKER=true
 WORKDIR /app
 VOLUME [ "/data" ]
