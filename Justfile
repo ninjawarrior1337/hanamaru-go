@@ -1,5 +1,3 @@
-
-
 run: build_native gen
     go run --tags ij,jp .
 
