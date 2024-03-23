@@ -7,7 +7,7 @@ package debug
 extern void goSendMessage(uintptr_t handle, char* msg);
 extern char* goReferencedMessage(uintptr_t handle);
 
-void run_uiua(uintptr_t ctx, char* uiua);
+char* run_uiua(uintptr_t ctx, char* uiua);
 void drop_string(char* ptr);
 */
 import "C"
@@ -51,7 +51,14 @@ var Uiua = &framework.Command{
 		input_c := C.CString(input)
 		defer C.free(unsafe.Pointer(input_c))
 
-		C.run_uiua(C.uintptr_t(h), input_c)
+		res_c := C.run_uiua(C.uintptr_t(h), input_c)
+		defer C.drop_string(res_c)
+
+		res := C.GoString(res_c)
+		_, err := ctx.Reply(fmt.Sprintf("```\n%v\n```", res))
+		if err != nil {
+			return err
+		}
 
 		return nil
 	},

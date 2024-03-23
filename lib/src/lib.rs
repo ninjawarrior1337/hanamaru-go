@@ -29,7 +29,7 @@ fn send_message(ctx: uintptr_t, msg: &str) {
 
 
 #[no_mangle]
-pub extern "C" fn run_uiua(ctx: uintptr_t, input_ptr: *const c_char) {
+pub extern "C" fn run_uiua(ctx: uintptr_t, input_ptr: *const c_char) -> *const c_char {
     let mut uiua = Uiua::with_safe_sys();
 
     let input_cstr = unsafe { CStr::from_ptr(input_ptr) };
@@ -51,16 +51,18 @@ pub extern "C" fn run_uiua(ctx: uintptr_t, input_ptr: *const c_char) {
         comp.load_str(input)
     });
 
-    if let Err(e) = result {
-        send_message(ctx, &e.to_string())
+    let result_str = if let Err(e) = result {
+        e.to_string()
     } else {
         let config = FormatConfig::default().with_trailing_newline(false);
         let mut formatted = "Formatted: ".to_owned() + &format_str(input, &config).unwrap().output;
         let v: Vec<String> = uiua.stack().iter().map(|e| e.to_string()).collect();
         formatted += "\n";
         formatted += &v.join("\n");
-        send_message(ctx, &formatted)
-    }
+        formatted
+    };
+
+    return CString::new(result_str).unwrap().into_raw()
 }
 
 #[no_mangle]
