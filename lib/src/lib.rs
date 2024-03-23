@@ -1,7 +1,7 @@
 use std::{ffi::{CStr, CString}, os::raw::c_void, ptr::null, result};
 
 use libc::{c_char, free, uintptr_t};
-use uiua::{Compiler, Uiua, UiuaError, UiuaResult};
+use uiua::{format::{format_str, FormatConfig}, Compiler, Uiua, UiuaError, UiuaResult};
 
 extern "C" {
     fn goSendMessage(ctx: uintptr_t, msg: *const c_char);
@@ -27,11 +27,13 @@ fn send_message(ctx: uintptr_t, msg: &str) {
     }
 }
 
+
 #[no_mangle]
-pub extern "C" fn run_uiua(ctx: uintptr_t, input: *const c_char) {
+pub extern "C" fn run_uiua(ctx: uintptr_t, input_ptr: *const c_char) {
     let mut uiua = Uiua::with_safe_sys();
 
-    let input_cstr = unsafe { CStr::from_ptr(input) };
+    let input_cstr = unsafe { CStr::from_ptr(input_ptr) };
+    let input = input_cstr.to_str().unwrap();
 
     let result = uiua.compile_run(|comp| {
         comp.print_diagnostics(true);
@@ -46,14 +48,18 @@ pub extern "C" fn run_uiua(ctx: uintptr_t, input: *const c_char) {
             Ok(())
         }).unwrap();
 
-        comp.load_str(input_cstr.to_str().unwrap())
+        comp.load_str(input)
     });
 
     if let Err(e) = result {
         send_message(ctx, &e.to_string())
     } else {
+        let config = FormatConfig::default().with_trailing_newline(false);
+        let mut formatted = "Formatted: ".to_owned() + &format_str(input, &config).unwrap().output;
         let v: Vec<String> = uiua.stack().iter().map(|e| e.to_string()).collect();
-        send_message(ctx, &v.join("\n"))
+        formatted += "\n";
+        formatted += &v.join("\n");
+        send_message(ctx, &formatted)
     }
 }
 
