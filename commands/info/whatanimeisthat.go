@@ -2,11 +2,12 @@ package info
 
 import (
 	"fmt"
+	"math"
+	"strconv"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/ninjawarrior1337/hanamaru-go/framework"
 	"github.com/ninjawarrior1337/hanamaru-go/util"
-	"math"
-	"strconv"
 )
 
 var WhatAnimeIsThat = &framework.Command{
@@ -24,8 +25,8 @@ var WhatAnimeIsThat = &framework.Command{
 			return err
 		}
 
-		if len(ta.Docs) > 0 {
-			_, err = ctx.ReplyEmbed(waitEmbed(ta.Docs[0]))
+		if len(ta.Result) > 0 {
+			_, err = ctx.ReplyEmbed(waitEmbed(ta.Result[0]))
 			return err
 		}
 		return nil
@@ -33,17 +34,17 @@ var WhatAnimeIsThat = &framework.Command{
 	Setup: nil,
 }
 
-func waitEmbed(doc util.TraceMoeDocs) *discordgo.MessageEmbed {
-	al, _ := util.GetAnimeInfoFromID(doc.AnilistID)
+func waitEmbed(doc util.TraceMoeResult) *discordgo.MessageEmbed {
+	al, _ := util.GetAnimeInfoFromID(doc.Anilist)
 	return &discordgo.MessageEmbed{
-		Title:     "I think that this comes from " + doc.TitleEnglish,
+		Title:     "I think that this comes from " + al.Title.English,
 		URL:       al.SiteURL,
 		Thumbnail: &discordgo.MessageEmbedThumbnail{URL: al.CoverImage.Large},
 		Color:     0x02a9ff,
 		Fields: []*discordgo.MessageEmbedField{
 			{
 				Name:   "Appears at",
-				Value:  fmt.Sprintf("%02.f:%02.f", doc.At/60, math.Mod(doc.At, 60)),
+				Value:  fmt.Sprintf("%02.f:%02.f", doc.From/60, math.Mod(doc.From, 60)),
 				Inline: true,
 			},
 			{
@@ -52,7 +53,7 @@ func waitEmbed(doc util.TraceMoeDocs) *discordgo.MessageEmbed {
 				Inline: true,
 			},
 			{
-				Name:  "Certainty",
+				Name:  "Similarity",
 				Value: fmt.Sprintf("%02.f%%", doc.Similarity*100),
 			},
 		},

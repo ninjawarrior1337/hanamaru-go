@@ -25,7 +25,7 @@ func TestTraceAnime(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	if ta.Docs[0].TitleNative != "ラブライブ！サンシャイン!!" && ta.Docs[0].Episode != 4 {
+	if ta.Result[0].Anilist != 21584 && ta.Result[0].Episode != 4 {
 		t.Fail()
 	}
 }
