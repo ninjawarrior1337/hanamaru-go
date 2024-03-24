@@ -6,6 +6,7 @@ use uiua::{format::{format_str, FormatConfig}, Compiler, Uiua, UiuaError, UiuaRe
 extern "C" {
     fn goSendMessage(ctx: uintptr_t, msg: *const c_char);
     fn goReferencedMessage(ctx: uintptr_t) -> *const c_char;
+    fn goAssignRole(ctx: uintptr_t, target_id: *const c_char, role_id: *const c_char);
 }
 
 fn referenced_message(ctx: uintptr_t) -> UiuaResult<String> {
@@ -17,6 +18,14 @@ fn referenced_message(ctx: uintptr_t) -> UiuaResult<String> {
         let s = CStr::from_ptr(m).to_str().unwrap().to_owned();
         free(m as *mut c_void);
         return Ok(s)
+    }
+}
+
+fn assign_role(ctx: uintptr_t, target_id: &str, role_id: &str) {
+    let target_c = CString::new(target_id).unwrap();
+    let role_c = CString::new(role_id).unwrap();
+    unsafe {
+        goAssignRole(ctx, target_c.into_raw(), role_c.into_raw())
     }
 }
 
@@ -38,13 +47,23 @@ pub extern "C" fn run_uiua(ctx: uintptr_t, input_ptr: *const c_char) -> *const c
     let result = uiua.compile_run(|comp| {
         comp.print_diagnostics(true);
 
+        // Pushes the content of the referenced discord message onto the stack
         comp.create_bind_function("&dr", (0, 1), move |ua| {
             ua.push(referenced_message(ctx)?);
             Ok(())
         }).unwrap();
+        // Pops the top of the stack and sends a discord message
         comp.create_bind_function("&ds", (1, 0), move |ua| {
             let s = ua.pop_string()?;
             send_message(ctx, &s);
+            Ok(())
+        }).unwrap();
+
+        // Pops a target and a role id off the stack and tells discord to give role to target
+        comp.create_bind_function("&dar", (2, 0), move |ua| {
+            let target_id = ua.pop_string()?;
+            let role_id = ua.pop_string()?;
+            assign_role(ctx, &target_id, &role_id);
             Ok(())
         }).unwrap();
 

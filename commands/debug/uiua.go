@@ -40,6 +40,22 @@ func goReferencedMessage(handle C.uintptr_t) *C.char {
 	}
 }
 
+//export goAssignRole
+func goAssignRole(handle C.uintptr_t, targetId_c *C.char, roleId_c *C.char) {
+	h := cgo.Handle(handle)
+	ctx := h.Value().(*framework.Context)
+
+	targetId := C.GoString(targetId_c)
+	defer C.drop_string(targetId_c)
+	roleId := C.GoString(roleId_c)
+	defer C.drop_string(roleId_c)
+
+	err := ctx.Hanamaru.GuildMemberRoleAdd(ctx.GuildID, targetId, roleId)
+	if err != nil {
+		ctx.Reply(fmt.Sprintf("ERROR: failed to set role %v", err))
+	}
+}
+
 var Uiua = &framework.Command{
 	Name:               "uiua",
 	PermissionRequired: 0,
