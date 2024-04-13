@@ -77,10 +77,10 @@ func main() {
 		bot.AddEventListener(event)
 	}
 
-	bot.AddEventListener(events.Nhentai)
+	// bot.AddEventListener(events.Nhentai): Scraping no longer viable
+	// bot.AddEventListener(events.BigEmoji): Annoying and also ruins the humor
 	bot.AddEventListener(events.ReactionExpansion)
 	bot.AddEventListener(events.Roboragi)
-	// bot.AddEventListener(events.BigEmoji)
 	bot.AddEventListener(events.AwardsAddHandler)
 	bot.AddEventListener(events.AwardsRemoveHandler)
 
