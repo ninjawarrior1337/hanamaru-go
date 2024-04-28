@@ -3,6 +3,7 @@ package info
 import (
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 
 	hdb "github.com/ninjawarrior1337/hanamaru-go/db"
@@ -34,6 +35,25 @@ var Tag = &framework.Command{
 			}
 
 			switch option {
+			case "list":
+				pageStr := ctx.GetArgIndexDefault(1, "1")
+				page, err := strconv.Atoi(pageStr)
+				if err != nil {
+					return err
+				}
+				res, err := hdb.QueryListTags(db, ctx.GuildID, page-1)
+				if err != nil {
+					return err
+				}
+
+				if len(res) < 1 {
+					return errors.New("no results found")
+				}
+
+				var s = "Tags: \n"
+				s += strings.Join(res, "\n")
+				ctx.Reply(s)
+
 			case "delete":
 				tagName, err := ctx.GetArgIndex(1)
 				if err != nil {

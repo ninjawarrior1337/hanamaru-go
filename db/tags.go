@@ -62,6 +62,25 @@ func QuerySearchTags(db *sql.DB, query string, guild_id string) ([]string, error
 	return results, nil
 }
 
+func QueryListTags(db *sql.DB, guild_id string, page int) ([]string, error) {
+	const LIMIT = 20
+	var results []string
+	// Page here is 0 indexed
+	res, err := db.Query("SELECT name FROM tag WHERE guild_id = ? LIMIT ? OFFSET ?", guild_id, LIMIT, LIMIT*page)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Close()
+
+	for res.Next() {
+		var s string
+		res.Scan(&s)
+		results = append(results, s)
+	}
+
+	return results, nil
+}
+
 func MutateRemoveTagByName(db *sql.DB, guild_id string, tag string) error {
 	tx, err := db.Begin()
 	if err != nil {
