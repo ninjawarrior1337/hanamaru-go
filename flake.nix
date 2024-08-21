@@ -57,7 +57,7 @@
             pname = "hanamaru-lib";
             inherit version;
             src = ./lib;
-            cargoHash = "sha256-U13p/7temhpIVKcadfzKH0YUMChi+oNBiTLPpVLbl6A=";
+            cargoHash = "sha256-64arxp+gfKR4RFEU1VfMwM/lLno2JMThq1hGzYF5sok=";
           };
 
           hanamaru = pkgs.writeShellScriptBin "hanamaru.sh" ''
