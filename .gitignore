@@ -134,3 +134,4 @@ pkged.go
 *.sqlite
 test_files
 hanamaru-go
+result

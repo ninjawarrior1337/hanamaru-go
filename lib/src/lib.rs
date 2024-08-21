@@ -1,7 +1,12 @@
-use std::{ffi::{CStr, CString}, os::raw::c_void, ptr::null, result};
+use std::{
+    ffi::{CStr, CString},
+    os::raw::c_void,
+};
 
 use libc::{c_char, free, uintptr_t};
-use uiua::{format::{format_str, FormatConfig}, Compiler, Uiua, UiuaError, UiuaResult};
+use uiua::{
+    format::{format_str, FormatConfig}, Uiua, UiuaError, UiuaErrorKind,
+};
 
 extern "C" {
     fn goSendMessage(ctx: uintptr_t, msg: *const c_char);
@@ -9,24 +14,22 @@ extern "C" {
     fn goAssignRole(ctx: uintptr_t, target_id: *const c_char, role_id: *const c_char);
 }
 
-fn referenced_message(ctx: uintptr_t) -> UiuaResult<String> {
+fn referenced_message(ctx: uintptr_t) -> Option<String> {
     unsafe {
         let m = goReferencedMessage(ctx);
         if m.is_null() {
-            return Err(UiuaError::Panic("no referenced message".to_owned()));
+            return None;
         }
         let s = CStr::from_ptr(m).to_str().unwrap().to_owned();
         free(m as *mut c_void);
-        return Ok(s)
+        return Some(s);
     }
 }
 
 fn assign_role(ctx: uintptr_t, target_id: &str, role_id: &str) {
     let target_c = CString::new(target_id).unwrap();
     let role_c = CString::new(role_id).unwrap();
-    unsafe {
-        goAssignRole(ctx, target_c.into_raw(), role_c.into_raw())
-    }
+    unsafe { goAssignRole(ctx, target_c.into_raw(), role_c.into_raw()) }
 }
 
 fn send_message(ctx: uintptr_t, msg: &str) {
@@ -35,7 +38,6 @@ fn send_message(ctx: uintptr_t, msg: &str) {
         goSendMessage(ctx, s.into_raw())
     }
 }
-
 
 #[no_mangle]
 pub extern "C" fn run_uiua(ctx: uintptr_t, input_ptr: *const c_char) -> *const c_char {
@@ -49,15 +51,26 @@ pub extern "C" fn run_uiua(ctx: uintptr_t, input_ptr: *const c_char) -> *const c
 
         // Pushes the content of the referenced discord message onto the stack
         comp.create_bind_function("&dr", (0, 1), move |ua| {
-            ua.push(referenced_message(ctx)?);
-            Ok(())
-        }).unwrap();
+            let ref_msg = referenced_message(ctx);
+            match ref_msg {
+                Some(m) => {
+                    ua.push(m);
+                    Ok(())
+                }
+                None => Err(UiuaError::from(UiuaErrorKind::Run(
+                    ua.span().sp("no referenced message".to_owned()),
+                    ua.inputs().clone().into(),
+                ))),
+            }
+        })
+        .unwrap();
         // Pops the top of the stack and sends a discord message
         comp.create_bind_function("&ds", (1, 0), move |ua| {
             let s = ua.pop_string()?;
             send_message(ctx, &s);
             Ok(())
-        }).unwrap();
+        })
+        .unwrap();
 
         // Pops a target and a role id off the stack and tells discord to give role to target
         comp.create_bind_function("&dar", (2, 0), move |ua| {
@@ -65,7 +78,8 @@ pub extern "C" fn run_uiua(ctx: uintptr_t, input_ptr: *const c_char) -> *const c
             let role_id = ua.pop_string()?;
             assign_role(ctx, &target_id, &role_id);
             Ok(())
-        }).unwrap();
+        })
+        .unwrap();
 
         comp.load_str(input)
     });
@@ -81,7 +95,7 @@ pub extern "C" fn run_uiua(ctx: uintptr_t, input_ptr: *const c_char) -> *const c
         formatted
     };
 
-    return CString::new(result_str).unwrap().into_raw()
+    return CString::new(result_str).unwrap().into_raw();
 }
 
 #[no_mangle]
