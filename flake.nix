@@ -63,6 +63,8 @@
           hanamaru = pkgs.writeShellScriptBin "hanamaru.sh" ''
               exec ${hanamaru-go}/bin/hanamaru-go "$@"
             '';
+
+          default = hanamaru;
         };
 
       # Add dependencies that are only needed for development
@@ -76,6 +78,5 @@
       # The default package for 'nix build'. This makes sense if the
       # flake provides only one package or there is a clear "main"
       # package.
-      defaultPackage = self.packages.${system}.hanamaru;
     });
 }
