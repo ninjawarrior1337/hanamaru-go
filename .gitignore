@@ -135,3 +135,4 @@ pkged.go
 test_files
 hanamaru-go
 result
+.direnv
