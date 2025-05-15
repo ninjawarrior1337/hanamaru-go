@@ -5,13 +5,14 @@ use std::{
 
 use libc::{c_char, free, uintptr_t};
 use uiua::{
-    format::{format_str, FormatConfig}, Uiua, UiuaError, UiuaErrorKind,
+    format::{format_str, FormatConfig},
+    Uiua, UiuaError, UiuaErrorKind,
 };
 
-extern "C" {
-    fn goSendMessage(ctx: uintptr_t, msg: *const c_char);
-    fn goReferencedMessage(ctx: uintptr_t) -> *const c_char;
-    fn goAssignRole(ctx: uintptr_t, target_id: *const c_char, role_id: *const c_char);
+unsafe extern "C" {
+    unsafe fn goSendMessage(ctx: uintptr_t, msg: *const c_char);
+    unsafe fn goReferencedMessage(ctx: uintptr_t) -> *const c_char;
+    unsafe fn goAssignRole(ctx: uintptr_t, target_id: *const c_char, role_id: *const c_char);
 }
 
 fn referenced_message(ctx: uintptr_t) -> Option<String> {
@@ -57,10 +58,11 @@ pub extern "C" fn run_uiua(ctx: uintptr_t, input_ptr: *const c_char) -> *const c
                     ua.push(m);
                     Ok(())
                 }
-                None => Err(UiuaError::from(UiuaErrorKind::Run(
-                    ua.span().sp("no referenced message".to_owned()),
-                    ua.inputs().clone().into(),
-                ))),
+                None => Err(UiuaError::from(UiuaErrorKind::Run {
+                    message: ua.span().sp("no referenced message".to_owned()),
+                    info: vec![],
+                    inputs: ua.inputs().clone().into(),
+                })),
             }
         })
         .unwrap();

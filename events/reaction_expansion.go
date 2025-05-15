@@ -9,7 +9,7 @@ import (
 var expansionMap = map[string][]string{}
 
 func init() {
-	expansionMap["💥"] = append([]string{"🆗"}, util.MustMapToEmoji("boomer")...)
+	expansionMap["💥"] = append([]string{"5️⃣"}, util.MustMapToEmoji("bigbooms")...)
 }
 
 var ReactionExpansion = &framework.EventListener{

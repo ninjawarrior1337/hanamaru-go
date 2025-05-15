@@ -48,9 +48,9 @@
 
             buildInputs = [
               (hanamaru-lib
-              {
-                inherit rustPlatform;
-              })
+                {
+                  inherit rustPlatform;
+                })
             ];
 
             doCheck = false;
@@ -63,7 +63,7 @@
             pname = "hanamaru-lib";
             inherit version;
             src = ./lib;
-            cargoHash = "sha256-64arxp+gfKR4RFEU1VfMwM/lLno2JMThq1hGzYF5sok=";
+            cargoHash = "sha256-HY9uKN2gaiO2OTRKFxTOvAKjw1LVdbssAzbrGxXpOIU=";
           };
 
         hanamaru = {
@@ -75,18 +75,32 @@
         '');
 
         default = pkgs.callPackage hanamaru {};
+
+        dockerImages.latest = pkgs.dockerTools.buildLayeredImage {
+          name = "hanamaru-go";
+          tag = "latest";
+          contents = with pkgs; [
+            default
+            bash
+            cacert
+          ];
+          config = {
+            Cmd = ["${default}/bin/hanamaru"];
+            Env = [
+              "IN_DOCKER=true"
+            ];
+            Volumes = {
+              "/data" = {};
+            };
+          };
+        };
       };
 
       # Add dependencies that are only needed for development
-      devShells =
-        {
-          default = pkgs.mkShell {
-            buildInputs = with pkgs; [ go gopls gotools go-tools rustc cargo just ];
-          };
+      devShells = {
+        default = pkgs.mkShell {
+          buildInputs = with pkgs; [go gopls gotools go-tools just];
         };
-
-      # The default package for 'nix build'. This makes sense if the
-      # flake provides only one package or there is a clear "main"
-      # package.
+      };
     });
 }
