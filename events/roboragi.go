@@ -10,8 +10,8 @@ import (
 	"github.com/ninjawarrior1337/hanamaru-go/util"
 )
 
-var animeRegex = regexp.MustCompile(`{(.*)}`)
-var mangaRegex = regexp.MustCompile(`\[(.*)\]`)
+var animeRegex = regexp.MustCompile(`a{(.*)}`)
+var mangaRegex = regexp.MustCompile(`m\[(.*)\]`)
 
 var regexes = []*regexp.Regexp{animeRegex, mangaRegex}
 
