@@ -15,7 +15,7 @@ COPY --from=builder_rs /hanamaru/target/release/libhanamaru_lib.a  ./lib/target/
 RUN go generate
 RUN go build -ldflags='-s -w' -tags="ij,jp"
 
-FROM debian:12-slim
+FROM debian:13-slim
 
 RUN apt-get update && apt-get install -y \
     ca-certificates \
