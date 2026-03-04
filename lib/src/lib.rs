@@ -1,6 +1,5 @@
 use std::{
-    ffi::{CStr, CString},
-    os::raw::c_void,
+    ffi::{CStr, CString, c_void},
 };
 
 use libc::{c_char, free, uintptr_t};

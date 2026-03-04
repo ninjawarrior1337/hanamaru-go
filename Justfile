@@ -1,6 +1,9 @@
 run: build_native gen
     go run --tags ij,jp .
 
+build: build_native gen
+    go build .
+
 build_native:
     cd lib && cargo build --release
 

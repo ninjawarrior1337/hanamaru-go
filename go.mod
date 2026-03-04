@@ -1,6 +1,6 @@
 module github.com/ninjawarrior1337/hanamaru-go
 
-go 1.22
+go 1.25
 
 require (
 	github.com/anthonynsimon/bild v0.13.0
