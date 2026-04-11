@@ -9,13 +9,7 @@
     self,
     nixpkgs,
     flake-utils,
-  }: let
-    # to work with older version of flakes
-    lastModifiedDate = self.lastModifiedDate or self.lastModified or "19700101";
-
-    # Generate a user-friendly version number.
-    version = builtins.substring 0 8 lastModifiedDate;
-  in
+  }:
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = import nixpkgs {
         inherit system;

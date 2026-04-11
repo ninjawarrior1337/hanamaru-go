@@ -1,11 +1,10 @@
 {
   buildGoModule,
   hanamaru-lib,
-  lib,
 }:
 buildGoModule {
   pname = "hanamaru-go";
-  version = "1.4.0";
+  version = builtins.readFile ../version/version.txt;
   src = ../.;
 
   ldflags = [
