@@ -12,3 +12,7 @@ gen:
 
 build_docker:
     docker build -t ghcr.io/ninjawarrior1337/hanamaru-go:main .
+
+update_hashes:
+    nix-update --flake --version skip hanamaru-go
+    nix-update --flake --version skip hanamaru-lib
