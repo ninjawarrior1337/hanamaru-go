@@ -21,7 +21,7 @@
       # Add dependencies that are only needed for development
       devShells = {
         default = pkgs.mkShell {
-          buildInputs = with pkgs; [go gopls gotools go-tools just nix-update];
+          buildInputs = with pkgs; [go_1_27 gopls gotools go-tools just nix-update];
         };
       };
     });

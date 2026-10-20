@@ -1,9 +1,9 @@
-FROM rust as builder_rs
+FROM rust AS builder_rs
 WORKDIR /hanamaru
 COPY ./lib ./
 RUN cargo build --release
 
-FROM golang as builder_go
+FROM golang:1.27.3 AS builder_go
 WORKDIR /hanamaru
 
 COPY go.mod go.sum ./

@@ -1,8 +1,9 @@
 {
   buildGoModule,
+  go_1_27,
   hanamaru-lib,
 }:
-buildGoModule {
+(buildGoModule.override {go = go_1_27;}) {
   pname = "hanamaru-go";
   version = builtins.readFile ../version/version.txt;
   src = ../.;
